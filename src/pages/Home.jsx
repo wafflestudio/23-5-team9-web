@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import "./styles/common.css"; // 공통 CSS
-import "./styles/postlist.css"; // 이 컴포넌트 전용 CSS
-import PostCard from "./components/PostCard";
-import JobFilter from "./components/JobFilter";
-import TopFilters from "./components/TopFilters";
-import { usePosts } from "./hooks/usePosts";
-import { useJobFilter } from "./hooks/useJobFilter";
+import "../styles/common.css"; // 공통 CSS
+import "../styles/postlist.css"; // 이 컴포넌트 전용 CSS
+import PostCard from "../components/PostCard";
+import JobFilter from "../components/JobFilter";
+import TopFilters from "../components/TopFilters";
+import { usePosts } from "../hooks/usePosts";
+import { useJobFilter } from "../hooks/useJobFilter";
 
 /**
  * 포스트 목록을 불러와서 그리드 형태로 보여주는 컴포넌트

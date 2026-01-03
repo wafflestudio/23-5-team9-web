@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/common.css';
+import '../styles/common.css';
 
 const mockChatRooms = [
   { id: 1, partner: '당근이', lastMessage: '안녕하세요! 물건 팔렸나요?', time: '방금 전', unread: 2 },
@@ -19,7 +19,7 @@ function ChatList() {
           <div 
             key={room.id} 
             className="chat-room-item"
-            onClick={() => navigate(`/React-Week5/chat/${room.id}`)}
+            onClick={() => navigate(`/chat/${room.id}`)}
             style={{ padding: '15px', borderBottom: '1px solid #eee', cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}
           >
             <div>

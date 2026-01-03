@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./styles/common.css"; // 공통 CSS
-import "./styles/postbody.css"; // 이 컴포넌트 전용 CSS (아래 CSS 내용 참고)
+import "../styles/common.css"; // 공통 CSS
+import "../styles/postbody.css"; // 이 컴포넌트 전용 CSS (아래 CSS 내용 참고)
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 

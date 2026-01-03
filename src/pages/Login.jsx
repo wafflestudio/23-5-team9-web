@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './styles/login.css';
+import '../styles/login.css';
 
 const BASE_URL = 'https://api-internhasha.wafflestudio.com';
 
@@ -25,7 +25,7 @@ export default function LoginForm({ onLogin }) {
       const data = await res.json();
       localStorage.setItem('token', data.token);
       onLogin && onLogin();
-      navigate('/React-Week5'); // 홈으로 이동
+      navigate('/'); // 홈으로 이동
     } catch (err) {
       setError('이메일 또는 비밀번호가 올바르지 않습니다.');
     } finally {
@@ -61,7 +61,7 @@ export default function LoginForm({ onLogin }) {
         </form>
         <div className="signup-link">
           아직 계정이 없으신가요? 
-          <Link to="/React-Week5/signup">회원가입</Link>
+          <Link to="/signup">회원가입</Link>
         </div>
       </div>
     </div>

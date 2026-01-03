@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './styles/common.css';
+import '../styles/common.css';
 
 function MyCarrot() {
   const [activeTab, setActiveTab] = useState('info'); // info, coin, password

@@ -6,89 +6,96 @@ function NavBar({ isLoggedIn, onLogout }) {
   const location = useLocation();
 
   const navItems = [
-    { id: 'home', label: '홈', path: '/React-Week5' },
-    { id: 'chat', label: '채팅', path: '/React-Week5/chat' },
-    { id: 'my', label: '나의 당근', path: '/React-Week5/my' },
+    { id: 'home', label: '중고거래', path: '/' },
+    { id: 'chat', label: '채팅하기', path: '/chat' },
+    { id: 'my', label: '나의 당근', path: '/my' },
   ];
 
   const isActive = (path) => {
-    if (path === '/React-Week5' && (location.pathname === '/React-Week5' || location.pathname === '/React-Week5/')) return true;
-    if (path !== '/React-Week5' && location.pathname.startsWith(path)) return true;
+    if (path === '/' && (location.pathname === '/' || location.pathname === '/')) return true;
+    if (path !== '/' && location.pathname.startsWith(path)) return true;
     return false;
   };
 
   return (
     <nav style={{
-      width: '250px',
-      height: '100vh',
-      backgroundColor: '#f8f9fa',
-      borderRight: '1px solid #dee2e6',
+      width: '100%',
+      height: '64px',
+      backgroundColor: '#ffffff',
+      borderBottom: '1px solid #e9ecef',
       display: 'flex',
-      flexDirection: 'column',
-      padding: '20px',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 20px',
       position: 'fixed',
       left: 0,
-      top: 0
+      top: 0,
+      zIndex: 1000
     }}>
-      <h1 style={{ color: '#ff6f0f', marginBottom: '40px', textAlign: 'center' }}>당근마켓</h1>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => navigate(item.path)}
-            style={{
-              padding: '15px 20px',
-              fontSize: '1.1rem',
-              textAlign: 'left',
-              backgroundColor: isActive(item.path) ? '#ff6f0f' : 'transparent',
-              color: isActive(item.path) ? 'white' : '#333',
-              border: 'none',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              transition: 'all 0.2s'
-            }}
-          >
-            {item.label}
-          </button>
-        ))}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+        <h1 
+          onClick={() => navigate('/')}
+          style={{ 
+            color: '#ff6f0f', 
+            fontSize: '24px', 
+            fontWeight: 'bold', 
+            cursor: 'pointer',
+            margin: 0 
+          }}
+        >
+          당근마켓
+        </h1>
+        <div style={{ display: 'flex', gap: '20px' }}>
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => navigate(item.path)}
+              style={{
+                padding: '8px 12px',
+                fontSize: '16px',
+                backgroundColor: 'transparent',
+                color: isActive(item.path) ? '#ff6f0f' : '#4d5159',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                transition: 'color 0.2s'
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
-      
-      <div style={{ marginTop: 'auto' }}>
+
+      <div>
         {isLoggedIn ? (
           <button
             onClick={onLogout}
             style={{
-              width: '100%',
-              padding: '15px 20px',
-              fontSize: '1.1rem',
-              textAlign: 'left',
-              backgroundColor: 'transparent',
-              color: '#333',
+              padding: '8px 16px',
+              fontSize: '14px',
+              backgroundColor: '#e9ecef',
+              color: '#212529',
               border: 'none',
-              borderRadius: '10px',
+              borderRadius: '6px',
               cursor: 'pointer',
-              fontWeight: 'bold',
-              transition: 'all 0.2s'
+              fontWeight: 'bold'
             }}
           >
             로그아웃
           </button>
         ) : (
           <button
-            onClick={() => navigate('/React-Week5/login')}
+            onClick={() => navigate('/login')}
             style={{
-              width: '100%',
-              padding: '15px 20px',
-              fontSize: '1.1rem',
-              textAlign: 'left',
-              backgroundColor: 'transparent',
-              color: '#333',
+              padding: '8px 16px',
+              fontSize: '14px',
+              backgroundColor: '#ff6f0f',
+              color: 'white',
               border: 'none',
-              borderRadius: '10px',
+              borderRadius: '6px',
               cursor: 'pointer',
-              fontWeight: 'bold',
-              transition: 'all 0.2s'
+              fontWeight: 'bold'
             }}
           >
             로그인
