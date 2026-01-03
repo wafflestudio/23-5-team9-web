@@ -11,6 +11,7 @@ function NavBar({ isLoggedIn, onLogout }: NavBarProps) {
 
   const navItems = [
     { id: 'home', label: '알바', path: '/dangeun/jobs' },
+    { id: 'products', label: '중고거래', path: '/dangeun/products' },
     { id: 'map', label: '동네지도', path: '/dangeun/map' },
     { id: 'chat', label: '채팅하기', path: '/dangeun/chat' },
     { id: 'my', label: '나의 당근', path: '/dangeun/my' },

@@ -9,6 +9,8 @@ import ChatList from './pages/ChatList';
 import ChatRoom from './pages/ChatRoom';
 import MyCarrot from './pages/MyCarrot';
 import NeighborhoodMap from './pages/NeighborhoodMap';
+import ProductList from './pages/ProductList';
+import ProductDetail from './pages/ProductDetail';
 import './styles/common.css';
 
 function App() {
@@ -47,6 +49,8 @@ function App() {
           <Route path="/" element={<Navigate to="/dangeun/jobs?page=0" replace />} />
           <Route path="/dangeun" element={<Navigate to="/dangeun/jobs?page=0" replace />} />
           <Route path="/dangeun/jobs" element={<Home/>}/>
+          <Route path="/dangeun/products" element={<ProductList />} />
+          <Route path="/dangeun/products/:id" element={<ProductDetail />} />
           <Route path="/dangeun/map" element={<NeighborhoodMap/>}/>
           <Route path="/dangeun/posts/:id" element={<PostDetail/>}/>
           <Route path="/dangeun/chat" element={<ChatList />} />
