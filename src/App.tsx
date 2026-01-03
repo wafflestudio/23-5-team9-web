@@ -44,7 +44,8 @@ function App() {
         margin: '0 auto'
       }}>
         <Routes>
-          <Route path="/" element={<Navigate to="/dangeun/jobs" replace />} />
+          <Route path="/" element={<Navigate to="/dangeun/jobs?page=0" replace />} />
+          <Route path="/dangeun" element={<Navigate to="/dangeun/jobs?page=0" replace />} />
           <Route path="/dangeun/jobs" element={<Home/>}/>
           <Route path="/dangeun/map" element={<NeighborhoodMap/>}/>
           <Route path="/dangeun/posts/:id" element={<PostDetail/>}/>
