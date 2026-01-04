@@ -21,21 +21,21 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('token');
-    navigate('/dangeun/login');
+    navigate('/23-5-team9-web/login');
   };
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    navigate('/dangeun/jobs');
+    navigate('/23-5-team9-web/jobs');
   };
 
   const handleSignup = () => {
     setIsLoggedIn(true);
-    navigate('/dangeun/jobs');
+    navigate('/23-5-team9-web/jobs');
   };
 
   // Hide NavBar on login/signup pages
-  const hideNav = location.pathname === '/dangeun/login' || location.pathname === '/dangeun/signup';
+  const hideNav = location.pathname === '/23-5-team9-web/login' || location.pathname === '/23-5-team9-web/signup';
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
@@ -46,19 +46,19 @@ function App() {
         margin: '0 auto'
       }}>
         <Routes>
-          <Route path="/" element={<Navigate to="/dangeun/jobs?page=0" replace />} />
-          <Route path="/dangeun" element={<Navigate to="/dangeun/jobs?page=0" replace />} />
-          <Route path="/dangeun/jobs" element={<Home/>}/>
-          <Route path="/dangeun/products" element={<ProductList />} />
-          <Route path="/dangeun/products/:id" element={<ProductDetail />} />
-          <Route path="/dangeun/map" element={<NeighborhoodMap/>}/>
-          <Route path="/dangeun/posts/:id" element={<PostDetail/>}/>
-          <Route path="/dangeun/chat" element={<ChatList />} />
-          <Route path="/dangeun/chat/:chatId" element={<ChatRoom />} />
-          <Route path="/dangeun/my" element={<MyCarrot />} />
+          <Route path="/" element={<Navigate to="/23-5-team9-web/jobs?page=0" replace />} />
+          <Route path="/23-5-team9-web" element={<Navigate to="/23-5-team9-web/jobs?page=0" replace />} />
+          <Route path="/23-5-team9-web/jobs" element={<Home/>}/>
+          <Route path="/23-5-team9-web/products" element={<ProductList />} />
+          <Route path="/23-5-team9-web/products/:id" element={<ProductDetail />} />
+          <Route path="/23-5-team9-web/map" element={<NeighborhoodMap/>}/>
+          <Route path="/23-5-team9-web/posts/:id" element={<PostDetail/>}/>
+          <Route path="/23-5-team9-web/chat" element={<ChatList />} />
+          <Route path="/23-5-team9-web/chat/:chatId" element={<ChatRoom />} />
+          <Route path="/23-5-team9-web/my" element={<MyCarrot />} />
           
-          <Route path="/dangeun/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/dangeun/signup" element={<Signup onSignup={handleSignup} />} />
+          <Route path="/23-5-team9-web/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/23-5-team9-web/signup" element={<Signup onSignup={handleSignup} />} />
         </Routes>
       </div>
     </div>

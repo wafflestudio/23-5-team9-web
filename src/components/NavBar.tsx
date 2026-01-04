@@ -10,16 +10,16 @@ function NavBar({ isLoggedIn, onLogout }: NavBarProps) {
   const location = useLocation();
 
   const navItems = [
-    { id: 'home', label: '알바', path: '/dangeun/jobs' },
-    { id: 'products', label: '중고거래', path: '/dangeun/products' },
-    { id: 'map', label: '동네지도', path: '/dangeun/map' },
-    { id: 'chat', label: '채팅하기', path: '/dangeun/chat' },
-    { id: 'my', label: '나의 당근', path: '/dangeun/my' },
+    { id: 'home', label: '알바', path: '/23-5-team9-web/jobs' },
+    { id: 'products', label: '중고거래', path: '/23-5-team9-web/products' },
+    { id: 'map', label: '동네지도', path: '/23-5-team9-web/map' },
+    { id: 'chat', label: '채팅하기', path: '/23-5-team9-web/chat' },
+    { id: 'my', label: '나의 당근', path: '/23-5-team9-web/my' },
   ];
 
   const isActive = (path: string) => {
-    if (path === '/dangeun/jobs' && (location.pathname === '/dangeun/jobs' || location.pathname === '/')) return true;
-    if (path !== '/dangeun/jobs' && location.pathname.startsWith(path)) return true;
+    if (path === '/23-5-team9-web/jobs' && (location.pathname === '/23-5-team9-web/jobs' || location.pathname === '/')) return true;
+    if (path !== '/23-5-team9-web/jobs' && location.pathname.startsWith(path)) return true;
     return false;
   };
 
@@ -40,7 +40,7 @@ function NavBar({ isLoggedIn, onLogout }: NavBarProps) {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
         <h1 
-          onClick={() => navigate('/dangeun/jobs')}
+          onClick={() => navigate('/23-5-team9-web/jobs')}
           style={{ 
             color: '#ff6f0f', 
             fontSize: '24px', 
@@ -92,7 +92,7 @@ function NavBar({ isLoggedIn, onLogout }: NavBarProps) {
           </button>
         ) : (
           <button
-            onClick={() => navigate('/dangeun/login')}
+            onClick={() => navigate('/23-5-team9-web/login')}
             style={{
               padding: '8px 16px',
               fontSize: '14px',

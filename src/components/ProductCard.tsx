@@ -7,7 +7,7 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product }: ProductCardProps) {
-  const productDetailUrl = `/dangeun/products/${product.id}`;
+  const productDetailUrl = `/23-5-team9-web/products/${product.id}`;
 
   return (
     <Link to={productDetailUrl} className="post-list-item">

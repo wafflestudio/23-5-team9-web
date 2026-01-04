@@ -9,5 +9,5 @@ export default defineConfig({
       usePolling: true,
     },
   },
-  base: '/dangeun/'
+  base: '/23-5-team9-web/'
 })
