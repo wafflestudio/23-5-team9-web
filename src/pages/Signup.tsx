@@ -75,7 +75,7 @@ export default function SignupForm({ onSignup }: SignupFormProps) {
         const data = await res.json();
         localStorage.setItem('token', data.token);
         onSignup && onSignup();
-        navigate('/23-5-team9-web/jobs');
+        navigate('/23-5-team9-web/products');
       } else {
         const errorData = await res.json();
         if (errorData.details) {

@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import NavBar from './components/NavBar';
-import Home from './pages/Home';
-import PostDetail from './pages/PostDetail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ChatList from './pages/ChatList';
@@ -26,12 +24,12 @@ function App() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    navigate('/23-5-team9-web/jobs');
+    navigate('/23-5-team9-web/products');
   };
 
   const handleSignup = () => {
     setIsLoggedIn(true);
-    navigate('/23-5-team9-web/jobs');
+    navigate('/23-5-team9-web/products');
   };
 
   // Hide NavBar on login/signup pages
@@ -46,13 +44,11 @@ function App() {
         margin: '0 auto'
       }}>
         <Routes>
-          <Route path="/" element={<Navigate to="/23-5-team9-web/jobs?page=0" replace />} />
-          <Route path="/23-5-team9-web" element={<Navigate to="/23-5-team9-web/jobs?page=0" replace />} />
-          <Route path="/23-5-team9-web/jobs" element={<Home/>}/>
+          <Route path="/" element={<Navigate to="/23-5-team9-web/products?page=0" replace />} />
+          <Route path="/23-5-team9-web" element={<Navigate to="/23-5-team9-web/products?page=0" replace />} />
           <Route path="/23-5-team9-web/products" element={<ProductList />} />
           <Route path="/23-5-team9-web/products/:id" element={<ProductDetail />} />
           <Route path="/23-5-team9-web/map" element={<NeighborhoodMap/>}/>
-          <Route path="/23-5-team9-web/posts/:id" element={<PostDetail/>}/>
           <Route path="/23-5-team9-web/chat" element={<ChatList />} />
           <Route path="/23-5-team9-web/chat/:chatId" element={<ChatRoom />} />
           <Route path="/23-5-team9-web/my" element={<MyCarrot />} />
