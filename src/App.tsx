@@ -10,6 +10,7 @@ import NeighborhoodMap from './pages/NeighborhoodMap';
 import ProductList from './pages/ProductList';
 import ProductDetail from './pages/ProductDetail';
 import './styles/common.css';
+import { BASE_URL } from './api/config';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
@@ -34,7 +35,7 @@ function App() {
     try {
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
-        await fetch('http://127.0.0.1:8000/api/auth/tokens', {
+        await fetch(`${BASE_URL}/api/auth/tokens`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${refreshToken}`

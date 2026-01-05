@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-
-const BASE_URL = 'http://127.0.0.1:8000';
+import { BASE_URL } from '../api/config';
 
 /**
  * 포스트 데이터를 가져오는 커스텀 훅

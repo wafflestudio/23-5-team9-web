@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const BASE_URL = 'http://127.0.0.1:8000';
+import { BASE_URL } from '../api/config';
 
 interface PasswordRequirementsProps {
   password: string;

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/login.css';
-
-const BASE_URL = 'http://127.0.0.1:8000';
+import { BASE_URL } from '../api/config';
 
 interface LoginFormProps {
   onLogin?: () => void;

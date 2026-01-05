@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LoginRequiredModal from './LoginRequiredModal';
 import { PostListItem } from '../hooks/usePosts';
-
-const BASE_URL = 'http://127.0.0.1:8000';
+import { BASE_URL } from '../api/config';
 
 interface PostCardProps {
   post: PostListItem;

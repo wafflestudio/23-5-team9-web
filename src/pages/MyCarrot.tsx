@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/common.css';
-
-const BASE_URL = 'http://127.0.0.1:8000';
+import { BASE_URL } from '../api/config';
 
 interface User {
   id: string;
