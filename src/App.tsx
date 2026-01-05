@@ -16,10 +16,25 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem('token');
-    navigate('/23-5-team9-web/login');
+  const handleLogout = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (refreshToken) {
+        await fetch('http://127.0.0.1:8000/api/auth/tokens', {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${refreshToken}`
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Logout failed', error);
+    } finally {
+      setIsLoggedIn(false);
+      localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
+      navigate('/23-5-team9-web/login');
+    }
   };
 
   const handleLogin = () => {

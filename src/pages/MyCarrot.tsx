@@ -23,6 +23,7 @@ function MyCarrot() {
 
   // Form states
   const [nickname, setNickname] = useState('');
+  const [profileImage, setProfileImage] = useState('');
 
   useEffect(() => {
     fetchUserData();
@@ -44,6 +45,7 @@ function MyCarrot() {
         const data = await res.json();
         setUser(data);
         setNickname(data.nickname || '');
+        setProfileImage(data.profile_image || '');
       } else {
         if (res.status === 401) {
            navigate('/23-5-team9-web/login');
@@ -94,13 +96,35 @@ function MyCarrot() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}` 
         },
-        body: JSON.stringify({ nickname })
+        body: JSON.stringify({ nickname, profile_image: profileImage || null })
       });
       if (res.ok) {
         alert('정보가 수정되었습니다.');
         fetchUserData();
       } else {
         alert('정보 수정 실패');
+      }
+    } catch (err) {
+      alert('오류 발생');
+    }
+  };
+
+  const handleChargeCoin = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`${BASE_URL}/api/user/me`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({ coin: user!.coin + 10000 })
+      });
+      if (res.ok) {
+        alert('10,000 코인이 충전되었습니다.');
+        fetchUserData();
+      } else {
+        alert('코인 충전 실패');
       }
     } catch (err) {
       alert('오류 발생');
@@ -166,8 +190,18 @@ function MyCarrot() {
               <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 <h3>프로필 정보</h3>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: '#eee', margin: '0 auto 10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {user.profile_image ? <img src={user.profile_image} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%' }} /> : 'No Image'}
+                  <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: '#eee', margin: '0 auto 10px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                    {user.profile_image ? <img src={user.profile_image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'No Image'}
+                  </div>
+                  <div style={{ marginBottom: '10px' }}>
+                    <label style={{ fontSize: '0.8rem', display: 'block', marginBottom: '5px' }}>프로필 이미지 URL</label>
+                    <input 
+                      type="text" 
+                      value={profileImage} 
+                      onChange={(e) => setProfileImage(e.target.value)}
+                      placeholder="이미지 URL 입력"
+                      style={{ width: '80%', padding: '5px' }}
+                    />
                   </div>
                 </div>
                 <div>
@@ -199,6 +233,21 @@ function MyCarrot() {
             <p style={{ fontSize: '48px', fontWeight: 'bold', color: '#ff6f0f', margin: 0 }}>
               {user.coin.toLocaleString()} <span style={{ fontSize: '20px', color: 'black' }}>코인</span>
             </p>
+            <button 
+              onClick={handleChargeCoin}
+              style={{ 
+                marginTop: '20px', 
+                padding: '10px 20px', 
+                background: '#ff6f0f', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '5px', 
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
+            >
+              10,000 코인 충전하기
+            </button>
           </div>
         )}
       </div>
