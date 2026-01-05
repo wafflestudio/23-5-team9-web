@@ -66,9 +66,37 @@ export default function SignupForm({ onSignup }: SignupFormProps) {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        // 회원가입 성공 시 로그인 페이지로 이동
-        navigate('/23-5-team9-web/login');
+        await res.json(); // 응답 본문을 읽어서 요청을 확실히 완료
+        
+        // 서버의 데이터 처리를 기다리기 위해 잠시 대기 (500ms)
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // 회원가입 성공 후 자동 로그인 처리
+        try {
+          const loginRes = await fetch(`${BASE_URL}/api/auth/tokens`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+
+          if (loginRes.ok) {
+            const loginData = await loginRes.json();
+            localStorage.setItem('token', loginData.access_token);
+            localStorage.setItem('refresh_token', loginData.refresh_token);
+            
+            if (onSignup) {
+              onSignup();
+            } else {
+              navigate('/23-5-team9-web/products');
+            }
+          } else {
+            // 자동 로그인 실패 시 조용히 로그인 페이지로 이동
+            navigate('/23-5-team9-web/login');
+          }
+        } catch (loginErr) {
+          console.error('Auto login failed:', loginErr);
+          navigate('/23-5-team9-web/login');
+        }
       } else {
         const errorData = await res.json();
         if (errorData.details) {
