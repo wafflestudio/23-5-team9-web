@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const BASE_URL = 'https://api-internhasha.wafflestudio.com';
+const BASE_URL = 'http://127.0.0.1:8000';
 
 interface User {
   name: string;

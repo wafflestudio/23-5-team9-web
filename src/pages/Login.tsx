@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/login.css';
 
-const BASE_URL = 'https://api-internhasha.wafflestudio.com';
+const BASE_URL = 'http://127.0.0.1:8000';
 
 interface LoginFormProps {
   onLogin?: () => void;
@@ -20,14 +20,15 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${BASE_URL}/api/auth/user/session`, {
+      const res = await fetch(`${BASE_URL}/api/auth/tokens`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
       if (!res.ok) throw new Error('로그인 실패');
       const data = await res.json();
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('refresh_token', data.refresh_token);
       onLogin && onLogin();
       navigate('/23-5-team9-web/products'); // 홈으로 이동
     } catch (err) {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const BASE_URL = 'https://api-internhasha.wafflestudio.com';
+const BASE_URL = 'http://127.0.0.1:8000';
 
 interface PasswordRequirementsProps {
   password: string;
@@ -32,7 +32,6 @@ interface SignupFormProps {
 }
 
 export default function SignupForm({ onSignup }: SignupFormProps) {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -55,17 +54,11 @@ export default function SignupForm({ onSignup }: SignupFormProps) {
 
     try {
       const payload = {
-        authType: 'APPLICANT',
-        info: {
-          type: "APPLICANT",
-          name,
-          email,
-          password,
-          successCode: '1234',
-        },
+        email,
+        password,
       };
 
-      const res = await fetch(`${BASE_URL}/api/auth/user`, {
+      const res = await fetch(`${BASE_URL}/api/user/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -73,9 +66,8 @@ export default function SignupForm({ onSignup }: SignupFormProps) {
 
       if (res.ok) {
         const data = await res.json();
-        localStorage.setItem('token', data.token);
-        onSignup && onSignup();
-        navigate('/23-5-team9-web/products');
+        // 회원가입 성공 시 로그인 페이지로 이동
+        navigate('/23-5-team9-web/login');
       } else {
         const errorData = await res.json();
         if (errorData.details) {
@@ -95,7 +87,6 @@ export default function SignupForm({ onSignup }: SignupFormProps) {
   return (
     <form onSubmit={handleSubmit} className="card form-card">
       <h2 className="section-title">회원가입</h2>
-      <input className="form-input" type="text" placeholder="이름" value={name} onChange={e => setName(e.target.value)} required />
       <input className="form-input" type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)} required />
       <div className="input-wrapper">
         <input

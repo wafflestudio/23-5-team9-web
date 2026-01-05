@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const BASE_URL = 'https://api-internhasha.wafflestudio.com';
+const BASE_URL = 'http://127.0.0.1:8000';
 
 /**
  * 포스트 데이터를 가져오는 커스텀 훅

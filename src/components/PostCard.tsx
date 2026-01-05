@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import LoginRequiredModal from './LoginRequiredModal';
 import { PostListItem } from '../hooks/usePosts';
 
-const BASE_URL = 'https://api-internhasha.wafflestudio.com';
+const BASE_URL = 'http://127.0.0.1:8000';
 
 interface PostCardProps {
   post: PostListItem;
