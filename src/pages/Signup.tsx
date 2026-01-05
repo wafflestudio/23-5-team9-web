@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { BASE_URL } from '../api/config';
+import '../styles/login.css';
 
 interface PasswordRequirementsProps {
   password: string;
@@ -16,12 +17,12 @@ const PasswordRequirements = ({ password }: PasswordRequirementsProps) => {
   };
 
   return (
-    <div className="password-requirements">
-      <div>{checks.length ? '✓' : '✗'} 8자리 이상</div>
-      <div>{checks.number ? '✓' : '✗'} 숫자 포함</div>
-      <div>{checks.case ? '✓' : '✗'} 영문 대소문자 포함</div>
-      <div>{checks.special ? '✓' : '✗'} 특수문자 포함</div>
-      <div>{checks.consecutive ? '✓' : '✗'} 연속된 문자열이나 숫자 없음</div>
+    <div className="password-requirements" style={{ fontSize: '0.8rem', color: '#666', marginTop: '10px', marginBottom: '10px' }}>
+      <div style={{ color: checks.length ? '#ff6f0f' : '#666' }}>{checks.length ? '✓' : '•'} 8자리 이상</div>
+      <div style={{ color: checks.number ? '#ff6f0f' : '#666' }}>{checks.number ? '✓' : '•'} 숫자 포함</div>
+      <div style={{ color: checks.case ? '#ff6f0f' : '#666' }}>{checks.case ? '✓' : '•'} 영문 대소문자 포함</div>
+      <div style={{ color: checks.special ? '#ff6f0f' : '#666' }}>{checks.special ? '✓' : '•'} 특수문자 포함</div>
+      <div style={{ color: checks.consecutive ? '#ff6f0f' : '#666' }}>{checks.consecutive ? '✓' : '•'} 연속된 문자열이나 숫자 없음</div>
     </div>
   );
 };
@@ -37,6 +38,7 @@ export default function SignupForm({ onSignup }: SignupFormProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const navigate = useNavigate();
 
@@ -84,46 +86,90 @@ export default function SignupForm({ onSignup }: SignupFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="card form-card">
-      <h2 className="section-title">회원가입</h2>
-      <input className="form-input" type="email" placeholder="이메일" value={email} onChange={e => setEmail(e.target.value)} required />
-      <div className="input-wrapper">
-        <input
-          className="form-input input-with-icon"
-          type={showPassword ? 'text' : 'password'}
-          placeholder="비밀번호"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          onFocus={() => setPasswordFocused(true)}
-          required
-        />
-        <span onClick={() => setShowPassword(!showPassword)} className="icon-right">
-          {showPassword ? '🙈' : '👁️'}
-        </span>
-      </div>
-      {passwordFocused && (
-        <>
-          <PasswordRequirements password={password} />
-          <div className="input-wrapper mt-sm">
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-logo">당근마켓</h1>
+        <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', color: '#333' }}>회원가입</h2>
+        
+        <form onSubmit={handleSubmit} className="login-form">
+          <input 
+            className="login-input" 
+            type="email" 
+            placeholder="이메일" 
+            value={email} 
+            onChange={e => setEmail(e.target.value)} 
+            required 
+          />
+          
+          <div style={{ position: 'relative', width: '100%' }}>
             <input
-              className="form-input input-with-icon"
+              className="login-input"
               type={showPassword ? 'text' : 'password'}
+              placeholder="비밀번호"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              onFocus={() => setPasswordFocused(true)}
+              required
+            />
+            <span 
+              onClick={() => setShowPassword(!showPassword)} 
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                cursor: 'pointer',
+                color: '#666',
+                fontSize: '0.8rem'
+              }}
+            >
+              {showPassword ? '숨기기' : '보기'}
+            </span>
+          </div>
+
+          {passwordFocused && <PasswordRequirements password={password} />}
+
+          <div style={{ position: 'relative', width: '100%' }}>
+            <input
+              className="login-input"
+              type={showPasswordConfirm ? 'text' : 'password'}
               placeholder="비밀번호 확인"
               value={passwordConfirm}
               onChange={e => setPasswordConfirm(e.target.value)}
               required
+              style={{ borderColor: passwordConfirm && !passwordsMatch ? '#ff4d4f' : undefined }}
             />
-            <span onClick={() => setShowPassword(!showPassword)} className="icon-right">
-              {showPassword ? '🙈' : '👁️'}
+            <span 
+              onClick={() => setShowPasswordConfirm(!showPasswordConfirm)} 
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                cursor: 'pointer',
+                color: '#666',
+                fontSize: '0.8rem'
+              }}
+            >
+              {showPasswordConfirm ? '숨기기' : '보기'}
             </span>
           </div>
-        </>
-      )}
-      {passwordConfirm && !passwordsMatch && (
-        <div className="form-error-small">비밀번호가 일치하지 않습니다.</div>
-      )}
-  <button className="button button-strong full-width-button mt-md" type="submit" disabled={loading || !passwordsMatch}>회원가입</button>
-      {error && <div className="form-error">{error}</div>}
-    </form>
+          
+          {passwordConfirm && !passwordsMatch && (
+            <div style={{ color: '#ff4d4f', fontSize: '0.8rem' }}>비밀번호가 일치하지 않습니다.</div>
+          )}
+
+          <button className="login-button" type="submit" disabled={loading}>
+            {loading ? '가입 중...' : '가입하기'}
+          </button>
+          
+          {error && <div className="login-error">{error}</div>}
+        </form>
+
+        <div className="signup-link">
+          이미 계정이 있으신가요? <Link to="/23-5-team9-web/login">로그인</Link>
+        </div>
+      </div>
+    </div>
   );
 }

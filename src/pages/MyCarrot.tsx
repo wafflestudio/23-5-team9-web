@@ -15,7 +15,6 @@ interface User {
 
 function MyCarrot() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('info'); // info, coin
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -137,37 +136,7 @@ function MyCarrot() {
     <div className="page-padding">
       <h2>나의 당근</h2>
       
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <button 
-          onClick={() => setActiveTab('info')}
-          style={{ 
-            padding: '10px 20px', 
-            borderRadius: '20px', 
-            border: 'none', 
-            background: activeTab === 'info' ? '#ff6f0f' : '#eee',
-            color: activeTab === 'info' ? 'white' : 'black',
-            cursor: 'pointer'
-          }}
-        >
-          내 정보
-        </button>
-        <button 
-          onClick={() => setActiveTab('coin')}
-          style={{ 
-            padding: '10px 20px', 
-            borderRadius: '20px', 
-            border: 'none', 
-            background: activeTab === 'coin' ? '#ff6f0f' : '#eee',
-            color: activeTab === 'coin' ? 'white' : 'black',
-            cursor: 'pointer'
-          }}
-        >
-          코인
-        </button>
-      </div>
-
       <div className="content-area" style={{ padding: '20px', border: '1px solid #eee', borderRadius: '10px' }}>
-        {activeTab === 'info' && (
           <div>
             {user.status === 'pending' ? (
               <form onSubmit={handleOnboard} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -186,69 +155,70 @@ function MyCarrot() {
                 <button type="submit" className="submit-btn" style={{ background: '#ff6f0f', color: 'white', border: 'none', padding: '10px', borderRadius: '5px', cursor: 'pointer' }}>등록하기</button>
               </form>
             ) : (
-              <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                <h3>프로필 정보</h3>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: '#eee', margin: '0 auto 10px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                    {user.profile_image ? <img src={user.profile_image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'No Image'}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                {/* Coin Section */}
+                <div style={{ textAlign: 'center', padding: '20px', background: '#fff8f0', borderRadius: '10px' }}>
+                  <h3 style={{ fontSize: '18px', marginBottom: '10px' }}>보유 코인</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
+                    <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#ff6f0f', margin: 0 }}>
+                      {user.coin.toLocaleString()} <span style={{ fontSize: '16px', color: 'black' }}>코인</span>
+                    </p>
+                    <button 
+                      onClick={handleChargeCoin}
+                      style={{ 
+                        padding: '8px 16px', 
+                        background: '#ff6f0f', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '5px', 
+                        cursor: 'pointer',
+                        fontSize: '14px'
+                      }}
+                    >
+                      충전하기
+                    </button>
                   </div>
-                  <div style={{ marginBottom: '10px' }}>
-                    <label style={{ fontSize: '0.8rem', display: 'block', marginBottom: '5px' }}>프로필 이미지 URL</label>
+                </div>
+
+                <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  <h3>프로필 정보</h3>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: '#eee', margin: '0 auto 10px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                      {user.profile_image ? <img src={user.profile_image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'No Image'}
+                    </div>
+                    <div style={{ marginBottom: '10px' }}>
+                      <label style={{ fontSize: '0.8rem', display: 'block', marginBottom: '5px' }}>프로필 이미지 URL</label>
+                      <input 
+                        type="text" 
+                        value={profileImage} 
+                        onChange={(e) => setProfileImage(e.target.value)}
+                        placeholder="이미지 URL 입력"
+                        style={{ width: '80%', padding: '5px' }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label>이메일</label>
+                    <input type="text" value={user.email} disabled style={{ width: '100%', padding: '8px', marginTop: '5px', background: '#f5f5f5' }} />
+                  </div>
+                  <div>
+                    <label>닉네임</label>
                     <input 
                       type="text" 
-                      value={profileImage} 
-                      onChange={(e) => setProfileImage(e.target.value)}
-                      placeholder="이미지 URL 입력"
-                      style={{ width: '80%', padding: '5px' }}
+                      value={nickname} 
+                      onChange={(e) => setNickname(e.target.value)}
+                      style={{ width: '100%', padding: '8px', marginTop: '5px' }}
                     />
                   </div>
-                </div>
-                <div>
-                  <label>이메일</label>
-                  <input type="text" value={user.email} disabled style={{ width: '100%', padding: '8px', marginTop: '5px', background: '#f5f5f5' }} />
-                </div>
-                <div>
-                  <label>닉네임</label>
-                  <input 
-                    type="text" 
-                    value={nickname} 
-                    onChange={(e) => setNickname(e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                  />
-                </div>
-                <div>
-                  <label>지역</label>
-                  <input type="text" value={user.region?.name || '지역 없음'} disabled style={{ width: '100%', padding: '8px', marginTop: '5px', background: '#f5f5f5' }} />
-                </div>
-                <button type="submit" className="submit-btn" style={{ background: '#ff6f0f', color: 'white', border: 'none', padding: '10px', borderRadius: '5px', cursor: 'pointer' }}>수정하기</button>
-              </form>
+                  <div>
+                    <label>지역</label>
+                    <input type="text" value={user.region?.name || '지역 없음'} disabled style={{ width: '100%', padding: '8px', marginTop: '5px', background: '#f5f5f5' }} />
+                  </div>
+                  <button type="submit" className="submit-btn" style={{ background: '#ff6f0f', color: 'white', border: 'none', padding: '10px', borderRadius: '5px', cursor: 'pointer' }}>수정하기</button>
+                </form>
+              </div>
             )}
           </div>
-        )}
-
-        {activeTab === 'coin' && (
-          <div style={{ textAlign: 'center', padding: '40px 0' }}>
-            <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>보유 코인</h3>
-            <p style={{ fontSize: '48px', fontWeight: 'bold', color: '#ff6f0f', margin: 0 }}>
-              {user.coin.toLocaleString()} <span style={{ fontSize: '20px', color: 'black' }}>코인</span>
-            </p>
-            <button 
-              onClick={handleChargeCoin}
-              style={{ 
-                marginTop: '20px', 
-                padding: '10px 20px', 
-                background: '#ff6f0f', 
-                color: 'white', 
-                border: 'none', 
-                borderRadius: '5px', 
-                cursor: 'pointer',
-                fontSize: '16px'
-              }}
-            >
-              10,000 코인 충전하기
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
