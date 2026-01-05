@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation, Navigate, useSearchParams } from "react-router-dom";
 import NavBar from './components/NavBar';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -15,6 +15,20 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const accessToken = searchParams.get('access_token');
+    const refreshToken = searchParams.get('refresh_token');
+
+    if (accessToken && refreshToken) {
+      localStorage.setItem('token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
+      setIsLoggedIn(true);
+      // Remove tokens from URL
+      navigate('/23-5-team9-web/products', { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   const handleLogout = async () => {
     try {
