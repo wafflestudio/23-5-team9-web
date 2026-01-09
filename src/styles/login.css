@@ -3,42 +3,38 @@
 .login-container {
   display: flex;
   justify-content: center;
-  /* align-items: center; Remove vertical centering to prevent jumping */
-  align-items: flex-start; /* Align to top */
+  align-items: center; 
   min-height: 100vh;
-  background-color: #ffffff;
-  padding: 20px;
-  padding-top: 140px; /* Give it a fixed top spacing */
+  background-color: #f8f9fa; /* 아주 연한 회색 배경으로 차분함 부여 */
 }
 
 .login-card {
   width: 100%;
-  max-width: 400px;
-  padding: 40px;
+  max-width: 420px;
+  padding: 50px 40px;
   background-color: #ffffff;
-  border-radius: 12px;
-  /* Removed border and shadow to unify with background, or keep subtle if needed. 
-     User said "Unified height/white", suggesting a flat look or seamless.
-     But usually, keeping a border/shadow helps readability if the bg is white.
-     Wait, user said "배경과 로그인창을 통일해서 하양색으로 만들 것" 
-     -> "Make background and login window unified to white"
-     If I remove border/shadow, it's just inputs floating. That might be what they want.
-     But "Login Window" implies a box.
-     I will keep a very subtle border or shadow, but make the container white.
-  */
-  border: 1px solid transparent; 
-  box-shadow: none; /* Let's try completely flat/unified as requested "unified" */
+  border-radius: 20px;
+  /* 부드럽고 확산되는 그림자로 모던함 강조 */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
+  border: none;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .login-logo {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--primary-color);
-  margin-bottom: 30px;
-  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
+}
+
+.login-title {
+    font-size: 1.2rem;
+    color: #495057;
+    margin-bottom: 30px;
+    font-weight: 600;
 }
 
 .login-form {
@@ -48,56 +44,108 @@
   gap: 12px;
 }
 
+/* 입력 필드 스타일 변경: 당근마켓 앱처럼 배경색이 있고 테두리가 없는 스타일 */
 .login-input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 16px;
   font-size: 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  transition: all 0.2s;
+  border: none;
+  border-radius: 12px;
+  background-color: #f1f3f5;
+  color: var(--text-dark);
   outline: none;
-  background-color: var(--background-light);
+  transition: all 0.2s ease;
 }
 
+/* Focus 시 아주 부드럽게 배경색 변경 및 링 효과 */
 .login-input:focus {
-  border-color: var(--primary-color);
-  background-color: white;
+  background-color: #e9ecef;
+  box-shadow: 0 0 0 2px rgba(255, 111, 15, 0.1); /* 당근색의 아주 연한 링 */
 }
 
+.login-input::placeholder {
+  color: #adb5bd;
+}
+
+/* 버튼 스타일 일신 */
 .login-button {
   width: 100%;
-  padding: 14px;
-  font-size: 1rem;
+  padding: 16px;
+  font-size: 1.1rem;
   font-weight: 700;
   color: white;
   background-color: var(--primary-color);
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 10px;
+  transition: all 0.2s;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(255, 111, 15, 0.2); /* 버튼에도 약간의 그림자 */
 }
 
 .login-button:hover {
   background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 111, 15, 0.3);
+}
+
+.login-button:active {
+  transform: translateY(0);
 }
 
 .login-button:disabled {
-  background-color: #ffb380;
+  background-color: #ffccaa;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .login-error {
   color: #ff4d4f;
   font-size: 0.9rem;
-  margin-top: 10px;
+  margin-top: 12px;
   text-align: center;
+  font-weight: 500;
+}
+
+/* 구글 로그인 버튼 전용 스타일 */
+.google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    background-color: #ffffff;
+    color: #3c4043;
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.google-login-btn:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .signup-link {
-  margin-top: 20px;
-  font-size: 0.9rem;
+  margin-top: 24px;
+  font-size: 0.95rem;
   color: #868e96;
+}
+
+.signup-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 6px;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
 }
 
 .signup-link a {

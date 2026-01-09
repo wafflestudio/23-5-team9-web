@@ -153,7 +153,6 @@ export default function ProfileEditForm({
             onChange={e => setNickname(e.target.value)}
             className="form-input"
             required
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #dee2e6' }}
         />
       </div>
 
@@ -164,7 +163,6 @@ export default function ProfileEditForm({
             onChange={e => setRegionId(e.target.value)}
             className="form-input"
             disabled={regionsLoading}
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #dee2e6' }}
         >
             {regionsLoading ? (
                 <option value="">불러오는 중...</option>
@@ -178,18 +176,11 @@ export default function ProfileEditForm({
 
       <button 
         type="submit" 
+        className="button"
         disabled={loading}
         style={{
             marginTop: '10px',
             width: '100%',
-            padding: '12px',
-            backgroundColor: '#ff6f0f',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            cursor: loading ? 'not-allowed' : 'pointer',
             height: '48px'
         }}
       >

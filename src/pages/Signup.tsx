@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { MAIN_API_URL } from '../api/config';
-// Reuse styles
 import '../styles/login.css'; 
 
 interface SignupFormProps {
@@ -27,7 +26,6 @@ export default function Signup({ onSignup }: SignupFormProps) {
       return;
     }
     
-    // Clear any existing tokens to avoid interference
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
 
@@ -35,7 +33,6 @@ export default function Signup({ onSignup }: SignupFormProps) {
     setError('');
 
     try {
-      // 1-step: Create Account
       const res = await fetch(`${MAIN_API_URL}/api/user/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,10 +40,8 @@ export default function Signup({ onSignup }: SignupFormProps) {
       });
 
       if (res.ok) {
-        // Wait for backend consistency (0.5s)
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Automatically login to proceed to onboarding
         const loginRes = await fetch(`${MAIN_API_URL}/api/auth/tokens`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -58,7 +53,6 @@ export default function Signup({ onSignup }: SignupFormProps) {
             localStorage.setItem('token', data.access_token);
             localStorage.setItem('refresh_token', data.refresh_token);
             
-            // Ensure state updates before navigation
             if (onSignup) {
                onSignup();
             }
@@ -67,8 +61,6 @@ export default function Signup({ onSignup }: SignupFormProps) {
         } else {
              const errorText = await loginRes.text();
              console.error('Auto-login failed after signup:', errorText);
-             // alert(`Auto-login failed: ${errorText}`); // user might find this annoying, but useful for debugging
-             // Fallback to manual login
              navigate('/dangeun/login');
         }
       } else {
@@ -84,33 +76,41 @@ export default function Signup({ onSignup }: SignupFormProps) {
 
   return (
     <div className="login-container">
-      <div className="card form-card" style={{ width: '400px', margin: 'auto', padding: '40px' }}>
-        <h2 className="section-title">회원가입</h2>
-        <form onSubmit={handleSubmit} style={{display:'flex', flexDirection:'column', gap:'10px'}}>
+      <div className="login-card">
+        <h1 
+            className="login-logo"
+            onClick={() => navigate('/dangeun/products')}
+            style={{ cursor: 'pointer', marginBottom: '10px' }}
+        >
+            당근마켓
+        </h1>
+        <h2 className="login-title">회원가입</h2>
+        
+        <form onSubmit={handleSubmit} className="login-form">
             <input 
-                className="form-input" 
+                className="login-input" 
                 type="email" 
                 placeholder="이메일" 
                 value={email} 
                 onChange={e => setEmail(e.target.value)} 
                 required 
             />
-            <div style={{ position: 'relative', marginBottom: '16px' }}>
+            <div style={{ position: 'relative' }}>
                 <input 
-                    className="form-input" 
+                    className="login-input" 
                     type={showPassword ? "text" : "password"} 
                     placeholder="비밀번호 (8자 이상)" 
                     value={password} 
                     onChange={e => setPassword(e.target.value)} 
                     required 
-                    style={{ paddingRight: '50px', marginBottom: 0 }} 
+                    style={{ paddingRight: '50px' }} 
                 />
                 <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     style={{
                         position: 'absolute',
-                        right: '10px',
+                        right: '15px',
                         top: '50%',
                         transform: 'translateY(-50%)',
                         background: 'none',
@@ -118,28 +118,29 @@ export default function Signup({ onSignup }: SignupFormProps) {
                         cursor: 'pointer',
                         color: '#868e96',
                         fontSize: '13px',
-                        fontWeight: 'bold'
+                        fontWeight: '600'
                     }}
                 >
                     {showPassword ? '숨기기' : '보기'}
                 </button>
             </div>
-            <div style={{ position: 'relative', marginBottom: '16px' }}>
+            
+            <div style={{ position: 'relative' }}>
                 <input 
-                    className="form-input" 
+                    className="login-input" 
                     type={showPasswordConfirm ? "text" : "password"} 
                     placeholder="비밀번호 확인" 
                     value={passwordConfirm} 
                     onChange={e => setPasswordConfirm(e.target.value)} 
                     required 
-                    style={{ paddingRight: '50px', marginBottom: 0 }} 
+                    style={{ paddingRight: '50px' }} 
                 />
                 <button
                     type="button"
                     onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
                     style={{
                         position: 'absolute',
-                        right: '10px',
+                        right: '15px',
                         top: '50%',
                         transform: 'translateY(-50%)',
                         background: 'none',
@@ -147,22 +148,28 @@ export default function Signup({ onSignup }: SignupFormProps) {
                         cursor: 'pointer',
                         color: '#868e96',
                         fontSize: '13px',
-                        fontWeight: 'bold'
+                        fontWeight: '600'
                     }}
                 >
                     {showPasswordConfirm ? '숨기기' : '보기'}
                 </button>
             </div>
+
              {!passwordsMatch && passwordConfirm && (
-                <div style={{color:'red', fontSize: '12px', marginBottom: '10px'}}>비밀번호가 일치하지 않습니다.</div>
+                <div style={{color:'#ff4d4f', fontSize: '12px', marginLeft: '4px'}}>비밀번호가 일치하지 않습니다.</div>
             )}
             
             {error && <div className="login-error">{error}</div>}
             
-            <button className="login-button" type="submit" disabled={loading} style={{marginTop:'20px'}}>
+            <button className="login-button" type="submit" disabled={loading} style={{ marginTop: '10px' }}>
                 {loading ? '가입 중...' : '다음'}
             </button>
         </form>
+
+        <div className="signup-link">
+          이미 계정이 있으신가요? 
+          <Link to="/dangeun/login" style={{ marginLeft: '5px' }}>로그인</Link>
+        </div>
       </div>
     </div>
   );
