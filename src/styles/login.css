@@ -3,10 +3,12 @@
 .login-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; Remove vertical centering to prevent jumping */
+  align-items: flex-start; /* Align to top */
   min-height: 100vh;
-  background-color: #ffffff; /* Unified white background */
+  background-color: #ffffff;
   padding: 20px;
+  padding-top: 140px; /* Give it a fixed top spacing */
 }
 
 .login-card {

@@ -26,6 +26,11 @@ export default function Signup({ onSignup }: SignupFormProps) {
       setError('비밀번호가 일치하지 않습니다.');
       return;
     }
+    
+    // Clear any existing tokens to avoid interference
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+
     setLoading(true);
     setError('');
 
@@ -38,6 +43,9 @@ export default function Signup({ onSignup }: SignupFormProps) {
       });
 
       if (res.ok) {
+        // Wait for backend consistency (0.5s)
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         // Automatically login to proceed to onboarding
         const loginRes = await fetch(`${MAIN_API_URL}/api/auth/tokens`, {
             method: 'POST',
@@ -49,9 +57,18 @@ export default function Signup({ onSignup }: SignupFormProps) {
             const data = await loginRes.json();
             localStorage.setItem('token', data.access_token);
             localStorage.setItem('refresh_token', data.refresh_token);
-            onSignup && onSignup();
+            
+            // Ensure state updates before navigation
+            if (onSignup) {
+               onSignup();
+            }
+            
             navigate('/dangeun/onboarding');
         } else {
+             const errorText = await loginRes.text();
+             console.error('Auto-login failed after signup:', errorText);
+             // alert(`Auto-login failed: ${errorText}`); // user might find this annoying, but useful for debugging
+             // Fallback to manual login
              navigate('/dangeun/login');
         }
       } else {

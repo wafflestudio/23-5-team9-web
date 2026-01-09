@@ -2,9 +2,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 interface NavBarProps {
   isLoggedIn: boolean;
+  hasBanner?: boolean;
 }
 
-function NavBar({ isLoggedIn }: NavBarProps) {
+function NavBar({ isLoggedIn, hasBanner = false }: NavBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,6 +21,22 @@ function NavBar({ isLoggedIn }: NavBarProps) {
     return false;
   };
 
+  const buttonStyle = {
+    padding: '8px 12px',
+    fontSize: '16px',
+    backgroundColor: 'transparent',
+    color: '#4d5159',
+    border: 'none',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    transition: 'color 0.2s'
+  };
+
+  const activeButtonStyle = {
+    ...buttonStyle,
+    color: '#ff6f0f'
+  };
+
   return (
     <nav style={{
       width: '100%',
@@ -32,8 +49,9 @@ function NavBar({ isLoggedIn }: NavBarProps) {
       padding: '0 20px',
       position: 'fixed',
       left: 0,
-      top: 0,
-      zIndex: 1000
+      top: hasBanner ? '50px' : '0',
+      zIndex: 1000,
+      transition: 'top 0.2s'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
         <h1 
@@ -53,16 +71,7 @@ function NavBar({ isLoggedIn }: NavBarProps) {
             <button
               key={item.id}
               onClick={() => navigate(item.path)}
-              style={{
-                padding: '8px 12px',
-                fontSize: '16px',
-                backgroundColor: 'transparent',
-                color: isActive(item.path) ? '#ff6f0f' : '#4d5159',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'color 0.2s'
-              }}
+              style={isActive(item.path) ? activeButtonStyle : buttonStyle}
             >
               {item.label}
             </button>
@@ -75,16 +84,7 @@ function NavBar({ isLoggedIn }: NavBarProps) {
           <div style={{ display: 'flex', gap: '10px' }}>
             <button
                 onClick={() => navigate('/dangeun/my')}
-                style={{
-                  padding: '8px 16px',
-                  fontSize: '14px',
-                  backgroundColor: '#ffffff',
-                  color: '#212529',
-                  border: '1px solid #dee2e6',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-                }}
+                style={isActive('/dangeun/my') ? activeButtonStyle : buttonStyle}
             >
                 나의 당근
             </button>
@@ -92,16 +92,7 @@ function NavBar({ isLoggedIn }: NavBarProps) {
         ) : (
           <button
             onClick={() => navigate('/dangeun/login')}
-            style={{
-              padding: '8px 16px',
-              fontSize: '14px',
-              backgroundColor: '#ff6f0f',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
+            style={isActive('/dangeun/login') ? activeButtonStyle : buttonStyle}
           >
             로그인
           </button>

@@ -33,7 +33,7 @@ export default function Login({ onLogin }: LoginFormProps) {
       localStorage.setItem('refresh_token', data.refresh_token);
       
       onLogin && onLogin();
-      navigate('/dangeun/community'); // Main Login goes to Community default? Or Home
+      navigate('/dangeun/community'); // Main Login goes to Community default
     } catch (err: any) {
       console.error(err);
       setError(err.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
