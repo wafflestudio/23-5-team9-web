@@ -18,7 +18,7 @@ export default function Onboarding() {
      setError('');
      const token = localStorage.getItem('token');
       if (!token) {
-          navigate('/dangeun/login');
+          navigate('/login');
           return;
       }
 
@@ -32,7 +32,7 @@ export default function Onboarding() {
       });
 
       if (res.ok) {
-        navigate('/dangeun/community'); // Main page after onboarding
+        navigate('/community'); // Main page after onboarding
       } else {
         const errorData = await res.json();
         throw new Error(errorData.detail || '온보딩에 실패했습니다.');

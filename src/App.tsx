@@ -68,14 +68,14 @@ function App() {
       })
       .then(data => {
         if (!data.nickname || !data.region) {
-          navigate('/dangeun/onboarding');
+          navigate('/onboarding');
         } else {
-          navigate('/dangeun/community');
+          navigate('/community');
         }
       })
       .catch((e) => {
         console.error(e);
-        navigate('/dangeun/community');
+        navigate('/community');
       });
     }
   }, [location, navigate]);
@@ -86,7 +86,7 @@ function App() {
     setIsMainLoggedIn(false);
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
-    navigate('/dangeun/products');
+    navigate('/products');
   };
 
   const handleMainLogin = () => {
@@ -94,12 +94,12 @@ function App() {
   };
   
   const hideNav = 
-    location.pathname === '/dangeun/login' || 
-    location.pathname === '/dangeun/signup' ||
-    location.pathname === '/dangeun/onboarding';
+    location.pathname === '/login' || 
+    location.pathname === '/signup' ||
+    location.pathname === '/onboarding';
     
   // Don't show banner on onboarding page itself
-  const showBanner = needsOnboarding && location.pathname !== '/dangeun/onboarding' && isMainLoggedIn;
+  const showBanner = needsOnboarding && location.pathname !== '/onboarding' && isMainLoggedIn;
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
@@ -123,7 +123,7 @@ function App() {
         }}>
           <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다.</span>
           <button 
-            onClick={() => navigate('/dangeun/my')}
+            onClick={() => navigate('/my')}
             style={{
               backgroundColor: 'white',
               color: '#ff6f0f',
@@ -146,22 +146,22 @@ function App() {
         margin: '0 auto'
       }}>
         <Routes>
-          <Route path="/" element={<Navigate to="/dangeun/products" replace />} />
-          <Route path="/dangeun" element={<Navigate to="/dangeun/products" replace />} />
+          <Route path="/" element={<Navigate to="/products" replace />} />
+          <Route path="/dangeun" element={<Navigate to="/products" replace />} />
           
           {/* Main Site Routes */}
-          <Route path="/dangeun/products" element={<ProductList />} />
-          <Route path="/dangeun/products/:id" element={<ProductDetail />} />
-          <Route path="/dangeun/community" element={<CommunityList />} />
-          <Route path="/dangeun/community/:id" element={<CommunityDetail />} />
-          <Route path="/dangeun/map" element={<NeighborhoodMap/>}/>
-          <Route path="/dangeun/chat" element={<ChatList />} />
-          <Route path="/dangeun/chat/:chatId" element={<ChatRoom />} />
-          <Route path="/dangeun/my" element={<MyCarrot onLogout={handleLogout} />} />
-          <Route path="/dangeun/onboarding" element={<Onboarding />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/community" element={<CommunityList />} />
+          <Route path="/community/:id" element={<CommunityDetail />} />
+          <Route path="/map" element={<NeighborhoodMap/>}/>
+          <Route path="/chat" element={<ChatList />} />
+          <Route path="/chat/:chatId" element={<ChatRoom />} />
+          <Route path="/my" element={<MyCarrot onLogout={handleLogout} />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           
-          <Route path="/dangeun/login" element={<Login onLogin={handleMainLogin} />} />
-          <Route path="/dangeun/signup" element={<Signup onSignup={handleMainLogin} />} />
+          <Route path="/login" element={<Login onLogin={handleMainLogin} />} />
+          <Route path="/signup" element={<Signup onSignup={handleMainLogin} />} />
 
         </Routes>
       </div>

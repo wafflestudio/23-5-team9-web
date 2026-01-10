@@ -18,7 +18,7 @@ function ChatList() {
           <div 
             key={room.id} 
             className="chat-room-item"
-            onClick={() => navigate(`/dangeun/chat/${room.id}`)}
+            onClick={() => navigate(`/chat/${room.id}`)}
             style={{ padding: '15px', borderBottom: '1px solid #eee', cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}
           >
             <div>

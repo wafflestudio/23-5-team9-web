@@ -9,7 +9,7 @@ interface CommunityCardProps {
 function CommunityCard({ post }: CommunityCardProps) {
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likeCount, setLikeCount] = useState(post.likeCount);
-  const postDetailUrl = `/dangeun/community/${post.id}`;
+  const postDetailUrl = `/community/${post.id}`;
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault();

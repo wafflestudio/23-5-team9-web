@@ -57,11 +57,11 @@ export default function Signup({ onSignup }: SignupFormProps) {
                onSignup();
             }
             
-            navigate('/dangeun/onboarding');
+            navigate('/onboarding');
         } else {
              const errorText = await loginRes.text();
              console.error('Auto-login failed after signup:', errorText);
-             navigate('/dangeun/login');
+             navigate('/login');
         }
       } else {
         const errorData = await res.json();
@@ -79,7 +79,7 @@ export default function Signup({ onSignup }: SignupFormProps) {
       <div className="login-card">
         <h1 
             className="login-logo"
-            onClick={() => navigate('/dangeun/products')}
+            onClick={() => navigate('/products')}
             style={{ cursor: 'pointer', marginBottom: '10px' }}
         >
             당근마켓
@@ -168,7 +168,7 @@ export default function Signup({ onSignup }: SignupFormProps) {
 
         <div className="signup-link">
           이미 계정이 있으신가요? 
-          <Link to="/dangeun/login" style={{ marginLeft: '5px' }}>로그인</Link>
+          <Link to="/login" style={{ marginLeft: '5px' }}>로그인</Link>
         </div>
       </div>
     </div>
