@@ -6,7 +6,7 @@ import './styles/common.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Router basename="/23-5-team9-web">
+    <Router>
       <App />
     </Router>
   </StrictMode>
