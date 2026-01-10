@@ -8,6 +8,13 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    proxy: {
+      '/api': {
+        target: 'https://dev.server.team9-toy-project.p-e.kr',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   base: '/23-5-team9-web/'
 })
