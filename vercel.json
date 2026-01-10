@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://dev.server.team9-toy-project.p-e.kr/api/:path*"
+      "source": "/api/(.*)",
+      "destination": "https://dev.server.team9-toy-project.p-e.kr/api/$1"
     },
     {
       "source": "/(.*)",
