@@ -1,1 +1,3 @@
-export const MAIN_API_URL = 'http://127.0.0.1:8000';
+export const MAIN_API_URL = import.meta.env.PROD
+  ? 'https://dev.server.team9-toy-project.p-e.kr'
+  : '';
