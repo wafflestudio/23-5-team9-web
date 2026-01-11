@@ -25,6 +25,7 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Banner 띄울지 말지 정하기
   useEffect(() => {
     const checkUser = async () => {
       const token = localStorage.getItem('token');
@@ -47,22 +48,33 @@ function App() {
       }
     };
     checkUser();
-  }, [isMainLoggedIn, location.pathname]); // Check on login state change or navigation
+  }, [isMainLoggedIn, location.pathname]); 
+  // isMaingLoggedIn (로그인 상태)
+  // location.pathname (페이지 이동)
 
+
+  // 소셜 로그인 성공 후 후처리 로직
   useEffect(() => {
+    // 문자열 파싱
+    // 1. (location.search) "?access_token=ab123&refresh_token=xy987" 
+    // 2. (accessToken) "ab123"
+    // 3. (refreshToken) "xy987"
     const params = new URLSearchParams(location.search);
     const accessToken = params.get('access_token');
     const refreshToken = params.get('refresh_token');
 
     if (accessToken && refreshToken) {
+      // 1. (localStorage) 브라우저에 보관하기
+      // 2. (setIsMainLoggedIn) 리액트에게 상태 변경 알리기
       localStorage.setItem('token', accessToken);
       localStorage.setItem('refresh_token', refreshToken);
       setIsMainLoggedIn(true);
       
-      // Clean up URL
+      // 주소창에서 토큰 삭제 (?access_token=abcd123...)
+      // 페이지 새로고침 없이 진행
       window.history.replaceState({}, document.title, window.location.pathname);
       
-      // Check user status to decide where to navigate
+      // 유저 정보 확인 (nickname, region)
       fetch(`${MAIN_API_URL}/api/user/me`, {
         headers: { 'Authorization': `Bearer ${accessToken}` }
       })
@@ -71,21 +83,25 @@ function App() {
         throw new Error('Failed to fetch user');
       })
       .then(data => {
+        // 온보딩이 필요한 경우
         if (!data.nickname || !data.region) {
           navigate('/dangeun/onboarding');
-        } else {
-          navigate('/dangeun/community');
+        } 
+        // 그렇지 않은 경우
+        else { 
+          navigate('/dangeun/products'); 
         }
-      })
+      }) 
       .catch((e) => {
         console.error(e);
-        navigate('/dangeun/community');
+        navigate('/dangeun/products');
       });
     }
-  }, [location, navigate]);
+  }, [location, navigate]); 
+  // location (주소창 정보)
+  // navigate (함수 의존성 반영)
 
-  const isLoggedIn = isMainLoggedIn;
-
+  // 로그아웃 로직
   const handleLogout = () => {
     setIsMainLoggedIn(false);
     localStorage.removeItem('token');
@@ -93,6 +109,7 @@ function App() {
     navigate('/dangeun/products');
   };
 
+  // 로그인 로직
   const handleMainLogin = () => {
     setIsMainLoggedIn(true);
   };
@@ -116,6 +133,7 @@ function App() {
 
       {/* Header Container (Sticky) */}
       <div style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
+        {/* Banner */}
         {shouldShowBanner && (
           <div className="onboarding-banner">
             <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다.</span>
@@ -127,16 +145,16 @@ function App() {
             </button>
           </div>
         )}
-        
-        {shouldShowNav && <NavBar isLoggedIn={isLoggedIn} />}
+        {/* Navigation */}
+        {shouldShowNav && <NavBar isLoggedIn={isMainLoggedIn} />}
       </div>
       
       {/* main */}
       <div className="main-content">
         <Routes>
+          {/* Redirection */}
           <Route path="/" element={<Navigate to="/dangeun/products" replace />} />
           <Route path="/dangeun" element={<Navigate to="/dangeun/products" replace />} />
-        
           {/* Main Site Routes */}
           <Route path="/dangeun/products" element={<ProductList />} />
           <Route path="/dangeun/products/:id" element={<ProductDetail />} />
@@ -147,10 +165,8 @@ function App() {
           <Route path="/dangeun/chat/:chatId" element={<ChatRoom />} />
           <Route path="/dangeun/my" element={<MyCarrot onLogout={handleLogout} />} />
           <Route path="/dangeun/onboarding" element={<Onboarding />} />
-          
           <Route path="/dangeun/login" element={<Login onLogin={handleMainLogin} />} />
           <Route path="/dangeun/signup" element={<Signup onSignup={handleMainLogin} />} />
-
         </Routes>
       </div>
     </div>
