@@ -8,11 +8,11 @@
     color: white;
     padding: 12px;
     text-align: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
+    /* position: fixed; removed for sticky layout */
+    /* top: 0; */
+    /* left: 0; */
+    /* right: 0; */
+    /* z-index: 9999; */
     display: flex;
     justify-content: center;
     gap: 10px;

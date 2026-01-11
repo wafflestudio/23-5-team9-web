@@ -2,10 +2,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 interface NavBarProps {
   isLoggedIn: boolean;
-  hasBanner?: boolean;
 }
 
-function NavBar({ isLoggedIn, hasBanner = false }: NavBarProps) {
+function NavBar({ isLoggedIn }: NavBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,10 +46,7 @@ function NavBar({ isLoggedIn, hasBanner = false }: NavBarProps) {
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '0 20px',
-      position: 'fixed',
-      left: 0,
-      top: hasBanner ? '50px' : '0',
-      zIndex: 1000,
+      /* Position styles removed to allow parent control */
       transition: 'top 0.2s'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>

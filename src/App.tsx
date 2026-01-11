@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
+
 import NavBar from './components/NavBar';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -12,7 +13,9 @@ import ProductList from './pages/ProductList';
 import ProductDetail from './pages/ProductDetail';
 import CommunityList from './pages/CommunityList';
 import CommunityDetail from './pages/CommunityDetail';
+
 import { MAIN_API_URL } from './api/config';
+
 import './styles/common.css';
 import './styles/app.css';
 
@@ -93,39 +96,47 @@ function App() {
   const handleMainLogin = () => {
     setIsMainLoggedIn(true);
   };
+
+  // currentPath
+  const currentPath = location.pathname;
+
+  // "서비스 이용을 위해 닉네임과 지역 설정이 필요합니다"
+  // 1. 로그인함
+  // 2. 온보딩이 필요함
+  // 3. 온보딩 페이지가 아님
+  const shouldShowBanner = isMainLoggedIn && needsOnboarding && currentPath !== '/dangeun/onboarding';
   
-  const hideNav = 
-    location.pathname === '/dangeun/login' || 
-    location.pathname === '/dangeun/signup' ||
-    location.pathname === '/dangeun/onboarding';
-    
-  // Don't show banner on onboarding page itself
-  const showBanner = needsOnboarding && location.pathname !== '/dangeun/onboarding' && isMainLoggedIn;
+  // "당근마켓 : 중고거래, 동네생활, 동네지도..."
+  // 제외 대상 -> 로그인, 회원가입, 온보딩
+  const isAuthPage = ['/dangeun/login', '/dangeun/signup', '/dangeun/onboarding'].includes(currentPath);
+  const shouldShowNav = !isAuthPage;
 
   return (
     <div className="app-container">
-      {showBanner && (
-        <div className="onboarding-banner">
-          <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다.</span>
-          <button 
-            onClick={() => navigate('/dangeun/my')}
-            className="onboarding-banner-button"
-          >
-            설정하러 가기
-          </button>
-        </div>
-      )}
-      {!hideNav && <NavBar isLoggedIn={isLoggedIn} hasBanner={!!showBanner} />}
-      <div 
-        className="main-content"
-        style={{ 
-          paddingTop: showBanner ? (!hideNav ? '114px' : '50px') : (!hideNav ? '64px' : '0')
-        }}
-      >
+
+      {/* Header Container (Sticky) */}
+      <div style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
+        {shouldShowBanner && (
+          <div className="onboarding-banner">
+            <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다.</span>
+            <button 
+              onClick={() => navigate('/dangeun/onboarding')}
+              className="onboarding-banner-button"
+            >
+              설정하러 가기
+            </button>
+          </div>
+        )}
+        
+        {shouldShowNav && <NavBar isLoggedIn={isLoggedIn} />}
+      </div>
+      
+      {/* main */}
+      <div className="main-content">
         <Routes>
           <Route path="/" element={<Navigate to="/dangeun/products" replace />} />
           <Route path="/dangeun" element={<Navigate to="/dangeun/products" replace />} />
-          
+        
           {/* Main Site Routes */}
           <Route path="/dangeun/products" element={<ProductList />} />
           <Route path="/dangeun/products/:id" element={<ProductDetail />} />
