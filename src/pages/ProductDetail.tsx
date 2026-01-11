@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/common.css";
-import "../styles/postbody.css";
+import "../styles/base-layout.css";
 import { useProduct } from "../hooks/useProducts";
 
 function ProductDetail() {

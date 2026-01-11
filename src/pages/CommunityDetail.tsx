@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/common.css";
-import "../styles/postbody.css";
+import "../styles/base-layout.css";
 import { useCommunityPost, Comment } from "../hooks/useCommunity";
 
 function CommunityDetail() {

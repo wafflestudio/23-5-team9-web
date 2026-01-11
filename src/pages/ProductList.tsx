@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "../styles/common.css";
-import "../styles/postlist.css";
+import "../styles/base-layout.css";
 import ProductCard from "../components/ProductCard";
 import LocationSelector from "../components/LocationSelector";
 import { useProducts, LOCATIONS } from "../hooks/useProducts";

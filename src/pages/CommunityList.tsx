@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "../styles/common.css";
-import "../styles/postlist.css";
+import "../styles/base-layout.css";
 import CommunityCard from "../components/CommunityCard";
 import LocationSelector from "../components/LocationSelector";
 import { useCommunity, COMMUNITY_CATEGORIES, LOCATIONS } from "../hooks/useCommunity";
