@@ -34,7 +34,7 @@ export default function Login({ onLogin }: LoginFormProps) {
       localStorage.setItem('refresh_token', data.refresh_token);
       
       onLogin && onLogin();
-      navigate('/dangeun/community'); // Main Login goes to Community default
+      navigate('/community'); // Main Login goes to Community default
     } catch (err: any) {
       console.error(err);
       setError(err.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
@@ -52,7 +52,7 @@ export default function Login({ onLogin }: LoginFormProps) {
       <div className="login-card">
         <h1 
             className="login-logo"
-            onClick={() => navigate('/dangeun/products')}
+            onClick={() => navigate('/products')}
             style={{ cursor: 'pointer', marginBottom: '10px' }}
         >
             당근마켓
@@ -116,7 +116,7 @@ export default function Login({ onLogin }: LoginFormProps) {
 
         <div className="signup-link">
           아직 계정이 없으신가요? 
-          <Link to="/dangeun/signup">회원가입</Link>
+          <Link to="/signup">회원가입</Link>
         </div>
       </div>
     </div>

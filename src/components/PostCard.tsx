@@ -28,7 +28,7 @@ function PostCard({ post }: PostCardProps) {
   }, [post.isBookmarked]);
   
   // 상세 페이지로 이동할 경로 (예: /post/a5f5ead2...)
-  const postDetailUrl = `/dangeun/posts/${post.id}`; 
+  const postDetailUrl = `/posts/${post.id}`; 
   
   // 위치 데이터 정리 (예: "경기 성남시 분당구...")
   const location = post.location.split('|')[0];

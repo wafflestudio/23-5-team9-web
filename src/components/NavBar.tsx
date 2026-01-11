@@ -9,10 +9,10 @@ function NavBar({ isLoggedIn }: NavBarProps) {
   const location = useLocation();
 
   const navItems = [
-    { id: 'products', label: '중고거래', path: '/dangeun/products' },
-    { id: 'community', label: '동네생활', path: '/dangeun/community' },
-    { id: 'map', label: '동네지도', path: '/dangeun/map' },
-    { id: 'chat', label: '채팅하기', path: '/dangeun/chat' },
+    { id: 'products', label: '중고거래', path: '/products' },
+    { id: 'community', label: '동네생활', path: '/community' },
+    { id: 'map', label: '동네지도', path: '/map' },
+    { id: 'chat', label: '채팅하기', path: '/chat' },
   ];
 
   const isActive = (path: string) => {
@@ -51,7 +51,7 @@ function NavBar({ isLoggedIn }: NavBarProps) {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
         <h1 
-          onClick={() => navigate('/dangeun/products')}
+          onClick={() => navigate('/products')}
           style={{ 
             color: '#ff6f0f', 
             fontSize: '24px', 
@@ -76,15 +76,15 @@ function NavBar({ isLoggedIn }: NavBarProps) {
           {/* Main nav items followed directly by auth actions */}
           {isLoggedIn ? (
             <button
-                onClick={() => navigate('/dangeun/my')}
-                style={isActive('/dangeun/my') ? activeButtonStyle : buttonStyle}
+                onClick={() => navigate('/my')}
+                style={isActive('/my') ? activeButtonStyle : buttonStyle}
             >
                 나의 당근
             </button>
           ) : (
             <button
-              onClick={() => navigate('/dangeun/login')}
-              style={isActive('/dangeun/login') ? activeButtonStyle : buttonStyle}
+              onClick={() => navigate('/login')}
+              style={isActive('/login') ? activeButtonStyle : buttonStyle}
             >
               로그인
             </button>

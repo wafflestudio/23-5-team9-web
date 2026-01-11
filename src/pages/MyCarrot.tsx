@@ -39,7 +39,7 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                navigate('/dangeun/login');
+                navigate('/login');
                 return;
             }
 
