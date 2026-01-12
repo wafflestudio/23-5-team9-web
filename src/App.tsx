@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 
 import NavBar from './components/NavBar';
@@ -19,41 +19,57 @@ import { MAIN_API_URL } from './api/config';
 import './styles/common.css';
 import './styles/app.css';
 
+interface User {
+  id: number;
+  nickname: string | null;
+  region: string | null;
+}
+
 function App() {
-  const [isMainLoggedIn, setIsMainLoggedIn] = useState(!!localStorage.getItem('token'));
-  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [isMainLoggedIn, setIsMainLoggedIn] = useState<boolean>(!!localStorage.getItem('token'));
+  const [needsOnboarding, setNeedsOnboarding] = useState<boolean>(false);
+  
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Banner 띄울지 말지 정하기
-  useEffect(() => {
-    const checkUser = async () => {
-      const token = localStorage.getItem('token');
-      if (isMainLoggedIn && token) {
-        try {
-          const res = await fetch(`${MAIN_API_URL}/api/user/me`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (!data.nickname || !data.region) {
-              setNeedsOnboarding(true);
-            } else {
-              setNeedsOnboarding(false);
-            }
-          }
-        } catch (e) {
-          console.error(e);
-        }
+  // 2. API 호출 함수
+  const fetchUserData = useCallback(async (token: string): Promise<User | null> => {
+    try {
+      const res = await fetch(`${MAIN_API_URL}/api/user/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        return data as User;
       }
-    };
-    checkUser();
-  }, [isMainLoggedIn, location.pathname]); 
-  // isMaingLoggedIn (로그인 상태)
-  // location.pathname (페이지 이동)
+    } catch (e) {
+      console.error("Failed to fetch user data:", e);
+    }
+    return null; 
+  }, []);
 
 
-  // 소셜 로그인 성공 후 후처리 로직
+  // 3. 로그인 상태 체크 및 유저 정보 로드
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    
+    if (!isMainLoggedIn || !token) {
+      setNeedsOnboarding(false); // 로그아웃 시 초기화
+      return;
+    }
+
+    (async () => {
+      const data = await fetchUserData(token);
+      if (data) {
+        // [부활] 받아온 데이터를 기반으로 State 업데이트
+        setNeedsOnboarding(!data.nickname || !data.region);
+      }
+    })();
+  }, [isMainLoggedIn, location.pathname, fetchUserData]);
+
+
+  // 4. 소셜 로그인 후처리
   useEffect(() => {
     // 문자열 파싱
     // 1. (location.search) "?access_token=ab123&refresh_token=xy987" 
@@ -74,47 +90,41 @@ function App() {
       // 페이지 새로고침 없이 진행
       window.history.replaceState({}, document.title, window.location.pathname);
       
-      // 유저 정보 확인 (nickname, region)
-      fetch(`${MAIN_API_URL}/api/user/me`, {
-        headers: { 'Authorization': `Bearer ${accessToken}` }
-      })
-      .then(res => {
-        if (res.ok) return res.json();
-        throw new Error('Failed to fetch user');
-      })
-      .then(data => {
-        // 온보딩이 필요한 경우
-        if (!data.nickname || !data.region) {
-          navigate('/onboarding');
-        } 
-        // 그렇지 않은 경우
-        else { 
-          navigate('/products'); 
-        }
-      }) 
-      .catch((e) => {
-        console.error(e);
-        navigate('/products');
-      });
-    }
-  }, [location, navigate]); 
-  // location (주소창 정보)
-  // navigate (함수 의존성 반영)
+      const handleSocialLogin = async () => {
+        const data = await fetchUserData(accessToken);
+        
+        if (data) {
+          const isMissingInfo = !data.nickname || !data.region;
+          setNeedsOnboarding(isMissingInfo); // State 업데이트
 
-  // 로그아웃 로직
+          if (isMissingInfo) {
+            navigate('/onboarding');
+          } else {
+            navigate('/products');
+          }
+        } else {
+            navigate('/products');
+        }
+      };
+
+      handleSocialLogin();
+    }
+  }, [location, navigate, fetchUserData]); 
+
+  // 로그아웃
   const handleLogout = () => {
     setIsMainLoggedIn(false);
+    setNeedsOnboarding(false); // 초기화
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
     navigate('/products');
   };
 
-  // 로그인 로직
+  // 로그인
   const handleMainLogin = () => {
     setIsMainLoggedIn(true);
   };
 
-  // currentPath
   const currentPath = location.pathname;
 
   // "서비스 이용을 위해 닉네임과 지역 설정이 필요합니다"
@@ -131,9 +141,8 @@ function App() {
   return (
     <div className="app-container">
 
-      {/* Header Container (Sticky) */}
+      {/* Header Container */}
       <div style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
-        {/* Banner */}
         {shouldShowBanner && (
           <div className="onboarding-banner">
             <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다</span>
@@ -145,16 +154,13 @@ function App() {
             </button>
           </div>
         )}
-        {/* Navigation */}
         {shouldShowNav && <NavBar isLoggedIn={isMainLoggedIn} />}
       </div>
       
-      {/* main */}
+      {/* Main Content */}
       <div className="main-content">
         <Routes>
-          {/* Redirection */}
           <Route path="/" element={<Navigate to="/products" replace />} />
-          {/* Main Site Routes */}
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/community" element={<CommunityList />} />
