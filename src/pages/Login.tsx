@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/login.css';
-import { MAIN_API_URL } from '../api/config';
+import { authApi } from '../api/auth';
 
 interface LoginFormProps {
   onLogin?: () => void;
@@ -20,11 +20,7 @@ export default function Login({ onLogin }: LoginFormProps) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${MAIN_API_URL}/api/auth/tokens`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+      const res = await authApi.login({ email, password });
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.detail || '로그인 실패');
@@ -44,7 +40,7 @@ export default function Login({ onLogin }: LoginFormProps) {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${MAIN_API_URL}/api/auth/oauth2/login/google`;
+    window.location.href = authApi.getGoogleLoginUrl();
   };
 
   return (

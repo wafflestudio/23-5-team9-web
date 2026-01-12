@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { MAIN_API_URL } from '../api/config';
+import { authApi } from '../api/auth';
 import '../styles/login.css'; 
 
 interface SignupFormProps {
@@ -33,20 +33,12 @@ export default function Signup({ onSignup }: SignupFormProps) {
     setError('');
 
     try {
-      const res = await fetch(`${MAIN_API_URL}/api/user/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await authApi.signup({ email, password });
 
       if (res.ok) {
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        const loginRes = await fetch(`${MAIN_API_URL}/api/auth/tokens`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
+        const loginRes = await authApi.login({ email, password });
         
         if (loginRes.ok) {
             const data = await loginRes.json();

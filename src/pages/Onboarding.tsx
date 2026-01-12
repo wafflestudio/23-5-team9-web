@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MAIN_API_URL } from '../api/config';
+import { userApi } from '../api/user';
 import ProfileEditForm from '../components/ProfileEditForm';
 import '../styles/login.css';
 
@@ -22,14 +22,7 @@ export default function Onboarding() {
           return;
       }
 
-      const res = await fetch(`${MAIN_API_URL}/api/user/me/onboard`, {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await userApi.updateOnboard(data);
 
       if (res.ok) {
         navigate('/community'); // Main page after onboarding

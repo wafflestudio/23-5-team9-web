@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MAIN_API_URL } from '../api/config';
+import { userApi, User } from '../api/user';
 import ProfileEditForm from '../components/ProfileEditForm';
 import '../styles/common.css';
-
-interface UserInfo {
-  nickname: string;
-  region: string; // Display name
-  region_id: string; // ID for API
-  profileImage: string;
-  coin: number;
-}
-
 
 interface MyCarrotProps {
     onLogout: () => void;
@@ -25,13 +16,7 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
   
   const [warningMessage, setWarningMessage] = useState('');
 
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    nickname: '',
-    region: '',
-    region_id: '', 
-    profileImage: 'https://via.placeholder.com/100',
-    coin: 0
-  });
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,21 +28,11 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
                 return;
             }
 
-            const res = await fetch(`${MAIN_API_URL}/api/user/me`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const res = await userApi.getMe();
 
             if (res.ok) {
                 const data = await res.json();
-                setUserInfo({
-                    nickname: data.nickname || '',
-                    region: data.region ? data.region.name : '지역 미설정',
-                    region_id: data.region ? data.region.id : '',
-                    profileImage: data.profile_image || 'https://via.placeholder.com/100',
-                    coin: data.coin || 0
-                });
+                setUser(data);
             } else {
                 console.error('Failed to fetch user info');
                 // 토큰 만료 등의 경우 로그인 페이지로 리다이렉트 고려
@@ -71,32 +46,18 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
   }, [navigate]);
 
   const handleInfoUpdate = async (data: { nickname: string; region_id: string; profile_image: string }) => {
+    if (!user) return;
     try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${MAIN_API_URL}/api/user/me/onboard/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                nickname: data.nickname,
-                region_id: data.region_id,
-                profile_image: data.profile_image,
-                coin: userInfo.coin // Keep existing coin
-            })
+        const res = await userApi.updateOnboard({
+            nickname: data.nickname,
+            region_id: data.region_id,
+            profile_image: data.profile_image,
+            coin: user.coin // Keep existing coin
         });
 
         if (res.ok) {
-            // Update local state to reflect changes (optional, but good for UI consistency if we stayed on same view)
-            // But we might need to refetch region name if region_id changed, or just let 'MyCarrot' reload.
-            // For now, let's just update what we know.
-             setUserInfo(prev => ({
-                ...prev,
-                nickname: data.nickname,
-                region_id: data.region_id,
-                profileImage: data.profile_image
-            }));
+            const updatedUser = await res.json();
+            setUser(updatedUser);
             alert('정보가 수정되었습니다.');
         } else {
             alert('정보 수정 실패');
@@ -108,27 +69,20 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
   };
 
   const handleCoinCharge = async (amount: number) => {
+     if (!user) return;
      try {
-        const token = localStorage.getItem('token');
-        const newCoin = userInfo.coin + amount;
+        const newCoin = user.coin + amount;
         
-        const res = await fetch(`${MAIN_API_URL}/api/user/me/onboard/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                nickname: userInfo.nickname,
-                region_id: userInfo.region_id || "78c24c9f-05ac-49b5-b3c7c3f66688",
-                profile_image: userInfo.profileImage,
-                coin: newCoin
-            })
+        const res = await userApi.updateOnboard({
+            nickname: user.nickname || '',
+            region_id: user.region?.id || "78c24c9f-05ac-49b5-b3c7c3f66688",
+            profile_image: user.profile_image || '',
+            coin: newCoin
         });
 
         if (res.ok) {
             const data = await res.json();
-            setUserInfo(prev => ({ ...prev, coin: data.coin }));
+            setUser(data);
             alert(`${amount}코인이 충전되었습니다!`);
         } else {
             alert('충전 실패');
@@ -138,6 +92,10 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
         alert('오류 발생');
     }
   };
+
+  if (!user) {
+      return <div>Loading...</div>;
+  }
 
   const handlePasswordUpdate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,9 +173,9 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
       <div className="content-area">
         {activeTab === 'info' && (
             <ProfileEditForm 
-                initialNickname={userInfo.nickname}
-                initialRegionId={userInfo.region_id}
-                initialProfileImage={userInfo.profileImage}
+                initialNickname={user.nickname || ''}
+                initialRegionId={user.region?.id || ''}
+                initialProfileImage={user.profile_image || ''}
                 onSubmit={handleInfoUpdate}
             />
         )}
@@ -228,7 +186,7 @@ function MyCarrot({ onLogout }: MyCarrotProps) {
             <div style={{ backgroundColor: '#fff4e6', padding: '40px', borderRadius: '16px', marginBottom: '30px' }}>
                 <h3 style={{ margin: 0, color: '#ff6f0f', marginBottom: '10px' }}>보유 코인</h3>
                 <div style={{ fontSize: '3rem', fontWeight: '800', color: '#212529' }}>
-                {userInfo.coin.toLocaleString()} <span style={{ fontSize: '1.5rem', fontWeight: 'normal' }}>C</span>
+                {user.coin.toLocaleString()} <span style={{ fontSize: '1.5rem', fontWeight: 'normal' }}>C</span>
                 </div>
             </div>
             

@@ -14,16 +14,10 @@ import ProductDetail from './pages/ProductDetail';
 import CommunityList from './pages/CommunityList';
 import CommunityDetail from './pages/CommunityDetail';
 
-import { MAIN_API_URL } from './api/config';
+import { userApi, User } from './api/user';
 
 import './styles/common.css';
 import './styles/app.css';
-
-interface User {
-  id: number;
-  nickname: string | null;
-  region: string | null;
-}
 
 function App() {
   const [isMainLoggedIn, setIsMainLoggedIn] = useState<boolean>(!!localStorage.getItem('token'));
@@ -35,9 +29,7 @@ function App() {
   // 2. API 호출 함수
   const fetchUserData = useCallback(async (token: string): Promise<User | null> => {
     try {
-      const res = await fetch(`${MAIN_API_URL}/api/user/me`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await userApi.getMe();
       
       if (res.ok) {
         const data = await res.json();

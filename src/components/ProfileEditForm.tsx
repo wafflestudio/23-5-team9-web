@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MAIN_API_URL } from '../api/config';
+import { regionApi } from '../api/region';
 
 interface Region {
   id: string;
@@ -39,7 +39,7 @@ export default function ProfileEditForm({
   useEffect(() => {
     const fetchRegions = async () => {
       try {
-        const res = await fetch(`${MAIN_API_URL}/api/regions/`);
+        const res = await regionApi.getRegions();
         if (res.ok) {
           const data = await res.json();
           setRegions(data);
@@ -75,11 +75,7 @@ export default function ProfileEditForm({
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          const res = await fetch(`${MAIN_API_URL}/api/regions/detect`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ latitude, longitude }),
-          });
+          const res = await regionApi.detectRegion(latitude, longitude);
 
           if (res.ok) {
             const detectedRegion = await res.json();
