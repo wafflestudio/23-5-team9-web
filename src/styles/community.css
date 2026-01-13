@@ -1,0 +1,41 @@
+.community-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.category-filter-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.category-filter-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  background-color: #ffffff;
+  color: #4d5159;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.category-filter-btn.active {
+  background-color: #ff6f0f;
+  color: #ffffff;
+}
+
+.filter-info-box {
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #fff4e6;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #ff6f0f;
+  font-weight: bold;
+}

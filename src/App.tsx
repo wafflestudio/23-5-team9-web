@@ -134,7 +134,7 @@ function App() {
     <div className="app-container">
 
       {/* Header Container */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
+      <div className="sticky-header-container">
         {shouldShowBanner && (
           <div className="onboarding-banner">
             <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다</span>

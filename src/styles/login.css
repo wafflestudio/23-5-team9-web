@@ -158,3 +158,63 @@
 .signup-link a:hover {
   text-decoration: underline;
 }
+
+/* Added for inline style refactoring */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.auth-input-container {
+    position: relative;
+}
+
+.auth-password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #868e96;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-password-input {
+    padding-right: 50px;
+}
+
+.google-login-container {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.google-icon {
+    margin-right: 10px;
+}
+
+.error-text {
+    color: #ff4d4f;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.signup-link-text {
+    margin-left: 5px;
+}
+
+.error-text {
+    color: #ff4d4f;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.signup-link-text {
+    margin-left: 5px;
+}
+.mt-10 { margin-top: 10px; }

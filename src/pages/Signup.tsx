@@ -70,9 +70,8 @@ export default function Signup({ onSignup }: SignupFormProps) {
     <div className="login-container">
       <div className="login-card">
         <h1 
-            className="login-logo"
+            className="login-logo cursor-pointer mb-10"
             onClick={() => navigate('/products')}
-            style={{ cursor: 'pointer', marginBottom: '10px' }}
         >
             당근마켓
         </h1>
@@ -87,80 +86,56 @@ export default function Signup({ onSignup }: SignupFormProps) {
                 onChange={e => setEmail(e.target.value)} 
                 required 
             />
-            <div style={{ position: 'relative' }}>
+            <div className="auth-input-container">
                 <input 
-                    className="login-input" 
+                    className="login-input auth-password-input" 
                     type={showPassword ? "text" : "password"} 
                     placeholder="비밀번호 (8자 이상)" 
                     value={password} 
                     onChange={e => setPassword(e.target.value)} 
                     required 
-                    style={{ paddingRight: '50px' }} 
                 />
                 <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    style={{
-                        position: 'absolute',
-                        right: '15px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: '#868e96',
-                        fontSize: '13px',
-                        fontWeight: '600'
-                    }}
+                    className="auth-password-toggle"
                 >
                     {showPassword ? '숨기기' : '보기'}
                 </button>
             </div>
             
-            <div style={{ position: 'relative' }}>
+            <div className="auth-input-container">
                 <input 
-                    className="login-input" 
+                    className="login-input auth-password-input" 
                     type={showPasswordConfirm ? "text" : "password"} 
                     placeholder="비밀번호 확인" 
                     value={passwordConfirm} 
                     onChange={e => setPasswordConfirm(e.target.value)} 
                     required 
-                    style={{ paddingRight: '50px' }} 
                 />
                 <button
                     type="button"
                     onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-                    style={{
-                        position: 'absolute',
-                        right: '15px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: '#868e96',
-                        fontSize: '13px',
-                        fontWeight: '600'
-                    }}
+                    className="auth-password-toggle"
                 >
                     {showPasswordConfirm ? '숨기기' : '보기'}
                 </button>
             </div>
 
              {!passwordsMatch && passwordConfirm && (
-                <div style={{color:'#ff4d4f', fontSize: '12px', marginLeft: '4px'}}>비밀번호가 일치하지 않습니다.</div>
+                <div className="error-text">비밀번호가 일치하지 않습니다.</div>
             )}
             
             {error && <div className="login-error">{error}</div>}
             
-            <button className="login-button" type="submit" disabled={loading} style={{ marginTop: '10px' }}>
+            <button className="login-button mt-10" type="submit" disabled={loading}>
                 {loading ? '가입 중...' : '다음'}
             </button>
         </form>
 
         <div className="signup-link">
           이미 계정이 있으신가요? 
-          <Link to="/login" style={{ marginLeft: '5px' }}>로그인</Link>
+          <Link to="/login" className="signup-link-text">로그인</Link>
         </div>
       </div>
     </div>

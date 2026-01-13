@@ -111,3 +111,10 @@
   border: none;
   box-shadow: none;
 }
+
+.sticky-header-container {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
