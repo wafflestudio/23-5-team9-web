@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useCommunityPost, Comment } from "@/features/community/hooks/useCommunity";
+import { Loading } from "@/shared/ui/StatusMessage";
 
 function CommunityDetail() {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ function CommunityDetail() {
     return postDate.toLocaleDateString('ko-KR');
   };
 
-  if (loading) return <div className="p-4 text-center">불러오는 중...</div>;
+  if (loading) return <Loading />;
   if (error) return <div className="p-4 text-center text-red-500">{error}</div>;
   if (!post) return <div className="p-4 text-center">게시글 정보가 없습니다.</div>;
 

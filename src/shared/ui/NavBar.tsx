@@ -21,8 +21,8 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const NavItem = ({ label, path, mobile = false }: { label: string, path: string, mobile?: boolean }) => {
     const isActive = pathname.startsWith(path);
     const baseStyle = mobile 
-      ? "block w-full p-4 text-left text-lg hover:bg-gray-50" 
-      : "px-3 py-2 text-base font-bold";
+      ? "block w-full p-4 text-left text-lg hover:bg-gray-50 cursor-pointer" 
+      : "px-3 py-2 text-base font-bold cursor-pointer";
     const activeStyle = isActive ? "text-primary font-bold" : "text-gray-700 font-medium";
 
     return (

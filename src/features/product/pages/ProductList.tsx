@@ -2,14 +2,14 @@ import { useState } from 'react';
 import ProductCard from "@/features/product/components/ProductCard";
 import LocationSelector from "@/features/location/components/LocationSelector";
 import { useProducts, LOCATIONS } from "@/features/product/hooks/useProducts";
-// UI 컴포넌트를 가져와서 사용 (StatusMessage 내부의 Loading, Error 등)
+import { Loading } from "@/shared/ui/StatusMessage";
 
 function ProductList() {
   const [filterLoc, setFilterLoc] = useState<string>('all');
   const { products, loading, error } = useProducts(filterLoc);
 
   // 1. 조기 리턴 패턴으로 들여쓰기 깊이 최소화
-  if (loading) return <div className="flex-center h-96">목록을 불러오고 있어요...</div>;
+  if (loading) return <Loading />;
   if (error) return <div className="text-red-500 p-10 text-center">{error}</div>;
 
   // 2. 파생 데이터 계산 (UI 로직 분리)

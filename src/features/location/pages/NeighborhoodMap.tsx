@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { Loading } from '@/shared/ui/StatusMessage';
 
 // Fix for default marker icon in leaflet with vite
 // We need to import the images directly to ensure they are bundled correctly
@@ -93,7 +94,7 @@ export default function NeighborhoodMap() {
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
       <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>동네 지도</h2>
       
-      {loading && <div style={{textAlign: 'center', padding: '20px'}}>위치를 불러오는 중...</div>}
+      {loading && <Loading />}
       {error && <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>{error}</div>}
       
       {location && (
