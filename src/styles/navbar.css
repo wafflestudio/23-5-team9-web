@@ -1,0 +1,167 @@
+.navbar-container {
+  width: 100%;
+  height: 64px;
+  background-color: var(--background-white);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  transition: top 0.2s;
+  position: relative;
+  z-index: 1000;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.navbar-logo {
+  color: var(--primary-color);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.navbar-item {
+  padding: 8px 12px;
+  font-size: 16px;
+  background-color: transparent;
+  color: var(--text-gray);
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+.navbar-item.active {
+  color: var(--primary-color);
+}
+
+.navbar-right {
+    /* For future use if needed */
+}
+
+/* Mobile Toggle Button (Hamburger) */
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--text-dark);
+}
+
+/* Mobile Side Menu */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.mobile-menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 70%; /* Adjust width as needed */
+  max-width: 320px;
+  height: 100%;
+  background-color: white;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-overlay.open .mobile-menu-content {
+  transform: translateX(0);
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-menu-title {
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--primary-color);
+}
+
+.mobile-menu-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-gray);
+  padding: 4px;
+}
+
+.mobile-menu-list {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.mobile-menu-item {
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-dark);
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.mobile-menu-item:hover {
+  background-color: var(--background-light);
+}
+
+.mobile-menu-item.active {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+  
+  .navbar-toggle {
+    display: block;
+  }
+  
+  .navbar-left {
+    gap: 0; /* Remove gap in mobile view since links are hidden */
+    flex: 1;
+  }
+}

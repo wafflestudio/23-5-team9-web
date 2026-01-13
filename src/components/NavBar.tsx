@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import '../styles/navbar.css';
 
 interface NavBarProps {
   isLoggedIn: boolean;
@@ -7,6 +9,7 @@ interface NavBarProps {
 function NavBar({ isLoggedIn }: NavBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { id: 'products', label: '중고거래', path: '/products' },
@@ -20,81 +23,110 @@ function NavBar({ isLoggedIn }: NavBarProps) {
     return false;
   };
 
-  const buttonStyle = {
-    padding: '8px 12px',
-    fontSize: '16px',
-    backgroundColor: 'transparent',
-    color: '#4d5159',
-    border: 'none',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    transition: 'color 0.2s'
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setIsMenuOpen(false); // Close menu on navigation
   };
 
-  const activeButtonStyle = {
-    ...buttonStyle,
-    color: '#ff6f0f'
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav style={{
-      width: '100%',
-      height: '64px',
-      backgroundColor: '#ffffff',
-      borderBottom: '1px solid #e9ecef',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 20px',
-      /* Position styles removed to allow parent control */
-      transition: 'top 0.2s'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
-        <h1 
-          onClick={() => navigate('/products')}
-          style={{ 
-            color: '#ff6f0f', 
-            fontSize: '24px', 
-            fontWeight: 'bold', 
-            cursor: 'pointer',
-            margin: 0 
-          }}
-        >
-          당근마켓
-        </h1>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => navigate(item.path)}
-              style={isActive(item.path) ? activeButtonStyle : buttonStyle}
-            >
-              {item.label}
-            </button>
-          ))}
-          
-          {/* Main nav items followed directly by auth actions */}
-          {isLoggedIn ? (
-            <button
-                onClick={() => navigate('/my')}
-                style={isActive('/my') ? activeButtonStyle : buttonStyle}
-            >
-                나의 당근
-            </button>
-          ) : (
-            <button
-              onClick={() => navigate('/login')}
-              style={isActive('/login') ? activeButtonStyle : buttonStyle}
-            >
-              로그인
-            </button>
-          )}
+    <>
+      <nav className="navbar-container">
+        <div className="navbar-left">
+          <h1 
+            onClick={() => navigate('/products')}
+            className="navbar-logo"
+          >
+            당근마켓
+          </h1>
+          <div className="navbar-links">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => navigate(item.path)}
+                className={`navbar-item ${isActive(item.path) ? 'active' : ''}`}
+              >
+                {item.label}
+              </button>
+            ))}
+            
+            {/* Main nav items followed directly by auth actions */}
+            {isLoggedIn ? (
+              <button
+                  onClick={() => navigate('/my')}
+                  className={`navbar-item ${isActive('/my') ? 'active' : ''}`}
+              >
+                  나의 당근
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className={`navbar-item ${isActive('/login') ? 'active' : ''}`}
+              >
+                로그인
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Toggle Button */}
+        <button className="navbar-toggle" onClick={toggleMenu} aria-label="메뉴 열기">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+      </nav>
+
+      {/* Mobile Side Menu Overlay */}
+      <div className={`mobile-menu-overlay ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+        <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-menu-header">
+                <div className="mobile-menu-title">당근마켓</div>
+                <button className="mobile-menu-close" onClick={toggleMenu} aria-label="메뉴 닫기">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div className="mobile-menu-list">
+                {navItems.map((item) => (
+                    <button
+                        key={item.id}
+                        onClick={() => handleNavigation(item.path)}
+                        className={`mobile-menu-item ${isActive(item.path) ? 'active' : ''}`}
+                    >
+                        {item.label}
+                    </button>
+                ))}
+                
+                <hr style={{ margin: '10px 20px', border: 'none', borderTop: '1px solid #eee' }} />
+                
+                {isLoggedIn ? (
+                    <button
+                        onClick={() => handleNavigation('/my')}
+                        className={`mobile-menu-item ${isActive('/my') ? 'active' : ''}`}
+                    >
+                        나의 당근
+                    </button>
+                ) : (
+                    <button
+                        onClick={() => handleNavigation('/login')}
+                        className={`mobile-menu-item ${isActive('/login') ? 'active' : ''}`}
+                    >
+                        로그인
+                    </button>
+                )}
+            </div>
         </div>
       </div>
-
-      {/* Right side removed to merge into main flow */}
-      <div /> 
-    </nav>
+    </>
   );
 }
 
