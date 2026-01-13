@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import PasswordInput from '@/shared/ui/PasswordInput';
 // import '@/styles/login.css'; 
+
+const AUTH_INPUT_STYLE = "w-full p-4 pr-[50px] text-base border-none rounded-xl bg-gray-100 text-slate-900 outline-none transition-all duration-200 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 placeholder:text-gray-400";
+const TOGGLE_BTN_STYLE = "absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-gray-500 text-[13px] font-semibold";
 
 interface SignupFormProps {
   onSignup?: () => void;
@@ -12,8 +16,6 @@ export default function Signup({ onSignup }: SignupFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -79,41 +81,23 @@ export default function Signup({ onSignup }: SignupFormProps) {
                 onChange={e => setEmail(e.target.value)} 
                 required 
             />
-            <div className="relative">
-                <input 
-                    className="w-full p-4 pr-[50px] text-base border-none rounded-xl bg-gray-100 text-slate-900 outline-none transition-all duration-200 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 placeholder:text-gray-400" 
-                    type={showPassword ? "text" : "password"} 
-                    placeholder="비밀번호 (8자 이상)" 
-                    value={password} 
-                    onChange={e => setPassword(e.target.value)} 
-                    required 
-                />
-                <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-gray-500 text-[13px] font-semibold"
-                >
-                    {showPassword ? '숨기기' : '보기'}
-                </button>
-            </div>
+            <PasswordInput
+                placeholder="비밀번호 (8자 이상)"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                className={AUTH_INPUT_STYLE}
+                toggleButtonClassName={TOGGLE_BTN_STYLE}
+            />
             
-            <div className="relative">
-                <input 
-                    className="w-full p-4 pr-[50px] text-base border-none rounded-xl bg-gray-100 text-slate-900 outline-none transition-all duration-200 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 placeholder:text-gray-400" 
-                    type={showPasswordConfirm ? "text" : "password"} 
-                    placeholder="비밀번호 확인" 
-                    value={passwordConfirm} 
-                    onChange={e => setPasswordConfirm(e.target.value)} 
-                    required 
-                />
-                <button
-                    type="button"
-                    onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-                    className="absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-gray-500 text-[13px] font-semibold"
-                >
-                    {showPasswordConfirm ? '숨기기' : '보기'}
-                </button>
-            </div>
+            <PasswordInput
+                placeholder="비밀번호 확인"
+                value={passwordConfirm}
+                onChange={e => setPasswordConfirm(e.target.value)}
+                required
+                className={AUTH_INPUT_STYLE}
+                toggleButtonClassName={TOGGLE_BTN_STYLE}
+            />
 
              {!passwordsMatch && passwordConfirm && (
                 <div className="text-[#ff4d4f] text-[12px] ml-1">비밀번호가 일치하지 않습니다.</div>

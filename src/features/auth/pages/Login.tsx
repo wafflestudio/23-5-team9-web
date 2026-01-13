@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import PasswordInput from '@/shared/ui/PasswordInput';
+
+const AUTH_INPUT_STYLE = "w-full rounded-xl bg-gray-100 p-4 text-base outline-none transition-all placeholder:text-gray-400 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 pr-[50px]";
 
 // 반복되는 Input 스타일을 재사용 가능한 컴포넌트로 분리
 const InputField = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
@@ -15,7 +18,6 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -51,24 +53,16 @@ export default function Login() {
             name="email" type="email" placeholder="이메일" required
             value={form.email} onChange={handleChange} 
           />
-          <div className="relative">
-            <InputField 
-              name="password" 
-              type={showPassword ? "text" : "password"} 
-              placeholder="비밀번호" 
-              required
-              value={form.password} 
-              onChange={handleChange} 
-              className="w-full rounded-xl bg-gray-100 p-4 pr-[50px] text-base outline-none transition-all placeholder:text-gray-400 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10"
-            />
-            <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-gray-500 text-[13px] font-semibold"
-            >
-                {showPassword ? '숨기기' : '보기'}
-            </button>
-          </div>
+          <PasswordInput
+            name="password"
+            placeholder="비밀번호"
+            required
+            value={form.password}
+            onChange={handleChange}
+            className={AUTH_INPUT_STYLE}
+            wrapperClassName="w-full"
+            toggleButtonClassName="absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent text-gray-500 text-[13px] font-semibold cursor-pointer border-none"
+          />
           
           <button 
             type="submit" disabled={loading}
