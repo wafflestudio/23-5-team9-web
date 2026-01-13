@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LOCATIONS } from '../../product/hooks/useProducts';
+import { LOCATIONS } from '@/features/product/hooks/useProducts';
 
 export interface Comment {
   id: number;

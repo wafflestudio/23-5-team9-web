@@ -1,5 +1,5 @@
 // src/api/productApi.ts
-import { Product } from "../hooks/useProducts"; 
+import { Product } from "@/features/product/hooks/useProducts"; 
 
 // 기존 Hook에 있던 MOCK 데이터를 여기로 이동
 const MOCK_PRODUCTS: Product[] = [

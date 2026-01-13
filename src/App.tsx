@@ -1,23 +1,23 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Login from './features/auth/pages/Login';
-import Signup from './features/auth/pages/Signup';
-import Onboarding from './features/auth/pages/Onboarding';
-import ChatList from './features/chat/pages/ChatList';
-import ChatRoom from './features/chat/pages/ChatRoom';
-import MyCarrot from './features/user/pages/MyCarrot';
-import NeighborhoodMap from './features/location/pages/NeighborhoodMap';
-import ProductList from './features/product/pages/ProductList';
-import ProductDetail from './features/product/pages/ProductDetail';
-import CommunityList from './features/community/pages/CommunityList';
-import CommunityDetail from './features/community/pages/CommunityDetail';
+import Login from '@/features/auth/pages/Login';
+import Signup from '@/features/auth/pages/Signup';
+import Onboarding from '@/features/auth/pages/Onboarding';
+import ChatList from '@/features/chat/pages/ChatList';
+import ChatRoom from '@/features/chat/pages/ChatRoom';
+import MyCarrot from '@/features/user/pages/MyCarrot';
+import NeighborhoodMap from '@/features/location/pages/NeighborhoodMap';
+import ProductList from '@/features/product/pages/ProductList';
+import ProductDetail from '@/features/product/pages/ProductDetail';
+import CommunityList from '@/features/community/pages/CommunityList';
+import CommunityDetail from '@/features/community/pages/CommunityDetail';
 
-import { AuthProvider, useAuth } from './features/auth/context/AuthContext';
-import { SocialLoginHandler } from './features/auth/components/SocialLoginHandler';
-import { MainLayout } from './shared/layouts/MainLayout';
-import { AuthLayout } from './features/auth/layouts/AuthLayout';
-import './styles/common.css';
-import './styles/app.css';
+import { AuthProvider, useAuth } from '@/features/auth/context/AuthContext';
+import { SocialLoginHandler } from '@/features/auth/components/SocialLoginHandler';
+import { MainLayout } from '@/shared/layouts/MainLayout';
+import { AuthLayout } from '@/features/auth/layouts/AuthLayout';
+import '@/styles/common.css';
+import '@/styles/app.css';
 
 // 내부 컴포넌트로 분리 (AuthContext를 사용하기 위해)
 function AppContent() {

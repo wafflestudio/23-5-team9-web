@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CommunityPost } from '../hooks/useCommunity';
-import '../../../styles/community.css';
+import '@/styles/community.css';
 
 interface CommunityCardProps {
   post: CommunityPost;

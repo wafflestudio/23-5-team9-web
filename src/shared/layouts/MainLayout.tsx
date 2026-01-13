@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import NavBar from '../ui/NavBar';
-import { OnboardingBanner } from '../../features/auth/components/OnboardingBanner';
-import { useAuth } from '../../features/auth/context/AuthContext';
+import { OnboardingBanner } from '@/features/auth/components/OnboardingBanner';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 export function MainLayout() {
   const { isLoggedIn } = useAuth();

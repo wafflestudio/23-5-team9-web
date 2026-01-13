@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import CommunityCard from "../components/CommunityCard";
-import LocationSelector from "../../location/components/LocationSelector";
-import CategorySelector from "../../../shared/ui/CategorySelector";
-import { Loading, ErrorMessage, EmptyState } from "../../../shared/ui/StatusMessage";
-import { useCommunity, COMMUNITY_CATEGORIES, LOCATIONS } from "../hooks/useCommunity";
-import "../../../styles/common.css";
-import "../../../styles/base-layout.css";
-import "../../../styles/community.css";
+import CommunityCard from "@/features/community/components/CommunityCard";
+import LocationSelector from "@/features/location/components/LocationSelector";
+import CategorySelector from "@/shared/ui/CategorySelector";
+import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
+import { useCommunity, COMMUNITY_CATEGORIES, LOCATIONS } from "@/features/community/hooks/useCommunity";
+import "@/styles/common.css";
+import "@/styles/base-layout.css";
+import "@/styles/community.css";
 
 function CommunityList() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');

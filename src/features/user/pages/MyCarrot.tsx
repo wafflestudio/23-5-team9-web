@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import ProfileEditForm from '../components/ProfileEditForm';
-import CoinTab from '../components/CoinTab';
-import PasswordTab from '../components/PasswordTab';
-import { useMyCarrotData } from '../hooks/useMyCarrotData';
-import { Loading } from "../../../shared/ui/StatusMessage";
-import '../../../styles/common.css';
-import '../../../styles/my-carrot.css';
+import ProfileEditForm from '@/features/user/components/ProfileEditForm';
+import CoinTab from '@/features/user/components/CoinTab';
+import PasswordTab from '@/features/user/components/PasswordTab';
+import { useMyCarrotData } from '@/features/user/hooks/useMyCarrotData';
+import { Loading } from "@/shared/ui/StatusMessage";
+import '@/styles/common.css';
+import '@/styles/my-carrot.css';
 
 function MyCarrot({ onLogout }: { onLogout: () => void }) {
   const { user, updateProfile, chargeCoin } = useMyCarrotData();

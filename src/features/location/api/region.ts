@@ -1,4 +1,4 @@
-import client from '../../../shared/api/client';
+import client from '@/shared/api/client';
 
 export const regionApi = {
     getRegions: () => client.get('/api/region/'),

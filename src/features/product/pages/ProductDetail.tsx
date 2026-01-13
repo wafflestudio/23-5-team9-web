@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
-import "../../../styles/common.css";
-import "../../../styles/base-layout.css";
-import "../../../styles/product-detail.css";
-import { useProduct } from "../hooks/useProducts";
-import { Loading, ErrorMessage, EmptyState } from "../../../shared/ui/StatusMessage";
+import "@/styles/common.css";
+import "@/styles/base-layout.css";
+import "@/styles/product-detail.css";
+import { useProduct } from "@/features/product/hooks/useProducts";
+import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 
 function ProductDetail() {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userApi } from '../../user/api/user';
-import ProfileEditForm from '../../user/components/ProfileEditForm';
-import '../../../styles/login.css';
+import { userApi } from '@/features/user/api/user';
+import ProfileEditForm from '@/features/user/components/ProfileEditForm';
+import '@/styles/login.css';
 
 export default function Onboarding() {
   const [error, setError] = useState('');

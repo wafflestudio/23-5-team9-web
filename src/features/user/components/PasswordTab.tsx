@@ -1,4 +1,4 @@
-import PasswordInput from '../../../shared/ui/PasswordInput';
+import PasswordInput from '@/shared/ui/PasswordInput';
 
 const PasswordTab = () => {
   const handleSubmit = (e: React.FormEvent) => {

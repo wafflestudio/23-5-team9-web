@@ -1,6 +1,6 @@
 // src/api/auth.ts
-import client from '../../../shared/api/client';
-import { MAIN_API_URL } from '../../../shared/api/config';
+import client from '@/shared/api/client';
+import { MAIN_API_URL } from '@/shared/api/config';
 
 export interface SignupRequest {
   email: string; 

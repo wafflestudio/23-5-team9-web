@@ -1,4 +1,4 @@
-import { User } from '../api/user';
+import { User } from '@/features/user/api/user';
 
 interface CoinTabProps {
   user: User;

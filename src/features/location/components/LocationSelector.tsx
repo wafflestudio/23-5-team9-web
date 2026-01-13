@@ -1,5 +1,5 @@
-import { LOCATIONS } from '../../product/hooks/useProducts';
-import '../../../styles/location-selector.css';
+import { LOCATIONS } from '@/features/product/hooks/useProducts';
+import '@/styles/location-selector.css';
 
 interface LocationSelectorProps {
   selectedLocation: string;

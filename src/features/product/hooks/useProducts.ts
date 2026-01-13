@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchProducts, fetchProductById } from '../api/productApi';
+import { fetchProducts, fetchProductById } from '@/features/product/api/productApi';
 
 export interface Product {
   id: number;

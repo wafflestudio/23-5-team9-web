@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { regionApi } from '../../location/api/region';
-import '../../../styles/profile-edit-form.css';
+import { regionApi } from '@/features/location/api/region';
+import '@/styles/profile-edit-form.css';
 
 interface Region {
   id: string;

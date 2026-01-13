@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Product } from '../hooks/useProducts';
-import '../../../styles/product-list.css';
+import { Product } from '@/features/product/hooks/useProducts';
+import '@/styles/product-list.css';
 
 interface ProductCardProps {
   product: Product;

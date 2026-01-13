@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userApi, User } from '../api/user';
+import { userApi, User } from '@/features/user/api/user';
 
 export const useMyCarrotData = () => {
   const [user, setUser] = useState<User | null>(null);

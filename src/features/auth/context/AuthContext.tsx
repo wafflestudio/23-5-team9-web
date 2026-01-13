@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { userApi, User } from '../../user/api/user';
+import { userApi, User } from '@/features/user/api/user';
 import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {

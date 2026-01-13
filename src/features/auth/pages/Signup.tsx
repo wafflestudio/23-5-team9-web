@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authApi } from '../api/auth';
-import '../../../styles/login.css'; 
+import { authApi } from '@/features/auth/api/auth';
+import '@/styles/login.css'; 
 
 interface SignupFormProps {
   onSignup?: () => void;

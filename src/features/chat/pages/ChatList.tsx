@@ -1,5 +1,5 @@
-import ChatRoomItem from '../components/ChatRoomItem';
-import '../../../styles/common.css';
+import ChatRoomItem from '@/features/chat/components/ChatRoomItem';
+import '@/styles/common.css';
 
 const mockChatRooms = [
   { id: 1, partner: '당근이', lastMessage: '안녕하세요! 물건 팔렸나요?', time: '방금 전', unread: 2 },

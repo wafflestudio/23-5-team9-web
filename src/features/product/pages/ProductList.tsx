@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import ProductCard from "../components/ProductCard";
-import LocationSelector from "../../location/components/LocationSelector";
-import { Loading, ErrorMessage, EmptyState } from "../../../shared/ui/StatusMessage";
-import { useProducts, LOCATIONS } from "../hooks/useProducts";
-import "../../../styles/common.css";
-import "../../../styles/base-layout.css";
-import "../../../styles/product-list.css";
+import ProductCard from "@/features/product/components/ProductCard";
+import LocationSelector from "@/features/location/components/LocationSelector";
+import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
+import { useProducts, LOCATIONS } from "@/features/product/hooks/useProducts";
+import "@/styles/common.css";
+import "@/styles/base-layout.css";
+import "@/styles/product-list.css";
 
 function ProductList() {
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
