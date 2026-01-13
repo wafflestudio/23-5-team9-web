@@ -1,4 +1,5 @@
 import ChatRoomItem from '@/features/chat/components/ChatRoomItem';
+import { PageContainer } from '@/shared/layouts/PageContainer';
 
 const mockChatRooms = [
   { id: 1, partner: '당근이', lastMessage: '안녕하세요! 물건 팔렸나요?', time: '방금 전', unread: 2 },
@@ -9,14 +10,13 @@ const mockChatRooms = [
 function ChatList() {
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">채팅</h2>
+    <PageContainer title="채팅">
       <div className="flex flex-col">
         {mockChatRooms.map((room) => (
           <ChatRoomItem key={room.id} room={room} />
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

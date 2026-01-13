@@ -3,16 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import PasswordInput from '@/shared/ui/PasswordInput';
-
-const AUTH_INPUT_STYLE = "w-full rounded-xl bg-gray-100 p-4 text-base outline-none transition-all placeholder:text-gray-400 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 pr-[50px]";
-
-// 반복되는 Input 스타일을 재사용 가능한 컴포넌트로 분리
-const InputField = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-  <input 
-    className="w-full rounded-xl bg-gray-100 p-4 text-base outline-none transition-all placeholder:text-gray-400 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10"
-    {...props} 
-  />
-);
+import { PageContainer } from '@/shared/layouts/PageContainer';
+import { Input } from '@/shared/ui/Input';
+import { Button } from '@/shared/ui/Button';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -41,11 +34,12 @@ export default function Login() {
   };
 
   return (
-    <div className="mx-auto mt-10 max-w-[420px] px-4">
-      <h2 className="mb-8 text-2xl font-bold text-gray-800">로그인</h2>
-        
+    <PageContainer>
+      <div className="max-w-[420px] mx-auto w-full mt-10">
+        <h2 className="mb-8 text-2xl font-bold text-gray-800">로그인</h2>
+          
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <InputField 
+          <Input 
             name="email" type="email" placeholder="이메일" required
             value={form.email} onChange={handleChange} 
           />
@@ -55,33 +49,39 @@ export default function Login() {
             required
             value={form.password}
             onChange={handleChange}
-            className={AUTH_INPUT_STYLE}
             wrapperClassName="w-full"
+            className="w-full rounded-xl bg-gray-100 p-4 text-base outline-none transition-all placeholder:text-gray-400 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 pr-[50px]"
             toggleButtonClassName="absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent text-gray-500 text-[13px] font-semibold cursor-pointer border-none"
           />
           
-          <button 
-            type="submit" disabled={loading}
-            className="mt-4 w-full rounded-xl bg-primary p-4 text-lg font-bold text-white shadow-md transition-all hover:bg-primary-hover hover:-translate-y-px disabled:bg-orange-200 disabled:cursor-not-allowed"
+          <Button 
+            type="submit" 
+            disabled={loading}
+            variant="primary"
+            fullWidth
+            className="mt-4 text-lg"
           >
             {loading ? '로그인 중...' : '로그인'}
-          </button>
+          </Button>
           
           {error && <div className="mt-3 text-center text-sm font-medium text-red-500">{error}</div>}
         </form>
 
-        <button 
+        <Button 
           onClick={() => window.location.href = authApi.getGoogleLoginUrl()}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white p-3.5 font-medium text-gray-700 transition-colors hover:bg-gray-50"
+          variant="outline"
+          fullWidth
+          className="mt-6 flex items-center justify-center gap-2 bg-white"
         >
           <GoogleIcon /> Google로 계속하기
-        </button>
+        </Button>
 
         <div className="mt-6 text-center text-sm text-gray-500">
           아직 계정이 없으신가요? 
           <Link to="/auth/signup" className="ml-1.5 font-semibold text-primary hover:underline">회원가입</Link>
         </div>
-    </div>
+      </div>
+    </PageContainer>
   );
 }
 

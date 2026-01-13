@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Loading } from '@/shared/ui/StatusMessage';
+import { PageContainer } from '@/shared/layouts/PageContainer';
 
 // Fix for default marker icon in leaflet with vite
 // We need to import the images directly to ensure they are bundled correctly
@@ -91,25 +92,16 @@ export default function NeighborhoodMap() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>동네 지도</h2>
-      
+    <PageContainer title="동네 지도">
       {loading && <Loading />}
-      {error && <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>{error}</div>}
+      {error && <div className="text-red-500 text-center py-5">{error}</div>}
       
       {location && (
-        <div>
-          <div style={{ 
-            marginBottom: '15px', 
-            fontSize: '18px', 
-            padding: '15px', 
-            backgroundColor: '#f8f9fa', 
-            borderRadius: '8px',
-            border: '1px solid #e9ecef'
-          }}>
-            현재 위치: <strong style={{ color: '#ff6f0f' }}>{address}</strong>
+        <div className="flex flex-col gap-4">
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 text-lg">
+            현재 위치: <strong className="text-primary">{address}</strong>
           </div>
-          <div style={{ height: '500px', width: '100%', borderRadius: '12px', overflow: 'hidden', border: '1px solid #ddd' }}>
+          <div className="h-[500px] w-full rounded-xl overflow-hidden border border-gray-200 z-0 relative">
             <MapContainer center={[location.lat, location.lng]} zoom={16} style={{ height: '100%', width: '100%' }}>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -125,6 +117,6 @@ export default function NeighborhoodMap() {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

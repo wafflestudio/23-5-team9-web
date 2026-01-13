@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { PageContainer } from '@/shared/layouts/PageContainer';
+import { Input } from '@/shared/ui/Input';
+import { Button } from '@/shared/ui/Button';
 
 const mockMessages = [
   { id: 1, sender: 'partner', text: '안녕하세요! 이 상품 구매하고 싶어요.', time: '오후 2:00' },
@@ -28,7 +31,7 @@ function ChatRoom() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)]">
+    <PageContainer fullWidth>
       <div className="p-3 border-b border-gray-200 flex items-center bg-white sticky top-0 z-10">
         <button onClick={() => navigate(-1)} className="mr-3 bg-transparent border-none cursor-pointer text-xl flex items-center justify-center p-1">←</button>
         <h3 className="m-0 text-lg font-bold">채팅방 {chatId}</h3>
@@ -52,18 +55,23 @@ function ChatRoom() {
       </div>
 
       <form onSubmit={handleSend} className="p-3 border-t border-gray-200 flex gap-2.5 bg-white pb-6">
-        <input 
+        <Input 
           type="text" 
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="메시지를 입력하세요"
-          className="flex-1 p-3 rounded-full border border-gray-200 outline-none focus:border-primary transition-colors bg-gray-50"
+          className="flex-1 rounded-full bg-gray-50"
+          // Override rounded-xl to rounded-full for chat input look
         />
-        <button type="submit" className="bg-primary text-white border-none px-5 py-2 rounded-full cursor-pointer hover:bg-primary-hover font-bold transition-colors whitespace-nowrap">
+        <Button 
+          type="submit" 
+          variant="primary" 
+          className="rounded-full px-5 whitespace-nowrap"
+        >
           전송
-        </button>
+        </Button>
       </form>
-    </div>
+    </PageContainer>
   );
 }
 
