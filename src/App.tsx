@@ -1,6 +1,5 @@
-import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import NavBar from './components/NavBar';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Onboarding from './pages/Onboarding';
@@ -15,20 +14,14 @@ import CommunityDetail from './pages/CommunityDetail';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { SocialLoginHandler } from './components/SocialLoginHandler';
+import { MainLayout } from './layouts/MainLayout';
+import { AuthLayout } from './layouts/AuthLayout';
 import './styles/common.css';
 import './styles/app.css';
 
 // 내부 컴포넌트로 분리 (AuthContext를 사용하기 위해)
 function AppContent() {
-  const { isLoggedIn, needsOnboarding, checkAuth, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // 기존 App.tsx에 있던 배너 노출 로직
-  const shouldShowBanner = isLoggedIn && needsOnboarding && location.pathname !== '/onboarding';
-  
-  // NavBar 노출 로직
-  const isAuthPage = ['/login', '/signup', '/onboarding'].includes(location.pathname);
+  const { checkAuth, logout } = useAuth();
 
   // 로그인/회원가입 완료 시 호출될 핸들러
   const handleAuthSuccess = () => {
@@ -36,27 +29,10 @@ function AppContent() {
   };
 
   return (
-    <div className="app-container">
-      {/* 소셜 로그인 URL 감지용 (보이지 않는 컴포넌트) */}
+    <>
       <SocialLoginHandler />
-
-      <div className="sticky-header-container">
-        {shouldShowBanner && (
-          <div className="onboarding-banner">
-            <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다</span>
-            <button 
-              onClick={() => navigate('/onboarding')}
-              className="onboarding-banner-button"
-            >
-              설정하러 가기
-            </button>
-          </div>
-        )}
-        {!isAuthPage && <NavBar isLoggedIn={isLoggedIn} />}
-      </div>
-      
-      <div className="main-content">
-        <Routes>
+      <Routes>
+        <Route element={<MainLayout />}>
           <Route path="/" element={<Navigate to="/products" replace />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetail />} />
@@ -66,12 +42,15 @@ function AppContent() {
           <Route path="/chat" element={<ChatList />} />
           <Route path="/chat/:chatId" element={<ChatRoom />} />
           <Route path="/my" element={<MyCarrot onLogout={logout} />} />
-          <Route path="/onboarding" element={<Onboarding />} />
+        </Route>
+
+        <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login onLogin={handleAuthSuccess} />} />
           <Route path="/signup" element={<Signup onSignup={handleAuthSuccess} />} />
-        </Routes>
-      </div>
-    </div>
+          <Route path="/onboarding" element={<Onboarding />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 
