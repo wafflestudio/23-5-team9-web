@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { regionApi } from '../api/region';
+import '../styles/profile-edit-form.css';
 
 interface Region {
   id: string;
@@ -134,57 +135,26 @@ export default function ProfileEditForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-        <div style={{ position: 'relative', display: 'inline-block' }}>
+    <form onSubmit={handleSubmit} className="profile-edit-form">
+      <div className="profile-image-section">
+        <div className="profile-image-container">
           <img 
               src={profileImage || 'https://via.placeholder.com/100'} 
               alt="Profile" 
-              style={{ 
-                  width: '120px', 
-                  height: '120px', 
-                  borderRadius: '50%', 
-                  objectFit: 'cover',
-                  border: '1px solid #e9ecef',
-                  backgroundColor: '#f8f9fa'
-              }} 
+              className="profile-image"
           />
-          <div style={{ 
-            position: 'absolute', 
-            bottom: -10, 
-            left: '50%', 
-            transform: 'translateX(-50%)', 
-            display: 'flex', 
-            gap: '8px',
-            width: 'max-content'
-          }}>
+          <div className="profile-image-actions">
             <button 
                 type="button" 
                 onClick={generateRandomImage}
-                style={{
-                    padding: '6px 10px',
-                    borderRadius: '20px',
-                    border: '1px solid #dee2e6',
-                    backgroundColor: 'white',
-                    fontSize: '12px',
-                    cursor: 'pointer',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                }}
+                className="profile-action-btn"
             >
                 랜덤
             </button>
             <button 
                 type="button" 
                 onClick={handleLinkInput}
-                style={{
-                    padding: '6px 10px',
-                    borderRadius: '20px',
-                    border: '1px solid #dee2e6',
-                    backgroundColor: 'white',
-                    fontSize: '12px',
-                    cursor: 'pointer',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                }}
+                className="profile-action-btn"
             >
                 링크
             </button>
@@ -193,7 +163,7 @@ export default function ProfileEditForm({
       </div>
 
       <div>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>닉네임</label>
+        <label className="profile-form-label">닉네임</label>
         <input 
             type="text" 
             value={nickname} 
@@ -204,7 +174,7 @@ export default function ProfileEditForm({
       </div>
 
       <div>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>지역</label>
+        <label className="profile-form-label">지역</label>
         <div style={{ display: 'flex', gap: '8px' }}>
             <select 
                 value={regionId} 
@@ -225,17 +195,7 @@ export default function ProfileEditForm({
                 type="button" 
                 onClick={handleDetectLocation}
                 disabled={detecting}
-                style={{
-                    padding: '0 16px',
-                    borderRadius: '8px',
-                    border: '1px solid #ff6f0f',
-                    backgroundColor: 'white',
-                    color: '#ff6f0f',
-                    fontSize: '14px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap'
-                }}
+                className="profile-detect-location-btn"
             >
                 {detecting ? "감지 중..." : "현재 위치 찾기"}
             </button>
@@ -244,13 +204,8 @@ export default function ProfileEditForm({
 
       <button 
         type="submit" 
-        className="button"
+        className="profile-submit-btn"
         disabled={loading}
-        style={{
-            marginTop: '10px',
-            width: '100%',
-            height: '48px'
-        }}
       >
         {loading ? '처리 중...' : submitButtonText}
       </button>

@@ -89,3 +89,49 @@
     border-radius: 20px;
     cursor: pointer;
 }
+
+.chat-room-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+.chat-room-item:hover {
+    background-color: #f8f9fa;
+}
+
+.chat-room-info-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-room-partner {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chat-room-last-message {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.chat-room-info-right {
+    text-align: right;
+}
+
+.chat-room-time {
+    color: #999;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.chat-room-unread {
+    background: #ff6f0f;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    display: inline-block;
+}

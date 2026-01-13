@@ -1,0 +1,98 @@
+.profile-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-image-section {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.profile-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.profile-image-actions {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  width: max-content;
+}
+
+.profile-action-btn {
+  padding: 6px 10px;
+  border-radius: 20px;
+  border: 1px solid #dee2e6;
+  background-color: white;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.profile-form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.profile-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.profile-region-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    align-items: center;
+}
+
+.profile-detect-location-btn {
+    padding: 8px 12px;
+    background-color: #495057;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.profile-detect-location-btn:disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+}
+
+.profile-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #ff6f0f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.profile-submit-btn:disabled {
+    background-color: #ffcfb0;
+    cursor: not-allowed;
+}

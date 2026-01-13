@@ -1,17 +1,20 @@
 import { useState } from 'react';
+import ProductCard from "../components/ProductCard";
+import LocationSelector from "../components/LocationSelector";
+import { Loading, ErrorMessage, EmptyState } from "../components/StatusMessage";
+import { useProducts, LOCATIONS } from "../hooks/useProducts";
 import "../styles/common.css";
 import "../styles/base-layout.css";
 import "../styles/product-list.css";
-import ProductCard from "../components/ProductCard";
-import LocationSelector from "../components/LocationSelector";
-import { useProducts, LOCATIONS } from "../hooks/useProducts";
 
 function ProductList() {
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
   const { products, loading, error } = useProducts(selectedLocation);
 
-  if (loading) return <div className="loading">로딩 중...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage message={error} />;
+
+  const locationLabel = LOCATIONS.find(loc => loc.value === selectedLocation)?.label;
 
   return (
     <div className="post-list-container">
@@ -19,13 +22,12 @@ function ProductList() {
       
       <LocationSelector 
         selectedLocation={selectedLocation}
-
         onLocationChange={setSelectedLocation}
       />
       
       {selectedLocation !== 'all' && (
         <div className="location-filter-info">
-          {LOCATIONS.find(loc => loc.value === selectedLocation)?.label} 매물 {products.length}개
+          {locationLabel} 매물 {products.length}개
         </div>
       )}
       
@@ -36,12 +38,12 @@ function ProductList() {
       </div>
       
       {products.length === 0 && (
-        <div className="no-results">
-          {selectedLocation !== 'all' 
-            ? `${LOCATIONS.find(loc => loc.value === selectedLocation)?.label}에 등록된 상품이 없습니다.`
+        <EmptyState 
+           message={selectedLocation !== 'all' 
+            ? `${locationLabel}에 등록된 상품이 없습니다.`
             : '등록된 상품이 없습니다.'
-          }
-        </div>
+           }
+        />
       )}
     </div>
   );

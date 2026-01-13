@@ -3,15 +3,16 @@ import "../styles/common.css";
 import "../styles/base-layout.css";
 import "../styles/product-detail.css";
 import { useProduct } from "../hooks/useProducts";
+import { Loading, ErrorMessage, EmptyState } from "../components/StatusMessage";
 
 function ProductDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { product, loading, error } = useProduct(id);
 
-  if (loading) return <div className="loading">불러오는 중...</div>;
-  if (error) return <div className="error-message">{error}</div>;
-  if (!product) return <div className="no-data">상품 정보가 없습니다.</div>;
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!product) return <EmptyState message="상품 정보가 없습니다." />;
 
   return (
     <div className="post-body-container">

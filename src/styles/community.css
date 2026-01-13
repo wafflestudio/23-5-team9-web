@@ -39,3 +39,48 @@
   color: #ff6f0f;
   font-weight: bold;
 }
+
+.community-card-category {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.community-card-category-label {
+  font-size: 12px;
+  color: #ff6f0f;
+  background-color: #fff4e6;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.community-card-footer {
+  margin-top: auto;
+  padding-top: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.community-like-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #868e96;
+  font-size: 13px;
+}
+
+.community-like-btn.liked {
+  color: #ff6f0f;
+}
+
+.community-card-stat {
+  color: #868e96;
+  font-size: 13px;
+}

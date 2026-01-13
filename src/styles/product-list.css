@@ -13,3 +13,19 @@
   color: #ff6f0f;
   font-weight: bold;
 }
+
+.post-price {
+  font-weight: bold;
+  margin-top: 4px;
+  font-size: 16px;
+}
+
+.post-footer {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.post-likes {
+  color: #868e96;
+  font-size: 13px;
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CommunityPost } from '../hooks/useCommunity';
+import '../styles/community.css';
 
 interface CommunityCardProps {
   post: CommunityPost;
@@ -45,15 +46,8 @@ function CommunityCard({ post }: CommunityCardProps) {
         )}
       </div>
       <div className="post-content">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <span style={{ 
-            fontSize: '12px', 
-            color: '#ff6f0f', 
-            backgroundColor: '#fff4e6', 
-            padding: '2px 8px', 
-            borderRadius: '4px',
-            fontWeight: 'bold'
-          }}>
+        <div className="community-card-category">
+          <span className="community-card-category-label">
             {post.category}
           </span>
         </div>
@@ -63,28 +57,18 @@ function CommunityCard({ post }: CommunityCardProps) {
           <span className="post-dot">·</span>
           <span className="post-time">{formatTimeAgo(post.createdAt)}</span>
         </div>
-        <div className="post-footer" style={{ marginTop: 'auto', paddingTop: '10px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div className="community-card-footer">
           <button
             onClick={handleLikeClick}
-            style={{
-              border: 'none',
-              background: 'none',
-              cursor: 'pointer',
-              padding: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              color: isLiked ? '#ff6f0f' : '#868e96',
-              fontSize: '13px'
-            }}
+            className={`community-like-btn ${isLiked ? 'liked' : ''}`}
           >
             <span>{isLiked ? '♥' : '♡'}</span>
             <span>{likeCount}</span>
           </button>
-          <span style={{ color: '#868e96', fontSize: '13px' }}>
+          <span className="community-card-stat">
             💬 {post.commentCount}
           </span>
-          <span style={{ color: '#868e96', fontSize: '13px' }}>
+          <span className="community-card-stat">
             👁️ {post.viewCount}
           </span>
         </div>

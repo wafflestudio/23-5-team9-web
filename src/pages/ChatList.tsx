@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import ChatRoomItem from '../components/ChatRoomItem';
 import '../styles/common.css';
 
 const mockChatRooms = [
@@ -8,32 +8,13 @@ const mockChatRooms = [
 ];
 
 function ChatList() {
-  const navigate = useNavigate();
 
   return (
     <div className="page-padding">
       <h2>채팅</h2>
       <div className="chat-list">
         {mockChatRooms.map((room) => (
-          <div 
-            key={room.id} 
-            className="chat-room-item"
-            onClick={() => navigate(`/chat/${room.id}`)}
-            style={{ padding: '15px', borderBottom: '1px solid #eee', cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}
-          >
-            <div>
-              <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>{room.partner}</div>
-              <div style={{ color: '#666', fontSize: '0.9rem' }}>{room.lastMessage}</div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ color: '#999', fontSize: '0.8rem', marginBottom: '5px' }}>{room.time}</div>
-              {room.unread > 0 && (
-                <span style={{ background: '#ff6f0f', color: 'white', padding: '2px 6px', borderRadius: '10px', fontSize: '0.8rem' }}>
-                  {room.unread}
-                </span>
-              )}
-            </div>
-          </div>
+          <ChatRoomItem key={room.id} room={room} />
         ))}
       </div>
     </div>

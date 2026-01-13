@@ -1,6 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../hooks/useProducts';
+import '../styles/product-list.css';
 
 interface ProductCardProps {
   product: Product;
@@ -29,11 +29,11 @@ function ProductCard({ product }: ProductCardProps) {
           <span className="post-dot">·</span>
           <span className="post-time">{new Date(product.createdAt).toLocaleDateString()}</span>
         </div>
-        <div className="post-price" style={{ fontWeight: 'bold', marginTop: '4px', fontSize: '16px' }}>
+        <div className="post-price">
           {product.price.toLocaleString()}원
         </div>
-        <div className="post-footer" style={{ marginTop: 'auto', paddingTop: '10px' }}>
-          <span className="post-likes" style={{ color: '#868e96', fontSize: '13px' }}>
+        <div className="post-footer">
+          <span className="post-likes">
             관심 {product.likeCount}
           </span>
         </div>
