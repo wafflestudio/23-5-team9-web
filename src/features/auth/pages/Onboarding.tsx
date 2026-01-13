@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userApi } from '@/features/user/api/user';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
-import '@/styles/login.css';
+// import '@/styles/login.css';
 
 export default function Onboarding() {
   const [error, setError] = useState('');
@@ -26,12 +26,12 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="login-container">
-      <div className="card form-card" style={{ width: '400px', margin: 'auto' }}>
-        <h2 className="section-title">추가 정보 입력</h2>
-        <p style={{marginBottom: '20px', color: '#666'}}>닉네임과 지역, 프로필 이미지를 설정해주세요.</p>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="bg-white rounded-[20px] shadow-[0_10px_25px_rgba(0,0,0,0.05)] border-none w-[400px] m-auto p-10">
+        <h2 className="text-dark text-2xl font-bold mb-4 pb-2 border-b-[3px] border-primary inline-block">추가 정보 입력</h2>
+        <p className="mb-5 text-[#666]">닉네임과 지역, 프로필 이미지를 설정해주세요.</p>
         
-        {error && <div className="login-error" style={{marginBottom: '15px'}}>{error}</div>}
+        {error && <div className="text-[#ff4d4f] text-sm mb-[15px] text-center font-medium">{error}</div>}
 
         <ProfileEditForm 
             initialProfileImage=""

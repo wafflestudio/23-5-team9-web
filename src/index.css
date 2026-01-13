@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #ff6f0f;
+  --color-primary-hover: #e65f00;
+  --color-secondary: #ff8c5a;
+  --color-accent: #ffbc42;
+  --color-dark: #212529;
+  --color-gray: #495057;
+  --color-gray-light: #868e96;
+  --color-light: #fafafa;
+  --color-white: #ffffff;
+  --color-border: #e9ecef;
+}
+
+/* Legacy Variable Mapping to Tailwind Theme */
+:root {
+  --primary-color: var(--color-primary);
+  --primary-hover: var(--color-primary-hover);
+  --secondary-color: var(--color-secondary);
+  --accent-color: var(--color-accent);
+  --text-dark: var(--color-dark);
+  --text-gray: var(--color-gray);
+  --text-light: var(--color-gray-light);
+  --background-light: var(--color-light);
+  --background-white: var(--color-white);
+  --border-color: var(--color-border);
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.05);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-xxl: 32px;
+}
+
+body {
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Global Styles */
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Legacy Utility Classes (Support during migration) */
+
+.card {
+  @apply bg-white rounded-[20px] shadow-[0_10px_25px_rgba(0,0,0,0.05)] overflow-hidden border-none;
+}
+
+.button {
+  @apply bg-primary text-white border-none rounded-[12px] px-5 py-3 text-base font-bold cursor-pointer transition-all duration-200 no-underline inline-flex items-center justify-center shadow-[0_4px_12px_rgba(255,111,15,0.2)];
+}
+
+.button:hover {
+  @apply bg-primary-hover -translate-y-[1px] shadow-[0_6px_16px_rgba(255,111,15,0.3)];
+}
+
+.button:disabled {
+  @apply bg-gray-light cursor-not-allowed transform-none shadow-none;
+}
+
+.button-outline {
+  @apply bg-transparent text-dark border border-border;
+}
+
+.button-outline:hover {
+  @apply bg-light;
+}
+
+.form-input {
+  @apply w-full p-4 text-base border-none rounded-[12px] bg-[#f1f3f5] text-dark outline-none transition-all duration-200 mb-4;
+}
+
+.form-input:focus {
+  @apply bg-[#e9ecef] shadow-[0_0_0_2px_rgba(255,111,15,0.1)];
+}
+
+/* Profile specific styles */
+.profile-center-bar {
+  @apply w-screen flex justify-center items-center fixed top-8 left-0 z-[999] pointer-events-none m-0;
+}
+
+.profile-center-btn {
+  @apply text-white text-[32px] font-bold border-none rounded-[32px] py-[18px] px-[48px] shadow-[0_6px_32px_rgba(255,107,53,0.18)] m-0 cursor-pointer pointer-events-auto transition-transform duration-200;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+}
+
+.profile-center-btn:hover {
+  @apply scale-[1.04] shadow-[0_8px_40px_rgba(255,107,53,0.25)];
+}
+
+.tag {
+  @apply bg-accent text-dark px-2 py-1 rounded-[20px] text-sm font-medium inline-block m-1;
+}
+
+.loading {
+  @apply flex justify-center items-center h-[200px] text-lg text-gray-light;
+}
+
+.loading::after {
+  content: '';
+  @apply w-5 h-5 border-2 border-primary border-t-transparent rounded-full ml-2 animate-spin;
+}

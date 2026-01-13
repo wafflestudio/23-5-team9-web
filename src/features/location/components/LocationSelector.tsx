@@ -1,5 +1,5 @@
 import { LOCATIONS } from '@/features/product/hooks/useProducts';
-import '@/styles/location-selector.css';
+// import '@/styles/location-selector.css';
 
 interface LocationSelectorProps {
   selectedLocation: string;
@@ -8,16 +8,20 @@ interface LocationSelectorProps {
 
 function LocationSelector({ selectedLocation, onLocationChange }: LocationSelectorProps) {
   return (
-    <div className="location-selector">
-      <h3 className="location-selector-title">
+    <div className="mb-6 pb-4 border-b border-[#e9ecef]">
+      <h3 className="text-base font-bold mb-3 text-[#212529]">
         지역 선택
       </h3>
-      <div className="location-buttons">
+      <div className="flex gap-2 flex-wrap">
         {LOCATIONS.map((location) => (
           <button
             key={location.value}
             onClick={() => onLocationChange(location.value)}
-            className={`location-btn ${selectedLocation === location.value ? 'active' : ''}`}
+            className={`px-4 py-2 text-sm font-bold border border-[#e9ecef] rounded-[20px] cursor-pointer whitespace-nowrap hover:bg-[#f8f9fa] ${
+              selectedLocation === location.value 
+                ? 'bg-primary text-white' 
+                : 'bg-white text-[#4d5159]'
+            }`}
           >
             {location.label}
           </button>

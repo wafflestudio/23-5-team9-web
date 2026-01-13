@@ -7,12 +7,12 @@ export function MainLayout() {
   const { isLoggedIn } = useAuth();
 
   return (
-    <div className="app-container">
+    <div className="min-h-screen bg-light">
        <OnboardingBanner /> 
-       <div className="sticky-header-container">
+       <div className="sticky top-0 z-[1000] w-full">
          <NavBar isLoggedIn={isLoggedIn} />
        </div>
-       <div className="main-content">
+       <div className="w-full mx-auto">
          <Outlet /> 
        </div>
     </div>

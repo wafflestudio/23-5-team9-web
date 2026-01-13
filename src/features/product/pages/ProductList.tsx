@@ -3,9 +3,9 @@ import ProductCard from "@/features/product/components/ProductCard";
 import LocationSelector from "@/features/location/components/LocationSelector";
 import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 import { useProducts, LOCATIONS } from "@/features/product/hooks/useProducts";
-import "@/styles/common.css";
-import "@/styles/base-layout.css";
-import "@/styles/product-list.css";
+// import "@/styles/common.css";
+// import "@/styles/base-layout.css";
+// import "@/styles/product-list.css";
 
 function ProductList() {
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
@@ -17,8 +17,8 @@ function ProductList() {
   const locationLabel = LOCATIONS.find(loc => loc.value === selectedLocation)?.label;
 
   return (
-    <div className="post-list-container">
-      <h1 className="product-list-title">중고거래 매물</h1>
+    <div className="max-w-screen-lg mx-auto py-10 px-5">
+      <h1 className="text-2xl font-bold mb-5">중고거래 매물</h1>
       
       <LocationSelector 
         selectedLocation={selectedLocation}
@@ -26,12 +26,12 @@ function ProductList() {
       />
       
       {selectedLocation !== 'all' && (
-        <div className="location-filter-info">
+        <div className="mb-4 p-3 bg-orange-50 rounded-lg text-sm text-primary font-bold">
           {locationLabel} 매물 {products.length}개
         </div>
       )}
       
-      <div className="post-list-grid">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-x-6 gap-y-8 mt-6">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

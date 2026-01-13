@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { regionApi } from '@/features/location/api/region';
-import '@/styles/profile-edit-form.css';
+// import '@/styles/profile-edit-form.css';
 
 interface Region {
   id: string;
@@ -138,26 +138,26 @@ export default function ProfileEditForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="profile-edit-form">
-      <div className="profile-image-section">
-        <div className="profile-image-container">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <div className="text-center mb-2.5">
+        <div className="relative inline-block">
           <img 
               src={profileImage || 'https://via.placeholder.com/100'} 
               alt="Profile" 
-              className="profile-image"
+              className="w-[120px] h-[120px] rounded-full object-cover border border-[#e9ecef] bg-[#f8f9fa]"
           />
-          <div className="profile-image-actions">
+          <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 flex gap-2 w-max">
             <button 
                 type="button" 
                 onClick={generateRandomImage}
-                className="profile-action-btn"
+                className="px-2.5 py-1.5 rounded-[20px] border border-[#dee2e6] bg-white text-xs cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.05)]"
             >
                 랜덤
             </button>
             <button 
                 type="button" 
                 onClick={handleLinkInput}
-                className="profile-action-btn"
+                className="px-2.5 py-1.5 rounded-[20px] border border-[#dee2e6] bg-white text-xs cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.05)]"
             >
                 링크
             </button>
@@ -167,37 +167,35 @@ export default function ProfileEditForm({
 
       {initialEmail && (
         <div>
-          <label className="profile-form-label">이메일</label>
+          <label className="block mb-2 font-bold">이메일</label>
           <input
             type="text"
             value={initialEmail}
             readOnly
-            className="form-input"
-            style={{ backgroundColor: '#f0f0f0', color: '#666', cursor: 'not-allowed' }}
+            className="w-full p-2.5 border border-gray-300 rounded-lg text-base outline-none bg-[#f0f0f0] text-[#666] cursor-not-allowed"
           />
         </div>
       )}
 
       <div>
-        <label className="profile-form-label">닉네임</label>
+        <label className="block mb-2 font-bold">닉네임</label>
         <input 
             type="text" 
             value={nickname} 
             onChange={e => setNickname(e.target.value)}
-            className="form-input"
+            className="w-full p-2.5 border border-gray-300 rounded-lg text-base outline-none"
             required
         />
       </div>
 
       <div>
-        <label className="profile-form-label">지역</label>
+        <label className="block mb-2 font-bold">지역</label>
         <div style={{ display: 'flex', gap: '8px' }}>
             <select 
                 value={regionId} 
                 onChange={e => setRegionId(e.target.value)}
-                className="form-input"
+                className="w-full p-2.5 border border-gray-300 rounded-lg text-base outline-none flex-1"
                 disabled={regionsLoading}
-                style={{ flex: 1 }}
             >
                 {regionsLoading ? (
                     <option value="">불러오는 중...</option>
@@ -211,7 +209,7 @@ export default function ProfileEditForm({
                 type="button" 
                 onClick={handleDetectLocation}
                 disabled={detecting}
-                className="profile-detect-location-btn"
+                className="px-3 py-2 bg-gray text-white border-none rounded-md cursor-pointer text-sm disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
                 {detecting ? "감지 중..." : "현재 위치 찾기"}
             </button>
@@ -220,7 +218,7 @@ export default function ProfileEditForm({
 
       <button 
         type="submit" 
-        className="profile-submit-btn"
+        className="w-full p-3.5 bg-primary text-white border-none rounded-lg text-base font-bold cursor-pointer mt-3 disabled:bg-[#ffcfb0] disabled:cursor-not-allowed"
         disabled={loading}
       >
         {loading ? '처리 중...' : submitButtonText}

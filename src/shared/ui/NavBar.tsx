@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../../styles/navbar.css';
+// import '../../styles/navbar.css';
 
 interface NavBarProps {
   isLoggedIn: boolean;
@@ -24,10 +24,10 @@ interface NavButtonProps {
   className?: string;
 }
 
-const NavButton = ({ label, path, isActive, onClick, className = 'navbar-item' }: NavButtonProps) => (
+const NavButton = ({ label, path, isActive, onClick, className = '' }: NavButtonProps) => (
   <button
     onClick={() => onClick(path)}
-    className={`${className} ${isActive ? 'active' : ''}`}
+    className={`${className} ${isActive ? 'text-primary font-bold' : ''}`}
   >
     {label}
   </button>
@@ -68,7 +68,10 @@ function NavBar({ isLoggedIn }: NavBarProps) {
 
   // 로그인 상태에 따른 버튼 렌더링
   const renderAuthButton = (isMobile = false) => {
-    const className = isMobile ? 'mobile-menu-item' : 'navbar-item';
+    const defaultClasses = isMobile 
+        ? "p-4 text-lg font-medium text-dark border-none bg-transparent text-left cursor-pointer hover:bg-light w-full block" 
+        : "px-3 py-2 text-base bg-transparent text-gray border-none cursor-pointer font-bold transition-colors duration-200";
+    
     const label = isLoggedIn ? '나의 당근' : '로그인';
     const path = isLoggedIn ? '/my' : '/login';
 
@@ -78,24 +81,24 @@ function NavBar({ isLoggedIn }: NavBarProps) {
         path={path}
         isActive={isActive(path)}
         onClick={handleNavigation}
-        className={className}
+        className={defaultClasses}
       />
     );
   };
 
   return (
     <>
-      <nav className="navbar-container">
-        <div className="navbar-left">
+      <nav className="w-full h-16 bg-white border-b border-border flex items-center justify-between px-5 relative z-[1000] transition-[top] duration-200">
+        <div className="flex items-center flex-1 md:flex-initial md:gap-10">
           <h1 
             onClick={() => handleNavigation('/products')}
-            className="navbar-logo"
+            className="text-primary text-2xl font-bold cursor-pointer m-0"
           >
             당근마켓
           </h1>
           
           {/* 데스크탑 네비게이션 링크 */}
-          <div className="navbar-links">
+          <div className="hidden md:flex md:gap-5 md:items-center">
             {NAV_ITEMS.map((item) => (
               <NavButton
                 key={item.id}
@@ -103,6 +106,7 @@ function NavBar({ isLoggedIn }: NavBarProps) {
                 path={item.path}
                 isActive={isActive(item.path)}
                 onClick={handleNavigation}
+                className="px-3 py-2 text-base bg-transparent text-gray border-none cursor-pointer font-bold transition-colors duration-200"
               />
             ))}
             {renderAuthButton()}
@@ -110,22 +114,22 @@ function NavBar({ isLoggedIn }: NavBarProps) {
         </div>
 
         {/* 모바일 메뉴 토글 버튼 */}
-        <button className="navbar-toggle" onClick={toggleMenu} aria-label="메뉴 열기">
+        <button className="block md:hidden p-2 bg-transparent border-none text-dark cursor-pointer" onClick={toggleMenu} aria-label="메뉴 열기">
           <MenuIcon />
         </button>
       </nav>
 
       {/* 모바일 사이드 메뉴 오버레이 */}
-      <div className={`mobile-menu-overlay ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-        <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
-          <div className="mobile-menu-header">
-            <div className="mobile-menu-title">당근마켓</div>
-            <button className="mobile-menu-close" onClick={toggleMenu} aria-label="메뉴 닫기">
+      <div className={`fixed top-0 right-0 w-full h-full bg-black/50 z-[2000] transition-all duration-300 ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={toggleMenu}>
+        <div className={`absolute top-0 right-0 w-[70%] max-w-[320px] h-full bg-white transition-transform duration-300 ease-in-out flex flex-col shadow-[-2px_0_8px_rgba(0,0,0,0.1)] ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`} onClick={(e) => e.stopPropagation()}>
+          <div className="flex justify-between items-center p-4 border-b border-border">
+            <div className="font-bold text-lg text-primary">당근마켓</div>
+            <button className="bg-transparent border-none text-2xl cursor-pointer text-gray p-1" onClick={toggleMenu} aria-label="메뉴 닫기">
               <CloseIcon />
             </button>
           </div>
           
-          <div className="mobile-menu-list">
+          <div className="flex flex-col py-5 overflow-y-auto">
             {NAV_ITEMS.map((item) => (
               <NavButton
                 key={item.id}
@@ -133,7 +137,7 @@ function NavBar({ isLoggedIn }: NavBarProps) {
                 path={item.path}
                 isActive={isActive(item.path)}
                 onClick={handleNavigation}
-                className="mobile-menu-item"
+                className="p-4 text-lg font-medium text-dark border-none bg-transparent text-left cursor-pointer hover:bg-light w-full block"
               />
             ))}
             
