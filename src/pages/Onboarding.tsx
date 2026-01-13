@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userApi } from '../api/user';
 import ProfileEditForm from '../components/ProfileEditForm';
@@ -7,12 +7,6 @@ import '../styles/login.css';
 export default function Onboarding() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [initialProfileImage, setInitialProfileImage] = useState('');
-
-  useEffect(() => {
-    const randomSeed = Math.random().toString(36).substring(7);
-    setInitialProfileImage(`https://robohash.org/${randomSeed}?set=set4`);
-  }, []);
 
   const handleOnboardingSubmit = async (data: { nickname: string; region_id: string; profile_image: string }) => {
      setError('');
@@ -41,7 +35,7 @@ export default function Onboarding() {
         {error && <div className="login-error" style={{marginBottom: '15px'}}>{error}</div>}
 
         <ProfileEditForm 
-            initialProfileImage={initialProfileImage}
+            initialProfileImage=""
             submitButtonText="시작하기"
             onSubmit={async (data) => {
                 try {

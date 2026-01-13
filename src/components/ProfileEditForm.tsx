@@ -22,6 +22,8 @@ export default function ProfileEditForm({
   submitButtonText = '저장하기',
   onSubmit
 }: ProfileEditFormProps) {
+
+  // onboarding data
   const [nickname, setNickname] = useState(initialNickname);
   const [regionId, setRegionId] = useState(initialRegionId);
   const [profileImage, setProfileImage] = useState(initialProfileImage);
@@ -34,7 +36,12 @@ export default function ProfileEditForm({
     // Update local state if props change (e.g. data loaded from parent)
     if (initialNickname) setNickname(initialNickname);
     if (initialRegionId) setRegionId(initialRegionId);
-    if (initialProfileImage) setProfileImage(initialProfileImage);
+    if (initialProfileImage) {
+      setProfileImage(initialProfileImage);
+    } else {
+      const randomSeed = Math.random().toString(36).substring(7);
+      setProfileImage(`https://robohash.org/${randomSeed}?set=set4`);
+    }
   }, [initialNickname, initialRegionId, initialProfileImage]);
 
   useEffect(() => {

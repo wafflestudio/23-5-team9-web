@@ -3,18 +3,15 @@ import ProfileEditForm from '../components/ProfileEditForm';
 import CoinTab from '../components/CoinTab';
 import PasswordTab from '../components/PasswordTab';
 import { useMyCarrotData } from '../hooks/useMyCarrotData';
+import { Loading } from "../components/StatusMessage";
 import '../styles/common.css';
 import '../styles/my-carrot.css';
-
-
-
-// --- 3. Main Component (구성 및 렌더링) ---
 
 function MyCarrot({ onLogout }: { onLogout: () => void }) {
   const { user, updateProfile, chargeCoin } = useMyCarrotData();
   const [activeTab, setActiveTab] = useState('info');
 
-  if (!user) return <div>Loading...</div>;
+  if (!user) return <Loading />;
 
   const TABS = [
     { id: 'info', label: '프로필 수정' },
