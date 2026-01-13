@@ -51,7 +51,7 @@ export default function Signup({ onSignup }: SignupFormProps) {
       navigate('/onboarding');
     } catch (err: any) {
       console.error(err);
-      const errorMsg = err.response?.data?.detail || '회원가입 중 오류가 발생했습니다.';
+      const errorMsg = err.response?.data?.error_msg || err.response?.data?.detail || '회원가입 중 오류가 발생했습니다.';
       setError(errorMsg);
     } finally {
       setLoading(false);
