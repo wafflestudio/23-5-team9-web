@@ -62,17 +62,10 @@ export default function Signup({ onSignup }: SignupFormProps) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-[420px] p-[50px_40px] bg-white rounded-[20px] shadow-[0_10px_25px_rgba(0,0,0,0.05)] border-none flex flex-col items-center">
-        <h1 
-            className="text-[2.2rem] font-extrabold text-primary mb-2 -tracking-[1px] cursor-pointer"
-            onClick={() => navigate('/products')}
-        >
-            당근마켓
-        </h1>
-        <h2 className="text-[1.2rem] text-gray-700 mb-[30px] font-semibold">회원가입</h2>
+    <div className="mx-auto mt-10 max-w-[420px] px-4">
+      <h2 className="mb-8 text-2xl font-bold text-gray-800">회원가입</h2>
         
-        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <input 
                 className="w-full p-4 text-base border-none rounded-xl bg-gray-100 text-slate-900 outline-none transition-all duration-200 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 placeholder:text-gray-400" 
                 type="email" 
@@ -118,7 +111,6 @@ export default function Signup({ onSignup }: SignupFormProps) {
           이미 계정이 있으신가요? 
           <Link to="/auth/login" className="text-primary font-semibold no-underline ml-1.5 hover:underline">로그인</Link>
         </div>
-      </div>
     </div>
   );
 }

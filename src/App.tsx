@@ -21,9 +21,11 @@ function App() {
     <AuthProvider>
       <SocialLoginHandler />
       <Routes>
-        {/* 메인 서비스 영역 */}
+        {/* 모든 페이지를 MainLayout 하나로 통합 */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Navigate to="/products" replace />} />
+          
+          {/* 기존 메인 서비스 */}
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/community" element={<CommunityList />} />
@@ -32,13 +34,11 @@ function App() {
           <Route path="/chat" element={<ChatList />} />
           <Route path="/chat/:chatId" element={<ChatRoom />} />
           <Route path="/my" element={<MyCarrot />} />
-        </Route>
 
-        {/* 인증 관련 영역 (Layout이 다름) */}
-        <Route path="/auth"> 
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="onboarding" element={<Onboarding />} />
+          {/* 인증 페이지도 이곳으로 통합 */}
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/signup" element={<Signup />} />
+          <Route path="/auth/onboarding" element={<Onboarding />} />
         </Route>
       </Routes>
     </AuthProvider>

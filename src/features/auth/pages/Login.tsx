@@ -41,12 +41,8 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-[420px] rounded-[20px] bg-white p-10 shadow-lg">
-        <h1 onClick={() => navigate('/products')} className="mb-2 cursor-pointer text-3xl font-extrabold tracking-tight text-primary">
-            당근마켓
-        </h1>
-        <h2 className="mb-8 text-xl font-semibold text-gray-700">로그인</h2>
+    <div className="mx-auto mt-10 max-w-[420px] px-4">
+      <h2 className="mb-8 text-2xl font-bold text-gray-800">로그인</h2>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <InputField 
@@ -85,7 +81,6 @@ export default function Login() {
           아직 계정이 없으신가요? 
           <Link to="/auth/signup" className="ml-1.5 font-semibold text-primary hover:underline">회원가입</Link>
         </div>
-      </div>
     </div>
   );
 }
