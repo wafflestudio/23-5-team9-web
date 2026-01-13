@@ -1,5 +1,6 @@
 import fetchClient from './client';
-import { MAIN_API_URL } from './config';
+
+const BACKEND_URL = 'https://dev.server.team9-toy-project.p-e.kr';
 
 export const authApi = {
     signup: (data: any) => fetchClient('/api/user/', {
@@ -10,5 +11,5 @@ export const authApi = {
         method: 'POST',
         body: JSON.stringify(data),
     }),
-    getGoogleLoginUrl: () => `${MAIN_API_URL}/api/auth/oauth2/login/google`
+    getGoogleLoginUrl: () => `${BACKEND_URL}/api/auth/oauth2/login/google`
 };
