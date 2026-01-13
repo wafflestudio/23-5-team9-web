@@ -2,55 +2,55 @@ import { useState } from 'react';
 import CommunityCard from "@/features/community/components/CommunityCard";
 import LocationSelector from "@/features/location/components/LocationSelector";
 import CategorySelector from "@/shared/ui/CategorySelector";
-import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 import { useCommunity, COMMUNITY_CATEGORIES, LOCATIONS } from "@/features/community/hooks/useCommunity";
+import { PageContainer } from "@/shared/layouts/PageContainer";
+import { DataListLayout } from "@/shared/layouts/DataListLayout";
 
 function CommunityList() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
   const { posts, loading, error } = useCommunity(selectedCategory, selectedLocation);
 
-  if (loading) return <Loading />;
-  if (error) return <ErrorMessage message={error} />;
-
   const locationLabel = LOCATIONS.find(loc => loc.value === selectedLocation)?.label;
 
-  return (
-    <div className="max-w-[1024px] mx-auto py-10 px-5">
-      <h1 className="text-2xl font-bold mb-5">동네생활</h1>
-      
+  const Filters = (
+    <div className="flex flex-col gap-2 bg-white pb-2">
       <LocationSelector 
-        selectedLocation={selectedLocation}
-        onLocationChange={setSelectedLocation}
-      />
-      
-      <CategorySelector 
-        categories={COMMUNITY_CATEGORIES}
-        selectedCategory={selectedCategory}
-        onSelect={setSelectedCategory}
-      />
-      
-      {selectedLocation !== 'all' && (
-        <div className="mb-4 p-3 bg-[#fff4e6] rounded-lg text-sm text-primary font-bold">
-          {locationLabel} 게시글 {posts.length}개
-        </div>
-      )}
-      
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-y-8 gap-x-6 mt-6">
-        {posts.map((post) => (
-          <CommunityCard key={post.id} post={post} />
-        ))}
-      </div>
-      
-      {posts.length === 0 && (
-        <EmptyState 
-          message={selectedLocation !== 'all' 
-            ? `${locationLabel}에 등록된 게시글이 없습니다.`
-            : '등록된 게시글이 없습니다.'
-          }
+          selectedLocation={selectedLocation}
+          onLocationChange={setSelectedLocation}
         />
-      )}
+        <CategorySelector 
+          categories={COMMUNITY_CATEGORIES}
+          selectedCategory={selectedCategory}
+          onSelect={setSelectedCategory}
+        />
+        {selectedLocation !== 'all' && (
+          <div className="p-3 bg-[#fff4e6] rounded-lg text-sm text-primary font-bold w-fit">
+            {locationLabel} 게시글 {posts.length}개
+          </div>
+        )}
     </div>
+  );
+
+  return (
+    <PageContainer title="동네생활">
+      <DataListLayout
+        isLoading={loading}
+        error={error}
+        isEmpty={posts.length === 0}
+        emptyMessage={selectedLocation !== 'all' 
+          ? `${locationLabel}에 등록된 게시글이 없습니다.`
+          : '등록된 게시글이 없습니다.'
+        }
+        filters={Filters}
+      >
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-y-8 gap-x-6">
+          {posts.map((post) => (
+            <CommunityCard key={post.id} post={post} />
+          ))}
+        </div>
+      </DataListLayout>
+    </PageContainer>
   );
 }
 
