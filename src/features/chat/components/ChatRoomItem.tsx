@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import '../../../styles/chat-room.css';
 
 interface ChatRoom {
   id: number;
@@ -18,17 +17,17 @@ function ChatRoomItem({ room }: ChatRoomItemProps) {
 
   return (
     <div 
-      className="chat-room-item"
+      className="p-4 border-b border-border cursor-pointer flex justify-between hover:bg-light transition-colors"
       onClick={() => navigate(`/chat/${room.id}`)}
     >
-      <div className="chat-room-info-left">
-        <div className="chat-room-partner">{room.partner}</div>
-        <div className="chat-room-last-message">{room.lastMessage}</div>
+      <div className="flex flex-col">
+        <div className="font-bold mb-1.5 min-w-0 truncate">{room.partner}</div>
+        <div className="text-gray text-sm min-w-0 truncate">{room.lastMessage}</div>
       </div>
-      <div className="chat-room-info-right">
-        <div className="chat-room-time">{room.time}</div>
+      <div className="text-right flex flex-col items-end min-w-[60px]">
+        <div className="text-gray-light text-xs mb-1.5">{room.time}</div>
         {room.unread > 0 && (
-          <span className="chat-room-unread">
+          <span className="bg-primary text-white px-2 py-0.5 rounded-full text-xs font-bold inline-block">
             {room.unread}
           </span>
         )}

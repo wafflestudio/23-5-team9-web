@@ -4,7 +4,6 @@ import LocationSelector from "@/features/location/components/LocationSelector";
 import CategorySelector from "@/shared/ui/CategorySelector";
 import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 import { useCommunity, COMMUNITY_CATEGORIES, LOCATIONS } from "@/features/community/hooks/useCommunity";
-import "@/styles/common.css";
 import "@/styles/base-layout.css";
 import "@/styles/community.css";
 

@@ -16,8 +16,6 @@ import { AuthProvider, useAuth } from '@/features/auth/context/AuthContext';
 import { SocialLoginHandler } from '@/features/auth/components/SocialLoginHandler';
 import { MainLayout } from '@/shared/layouts/MainLayout';
 import { AuthLayout } from '@/features/auth/layouts/AuthLayout';
-// import '@/styles/common.css';
-// import '@/styles/app.css';
 
 // 내부 컴포넌트로 분리 (AuthContext를 사용하기 위해)
 function AppContent() {

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import "@/styles/common.css";
 import "@/styles/base-layout.css";
 import { useCommunityPost, Comment } from "@/features/community/hooks/useCommunity";
 

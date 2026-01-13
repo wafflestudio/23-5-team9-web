@@ -4,8 +4,7 @@ import CoinTab from '@/features/user/components/CoinTab';
 import PasswordTab from '@/features/user/components/PasswordTab';
 import { useMyCarrotData } from '@/features/user/hooks/useMyCarrotData';
 import { Loading } from "@/shared/ui/StatusMessage";
-import '@/styles/common.css';
-import '@/styles/my-carrot.css';
+import "@/styles/my-carrot.css";
 
 function MyCarrot({ onLogout }: { onLogout: () => void }) {
   const { user, updateProfile, chargeCoin } = useMyCarrotData();

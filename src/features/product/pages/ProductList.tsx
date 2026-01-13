@@ -3,7 +3,6 @@ import ProductCard from "@/features/product/components/ProductCard";
 import LocationSelector from "@/features/location/components/LocationSelector";
 import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 import { useProducts, LOCATIONS } from "@/features/product/hooks/useProducts";
-// import "@/styles/common.css";
 // import "@/styles/base-layout.css";
 // import "@/styles/product-list.css";
 
