@@ -17,7 +17,7 @@ export function PageContainer({ title, rightAction, children, fullWidth = false 
     <div className={`flex flex-col min-h-[calc(100vh-60px)] ${maxWidthClass} ${paddingClass}`}>
       {title && (
         <header className="mb-6 flex items-center justify-between px-4 sm:px-0">
-          <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+          <h1 className="text-2xl font-bold text-text-heading">{title}</h1>
           {rightAction && <div>{rightAction}</div>}
         </header>
       )}

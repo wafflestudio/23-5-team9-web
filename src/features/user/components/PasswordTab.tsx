@@ -11,7 +11,7 @@ const PasswordTab = () => {
       <PasswordInput label="현재 비밀번호" />
       <PasswordInput label="새 비밀번호" />
       <PasswordInput label="새 비밀번호 확인" />
-      <button type="submit" className="w-full mt-2.5 h-12 bg-primary text-white font-bold rounded-md hover:bg-primary-hover transition-colors">비밀번호 변경</button>
+      <button type="submit" className="w-full mt-2.5 h-12 bg-primary text-text-inverse font-bold rounded-md hover:bg-primary-hover transition-colors">비밀번호 변경</button>
     </form>
   );
 };

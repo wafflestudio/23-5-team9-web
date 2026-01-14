@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <PageContainer>
       <div className="max-w-[420px] mx-auto w-full mt-10">
-        <h2 className="mb-8 text-2xl font-bold text-gray-800">로그인</h2>
+        <h2 className="mb-8 text-2xl font-bold text-text-primary">로그인</h2>
           
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <Input 
@@ -49,9 +49,6 @@ export default function Login() {
             required
             value={form.password}
             onChange={handleChange}
-            wrapperClassName="w-full"
-            className="w-full rounded-xl bg-gray-100 p-4 text-base outline-none transition-all placeholder:text-gray-400 focus:bg-gray-200 focus:ring-2 focus:ring-primary/10 pr-[50px]"
-            toggleButtonClassName="absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent text-gray-500 text-[13px] font-semibold cursor-pointer border-none"
           />
           
           <Button 
@@ -64,20 +61,20 @@ export default function Login() {
             {loading ? '로그인 중...' : '로그인'}
           </Button>
           
-          {error && <div className="mt-3 text-center text-sm font-medium text-red-500">{error}</div>}
+          {error && <div className="mt-3 text-center text-sm font-medium text-status-error">{error}</div>}
         </form>
 
         <Button 
           onClick={() => window.location.href = authApi.getGoogleLoginUrl()}
           variant="outline"
           fullWidth
-          className="mt-6 flex items-center justify-center gap-2 bg-white"
+          className="mt-6 flex items-center justify-center gap-2 bg-bg-page"
         >
           <GoogleIcon /> Google로 계속하기
         </Button>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          아직 계정이 없으신가요? 
+        <div className="mt-6 text-center text-sm text-text-secondary">
+          아직 계정이 없으신가요?
           <Link to="/auth/signup" className="ml-1.5 font-semibold text-primary hover:underline">회원가입</Link>
         </div>
       </div>

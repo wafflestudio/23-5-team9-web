@@ -94,14 +94,14 @@ export default function NeighborhoodMap() {
   return (
     <PageContainer title="동네 지도">
       {loading && <Loading />}
-      {error && <div className="text-red-500 text-center py-5">{error}</div>}
-      
+      {error && <div className="text-status-error text-center py-5">{error}</div>}
+
       {location && (
         <div className="flex flex-col gap-4">
-          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 text-lg">
+          <div className="bg-bg-box-light rounded-xl p-4 border border-border-base text-lg">
             현재 위치: <strong className="text-primary">{address}</strong>
           </div>
-          <div className="h-[500px] w-full rounded-xl overflow-hidden border border-gray-200 z-0 relative">
+          <div className="h-[500px] w-full rounded-xl overflow-hidden border border-border-base z-0 relative">
             <MapContainer center={[location.lat, location.lng]} zoom={16} style={{ height: '100%', width: '100%' }}>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

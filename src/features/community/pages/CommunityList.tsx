@@ -14,10 +14,10 @@ function CommunityList() {
   const locationLabel = LOCATIONS.find(loc => loc.value === selectedLocation)?.label;
 
   const Filters = (
-    <div className="flex flex-col gap-2 bg-white pb-2">
-      <LocationSelector 
-          selectedLocation={selectedLocation}
-          onLocationChange={setSelectedLocation}
+    <div className="flex flex-col gap-2 bg-bg-page pb-2">
+      <LocationSelector
+          selected={selectedLocation}
+          onChange={setSelectedLocation}
         />
         <CategorySelector 
           categories={COMMUNITY_CATEGORIES}

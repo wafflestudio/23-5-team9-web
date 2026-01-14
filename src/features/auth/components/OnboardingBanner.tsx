@@ -18,9 +18,9 @@ export function OnboardingBanner() {
   return (
     <div className="bg-primary text-white p-3 text-center flex justify-center gap-2.5 items-center text-sm font-medium animate-fade-in">
       <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다!</span>
-      <button 
+      <button
         onClick={() => navigate('/auth/onboarding')}
-        className="bg-white text-primary border-none py-1 px-3 rounded cursor-pointer font-bold text-xs hover:bg-gray-100 transition-colors"
+        className="bg-text-inverse text-primary border-none py-1 px-3 rounded cursor-pointer font-bold text-xs hover:bg-bg-box-light transition-colors"
       >
         설정하러 가기
       </button>

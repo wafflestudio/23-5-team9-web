@@ -1,14 +1,133 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary: #ff6f0f;
-  --color-primary-hover: #e65f00;
-  --color-bg-gray: #f8f9fa; /* light 대체 */
+/* ============================================
+   디자인 토큰 (Design Tokens)
+   ============================================ */
+:root {
+  /* Brand Colors */
+  --color-brand: #ff6f0f;
+  --color-brand-hover: #e65f00;
+
+  /* Semantic Colors - Backgrounds */
+  --bg-page: #ffffff;           /* 전체 페이지 배경 */
+  --bg-box: #f3f4f6;            /* 입력창, 카드 등 컨텐츠 박스 배경 (gray-100) */
+  --bg-box-hover: #e5e7eb;      /* 박스 호버 상태 (gray-200) */
+  --bg-box-light: #f9fafb;      /* 매우 밝은 박스 배경 (gray-50) */
+  --bg-box-alt: #f8f9fa;        /* 대체 박스 배경 (기존 bg-gray) */
+
+  /* Semantic Colors - Text */
+  --text-primary: #1e293b;      /* 주 텍스트 (slate-800) */
+  --text-heading: #0f172a;      /* 제목 텍스트 (slate-900) */
+  --text-body: #334155;         /* 본문 텍스트 (slate-700) */
+  --text-secondary: #64748b;    /* 보조 텍스트 (slate-500, gray-500) */
+  --text-tertiary: #6b7280;     /* 3차 텍스트 (gray-500) */
+  --text-muted: #9ca3af;        /* 약한 텍스트 (gray-400) */
+  --text-disabled: #d1d5db;     /* 비활성 텍스트 (gray-300) */
+  --text-inverse: #ffffff;      /* 반전 텍스트 (버튼 등) */
+  --text-placeholder: #9ca3af;  /* placeholder 텍스트 (gray-400) */
+
+  /* Semantic Colors - Borders */
+  --border-light: #f3f4f6;      /* 매우 밝은 테두리 (gray-100) */
+  --border-base: #e5e7eb;       /* 기본 테두리 (gray-200) */
+  --border-medium: #d1d5db;     /* 중간 테두리 (gray-300) */
+  --border-dark: #9ca3af;       /* 진한 테두리 (gray-400) */
+
+  /* Semantic Colors - Status */
+  --status-error: #ef4444;      /* 에러 (red-500) */
+  --status-success: #10b981;    /* 성공 (green-500) */
+  --status-warning: #f59e0b;    /* 경고 (amber-500) */
+  --status-info: #3b82f6;       /* 정보 (blue-500) */
+
+  /* Fonts */
   --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* 전역 리셋만 남김 */
+/* ============================================
+   Tailwind Theme 매핑
+   ============================================ */
+@theme {
+  /* Brand Colors */
+  --color-primary: var(--color-brand);
+  --color-primary-hover: var(--color-brand-hover);
+
+  /* Background Colors */
+  --color-bg-page: var(--bg-page);
+  --color-bg-box: var(--bg-box);
+  --color-bg-box-hover: var(--bg-box-hover);
+  --color-bg-box-light: var(--bg-box-light);
+  --color-bg-box-alt: var(--bg-box-alt);
+
+  /* Text Colors */
+  --color-text-primary: var(--text-primary);
+  --color-text-heading: var(--text-heading);
+  --color-text-body: var(--text-body);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+  --color-text-inverse: var(--text-inverse);
+  --color-text-placeholder: var(--text-placeholder);
+
+  /* Border Colors */
+  --color-border-light: var(--border-light);
+  --color-border-base: var(--border-base);
+  --color-border-medium: var(--border-medium);
+  --color-border-dark: var(--border-dark);
+
+  /* Status Colors */
+  --color-status-error: var(--status-error);
+  --color-status-success: var(--status-success);
+  --color-status-warning: var(--status-warning);
+  --color-status-info: var(--status-info);
+
+  /* Font */
+  --font-display: var(--font-display);
+}
+
+/* ============================================
+   Dark Mode
+   ============================================ */
+.dark {
+  /* Brand Colors - 다크모드에서도 동일 */
+  --color-brand: #ff6f0f;
+  --color-brand-hover: #ff8534;
+
+  /* Background Colors - 더 부드러운 다크 톤 */
+  --bg-page: #1a1a1a;
+  --bg-box: #262626;
+  --bg-box-hover: #303030;
+  --bg-box-light: #222222;
+  --bg-box-alt: #242424;
+
+  /* Text Colors - 더 높은 가독성 */
+  --text-primary: #f5f5f5;
+  --text-heading: #ffffff;
+  --text-body: #e0e0e0;
+  --text-secondary: #b3b3b3;
+  --text-tertiary: #999999;
+  --text-muted: #808080;
+  --text-disabled: #5c5c5c;
+  --text-inverse: #ffffff;
+  --text-placeholder: #808080;
+
+  /* Border Colors - 더 부드러운 경계 */
+  --border-light: #2d2d2d;
+  --border-base: #3a3a3a;
+  --border-medium: #4a4a4a;
+  --border-dark: #5a5a5a;
+
+  /* Status Colors - 더 밝고 눈에 잘 띄는 색상 */
+  --status-error: #f87171;
+  --status-success: #34d399;
+  --status-warning: #fbbf24;
+  --status-info: #60a5fa;
+}
+
+/* ============================================
+   Global Styles
+   ============================================ */
 body {
-  @apply bg-white text-slate-800 antialiased;
+  @apply bg-bg-page text-text-primary antialiased;
   font-family: var(--font-display);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

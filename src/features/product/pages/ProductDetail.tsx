@@ -17,18 +17,18 @@ function ProductDetail() {
         ← 뒤로가기
       </button>
       
-      <section className="bg-white rounded-[20px] border-none shadow-[0_10px_25px_rgba(0,0,0,0.05)] overflow-hidden p-6">
+      <section className="bg-bg-page rounded-[20px] border-none shadow-[0_10px_25px_rgba(0,0,0,0.05)] overflow-hidden p-6">
         {product.imageUrl && (
           <div className="mb-5 rounded-lg overflow-hidden">
             <img src={product.imageUrl} alt={product.title} className="w-full max-h-[400px] object-cover" />
           </div>
         )}
-        
+
         <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
-        <p className="text-lg text-gray-500 mb-2.5">{product.category}</p>
+        <p className="text-lg text-text-secondary mb-2.5">{product.category}</p>
         <h3 className="text-2xl font-bold mb-5">{product.price.toLocaleString()}원</h3>
-        
-        <div className="flex gap-2.5 mb-5 text-gray-500 text-sm">
+
+        <div className="flex gap-2.5 mb-5 text-text-secondary text-sm">
           <span>{product.location}</span>
           <span>·</span>
           <span>{new Date(product.createdAt).toLocaleDateString()}</span>
@@ -36,16 +36,16 @@ function ProductDetail() {
           <span>관심 {product.likeCount}</span>
         </div>
 
-        <hr className="my-5 border-0 border-t border-gray-200" />
-        
+        <hr className="my-5 border-0 border-t border-border-base" />
+
         <div className="whitespace-pre-wrap leading-relaxed">
           {product.content}
         </div>
       </section>
       
       <div className="mt-5 flex gap-2.5">
-        <button 
-          className="flex-1 p-[15px] bg-primary text-white border-none rounded-md text-lg font-bold cursor-pointer hover:bg-primary-hover"
+        <button
+          className="flex-1 p-[15px] bg-primary text-text-inverse border-none rounded-md text-lg font-bold cursor-pointer hover:bg-primary-hover"
           onClick={() => alert('채팅 기능은 준비중입니다.')}
         >
           채팅하기

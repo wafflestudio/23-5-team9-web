@@ -33,15 +33,15 @@ function CommunityCard({ post }: CommunityCardProps) {
 
   return (
     <Link to={postDetailUrl} className="flex flex-col text-inherit transition-transform duration-200 hover:-translate-y-1">
-      <div className="relative w-full pt-[100%] rounded-xl overflow-hidden bg-gray-100 mb-3 border border-black/5">
+      <div className="relative w-full pt-[100%] rounded-xl overflow-hidden bg-bg-box mb-3 border border-black/5">
         {post.imageUrl ? (
-          <img 
-            src={post.imageUrl} 
-            alt={post.title} 
+          <img
+            src={post.imageUrl}
+            alt={post.title}
             className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300"
           />
         ) : (
-          <div className="absolute top-0 left-0 w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
+          <div className="absolute top-0 left-0 w-full h-full bg-bg-box flex items-center justify-center text-text-muted">
              {/* Placeholder content if needed */}
           </div>
         )}
@@ -52,26 +52,26 @@ function CommunityCard({ post }: CommunityCardProps) {
             {post.category}
           </span>
         </div>
-        <h3 className="text-base font-medium mb-1.5 leading-normal text-slate-900 tracking-tighter truncate line-clamp-2 break-keep">
+        <h3 className="text-base font-medium mb-1.5 leading-normal text-text-heading tracking-tighter truncate line-clamp-2 break-keep">
             {post.title}
         </h3>
-        <div className="text-[13px] text-gray-500 mb-1 flex items-center">
-          <span className="text-gray-500">{post.location}</span>
+        <div className="text-[13px] text-text-secondary mb-1 flex items-center">
+          <span className="text-text-secondary">{post.location}</span>
           <span className="mx-1">·</span>
-          <span className="text-gray-500">{formatTimeAgo(post.createdAt)}</span>
+          <span className="text-text-secondary">{formatTimeAgo(post.createdAt)}</span>
         </div>
         <div className="mt-auto pt-2.5 flex gap-3 items-center">
           <button
             onClick={handleLikeClick}
-            className={`border-none bg-none cursor-pointer p-1 flex items-center gap-1 text-[13px] ${isLiked ? 'text-primary' : 'text-gray-400'}`}
+            className={`border-none bg-none cursor-pointer p-1 flex items-center gap-1 text-[13px] ${isLiked ? 'text-primary' : 'text-text-muted'}`}
           >
             <span>{isLiked ? '♥' : '♡'}</span>
             <span>{likeCount}</span>
           </button>
-          <span className="text-gray-400 text-[13px]">
+          <span className="text-text-muted text-[13px]">
             💬 {post.commentCount}
           </span>
-          <span className="text-gray-400 text-[13px]">
+          <span className="text-text-muted text-[13px]">
             👁️ {post.viewCount}
           </span>
         </div>

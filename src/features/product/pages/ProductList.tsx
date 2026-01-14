@@ -12,7 +12,7 @@ function ProductList() {
   const currentLocLabel = LOCATIONS.find(l => l.value === filterLoc)?.label;
 
   const Filters = (
-    <div className="flex flex-col gap-2 bg-white pb-2">
+    <div className="flex flex-col gap-2 bg-bg-page pb-2">
       <LocationSelector selected={filterLoc} onChange={setFilterLoc} />
       {filterLoc !== 'all' && (
         <span className="inline-block px-3 py-1 bg-orange-100 text-primary rounded-full text-sm font-bold w-fit">

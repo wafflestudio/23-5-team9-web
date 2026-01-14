@@ -20,9 +20,9 @@ export default function CategorySelector({ categories, selectedCategory, onSelec
             onClick={() => onSelect(category.value)}
             className={`
               px-4 py-2 text-sm font-bold rounded-full transition-all cursor-pointer
-              ${isActive 
-                ? 'bg-primary text-white shadow-sm' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ${isActive
+                ? 'bg-primary text-text-inverse shadow-sm'
+                : 'bg-bg-box text-text-body hover:bg-bg-box-hover'
               }
             `}
           >

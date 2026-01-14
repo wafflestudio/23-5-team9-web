@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTheme } from '@/shared/context/ThemeContext';
 
 const MENUS = [
   { id: 'products', label: '중고거래', path: '/products' },
@@ -11,6 +12,7 @@ const MENUS = [
 export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNav = (path: string) => {
@@ -20,10 +22,10 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const NavItem = ({ label, path, mobile = false }: { label: string, path: string, mobile?: boolean }) => {
     const isActive = pathname.startsWith(path);
-    const baseStyle = mobile 
-      ? "block w-full p-4 text-left text-lg hover:bg-gray-50 cursor-pointer" 
+    const baseStyle = mobile
+      ? "block w-full p-4 text-left text-lg hover:bg-bg-box-light cursor-pointer"
       : "px-3 py-2 text-base font-bold cursor-pointer";
-    const activeStyle = isActive ? "text-primary font-bold" : "text-gray-700 font-medium";
+    const activeStyle = isActive ? "text-primary font-bold" : "text-text-body font-medium";
 
     return (
       <button onClick={() => handleNav(path)} className={`${baseStyle} ${activeStyle} transition-colors`}>
@@ -36,12 +38,12 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-white px-5 shadow-sm">
+      <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-bg-page px-5 shadow-sm">
         <div className="flex items-center gap-10">
           <h1 onClick={() => handleNav('/products')} className="cursor-pointer text-2xl font-bold text-primary">
             당근마켓
           </h1>
-          
+
           {/* 데스크탑 메뉴 */}
           <div className="hidden md:flex md:items-center md:gap-4">
             {MENUS.map(menu => <NavItem key={menu.id} {...menu} />)}
@@ -49,23 +51,43 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
           </div>
         </div>
 
-        {/* 모바일 햄버거 버튼 */}
-        <button className="md:hidden" onClick={() => setIsMenuOpen(true)}>
-          <MenuIcon />
-        </button>
+        <div className="flex items-center gap-3">
+          {/* 다크모드 토글 */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg hover:bg-bg-box transition-colors"
+            aria-label="테마 전환"
+          >
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
+
+          {/* 모바일 햄버거 버튼 */}
+          <button className="md:hidden" onClick={() => setIsMenuOpen(true)}>
+            <MenuIcon />
+          </button>
+        </div>
       </nav>
 
       {/* 모바일 메뉴 오버레이 */}
       <div className={`fixed inset-0 z-[2000] bg-black/50 transition-opacity ${isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'}`} onClick={() => setIsMenuOpen(false)}>
-        <div 
-          className={`absolute right-0 h-full w-[70%] max-w-[300px] bg-white shadow-xl transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        <div
+          className={`absolute right-0 h-full w-[70%] max-w-[300px] bg-bg-page shadow-xl transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
           onClick={e => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-4">
             <span className="text-lg font-bold text-primary">당근마켓</span>
-            <button onClick={() => setIsMenuOpen(false)}><CloseIcon /></button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg hover:bg-bg-box transition-colors"
+                aria-label="테마 전환"
+              >
+                {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+              </button>
+              <button onClick={() => setIsMenuOpen(false)}><CloseIcon /></button>
+            </div>
           </div>
-          
+
           <div className="flex flex-col py-2">
             {MENUS.map(menu => <NavItem key={menu.id} {...menu} mobile />)}
             <div className="my-2" />
@@ -86,5 +108,25 @@ const MenuIcon = () => (
 const CloseIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+);
+
+const SunIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
   </svg>
 );

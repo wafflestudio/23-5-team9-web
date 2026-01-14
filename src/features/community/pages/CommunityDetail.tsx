@@ -33,7 +33,7 @@ function CommunityDetail() {
     setIsSubmitting(true);
     // Mock: 댓글 추가 시뮬레이션
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     const comment: Comment = {
       id: Date.now(),
       author: '나',
@@ -42,7 +42,7 @@ function CommunityDetail() {
       likeCount: 0,
       isLiked: false
     };
-    
+
     setComments([...comments, comment]);
     setNewComment('');
     setIsSubmitting(false);
@@ -52,7 +52,7 @@ function CommunityDetail() {
     const now = new Date();
     const postDate = new Date(dateString);
     const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
-    
+
     if (diffInSeconds < 60) return '방금 전';
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}분 전`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}시간 전`;
@@ -61,19 +61,19 @@ function CommunityDetail() {
   };
 
   if (loading) return <Loading />;
-  if (error) return <div className="p-4 text-center text-red-500">{error}</div>;
+  if (error) return <div className="p-4 text-center text-status-error">{error}</div>;
   if (!post) return <div className="p-4 text-center">게시글 정보가 없습니다.</div>;
 
   return (
     <div className="max-w-[720px] mx-auto my-10 px-5">
-      <button 
-        onClick={() => navigate(-1)} 
-        className="mb-5 border-none bg-none cursor-pointer text-xl flex items-center gap-1.5 hover:text-gray-600 transition-colors"
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-5 border-none bg-transparent cursor-pointer text-xl flex items-center gap-1.5 hover:text-text-secondary transition-colors"
       >
         ← 뒤로가기
       </button>
-      
-      <section className="bg-white rounded-lg">
+
+      <section className="bg-bg-page rounded-lg">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xs text-primary bg-[#fff4e6] px-3 py-1 rounded font-bold">
             {post.category}
@@ -82,24 +82,17 @@ function CommunityDetail() {
 
         {post.imageUrl && (
           <div className="mb-5 rounded-lg overflow-hidden">
-            <img 
-              src={post.imageUrl} 
-              alt={post.title} 
-              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }} 
+            <img
+              src={post.imageUrl}
+              alt={post.title}
+              className="w-full max-h-[400px] object-cover"
             />
           </div>
         )}
-        
+
         <h2>{post.title}</h2>
-        
-        <div style={{ 
-          display: 'flex', 
-          gap: '10px', 
-          marginBottom: '20px', 
-          color: '#868e96', 
-          fontSize: '0.9rem',
-          alignItems: 'center'
-        }}>
+
+        <div className="flex gap-2.5 mb-5 text-text-secondary text-sm items-center">
           <span>{post.author}</span>
           <span>·</span>
           <span>{post.location}</span>
@@ -107,53 +100,27 @@ function CommunityDetail() {
           <span>{formatTimeAgo(post.createdAt)}</span>
         </div>
 
-        <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid #e9ecef' }} />
-        
-        <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', marginBottom: '20px' }}>
+        <hr className="my-5 border-0 border-t border-border-base" />
+
+        <div className="whitespace-pre-wrap leading-relaxed mb-5">
           {post.content}
         </div>
 
-        <div style={{ 
-          display: 'flex', 
-          gap: '20px', 
-          paddingTop: '16px', 
-          borderTop: '1px solid #e9ecef' 
-        }}>
+        <div className="flex gap-5 pt-4 border-t border-border-base">
           <button
             onClick={handleLikeClick}
-            style={{
-              border: 'none',
-              background: 'none',
-              cursor: 'pointer',
-              padding: '8px 12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              color: isLiked ? '#ff6f0f' : '#868e96',
-              fontSize: '14px',
-              fontWeight: 'bold'
-            }}
+            className={`border-none bg-transparent cursor-pointer p-2 px-3 flex items-center gap-2 text-sm font-bold ${
+              isLiked ? 'text-primary' : 'text-text-secondary'
+            }`}
           >
-            <span style={{ fontSize: '18px' }}>{isLiked ? '♥' : '♡'}</span>
+            <span className="text-lg">{isLiked ? '♥' : '♡'}</span>
             <span>좋아요 {likeCount}</span>
           </button>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            color: '#868e96', 
-            fontSize: '14px' 
-          }}>
+          <div className="flex items-center gap-2 text-text-secondary text-sm">
             <span>💬</span>
             <span>댓글 {comments.length}</span>
           </div>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            color: '#868e96', 
-            fontSize: '14px' 
-          }}>
+          <div className="flex items-center gap-2 text-text-secondary text-sm">
             <span>👁️</span>
             <span>조회 {post.viewCount}</span>
           </div>
@@ -161,41 +128,25 @@ function CommunityDetail() {
       </section>
 
       {/* 댓글 섹션 */}
-      <section className="card" style={{ marginTop: '20px' }}>
-        <h3 style={{ marginBottom: '20px', fontSize: '18px', fontWeight: 'bold' }}>
+      <section className="mt-5">
+        <h3 className="mb-5 text-lg font-bold">
           댓글 {comments.length}
         </h3>
 
         {/* 댓글 작성 폼 */}
-        <form onSubmit={handleCommentSubmit} style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', gap: '8px' }}>
+        <form onSubmit={handleCommentSubmit} className="mb-6">
+          <div className="flex gap-2">
             <input
               type="text"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="댓글을 입력하세요..."
-              style={{
-                flex: 1,
-                padding: '12px',
-                border: '1px solid #e9ecef',
-                borderRadius: '6px',
-                fontSize: '14px'
-              }}
+              className="flex-1 p-3 border border-border-base rounded-md text-sm"
             />
             <button
               type="submit"
               disabled={isSubmitting || !newComment.trim()}
-              style={{
-                padding: '12px 24px',
-                backgroundColor: '#ff6f0f',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                cursor: isSubmitting || !newComment.trim() ? 'not-allowed' : 'pointer',
-                opacity: isSubmitting || !newComment.trim() ? 0.5 : 1
-              }}
+              className="px-6 py-3 bg-primary text-text-inverse border-none rounded-md text-sm font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? '등록 중...' : '등록'}
             </button>
@@ -204,71 +155,32 @@ function CommunityDetail() {
 
         {/* 댓글 목록 */}
         {comments.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '40px 0', 
-            color: '#868e96' 
-          }}>
+          <div className="text-center py-10 text-text-secondary">
             아직 댓글이 없습니다. 첫 댓글을 남겨보세요!
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="flex flex-col gap-4">
             {comments.map((comment) => (
-              <div 
+              <div
                 key={comment.id}
-                style={{
-                  padding: '16px',
-                  backgroundColor: '#f8f9fa',
-                  borderRadius: '8px'
-                }}
+                className="p-4 bg-bg-box-alt rounded-lg"
               >
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'flex-start',
-                  marginBottom: '8px'
-                }}>
+                <div className="flex justify-between items-start mb-2">
                   <div>
-                    <span style={{ 
-                      fontWeight: 'bold', 
-                      marginRight: '8px',
-                      fontSize: '14px'
-                    }}>
+                    <span className="font-bold mr-2 text-sm">
                       {comment.author}
                     </span>
-                    <span style={{ 
-                      color: '#868e96', 
-                      fontSize: '12px' 
-                    }}>
+                    <span className="text-text-secondary text-xs">
                       {formatTimeAgo(comment.createdAt)}
                     </span>
                   </div>
                 </div>
-                <div style={{ 
-                  fontSize: '14px', 
-                  lineHeight: '1.5',
-                  color: '#212529'
-                }}>
+                <div className="text-sm leading-normal text-text-primary">
                   {comment.content}
                 </div>
-                <div style={{ 
-                  marginTop: '8px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '12px' 
-                }}>
+                <div className="mt-2 flex items-center gap-3">
                   <button
-                    style={{
-                      border: 'none',
-                      background: 'none',
-                      cursor: 'pointer',
-                      padding: '4px 8px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      color: '#868e96',
-                      fontSize: '12px'
-                    }}
+                    className="border-none bg-transparent cursor-pointer p-1 px-2 flex items-center gap-1 text-text-secondary text-xs"
                   >
                     <span>♡</span>
                     <span>{comment.likeCount}</span>
@@ -284,4 +196,3 @@ function CommunityDetail() {
 }
 
 export default CommunityDetail;
-

@@ -32,35 +32,35 @@ function ChatRoom() {
 
   return (
     <PageContainer fullWidth>
-      <div className="p-3 border-b border-gray-200 flex items-center bg-white sticky top-0 z-10">
+      <div className="p-3 border-b border-border-base flex items-center bg-bg-page sticky top-0 z-10">
         <button onClick={() => navigate(-1)} className="mr-3 bg-transparent border-none cursor-pointer text-xl flex items-center justify-center p-1">←</button>
         <h3 className="m-0 text-lg font-bold">채팅방 {chatId}</h3>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-2.5">
         {messages.map((msg) => (
           <div key={msg.id} className={`max-w-[70%] flex flex-col ${msg.sender === 'me' ? 'self-end items-end' : 'self-start items-start'}`}>
             <div className={`py-2.5 px-4 rounded-[15px] text-sm break-words max-w-full ${
-              msg.sender === 'me' 
-                ? 'bg-primary text-white rounded-tr-none' 
-                : 'bg-gray-50 text-slate-900 rounded-tl-none border border-gray-200'
+              msg.sender === 'me'
+                ? 'bg-primary text-text-inverse rounded-tr-none'
+                : 'bg-bg-box-light text-text-heading rounded-tl-none border border-border-base'
             }`}>
               {msg.text}
             </div>
-            <div className={`text-xs text-gray-500 mt-1 ${msg.sender === 'me' ? 'text-right' : 'text-left'}`}>
+            <div className={`text-xs text-text-secondary mt-1 ${msg.sender === 'me' ? 'text-right' : 'text-left'}`}>
               {msg.time}
             </div>
           </div>
         ))}
       </div>
 
-      <form onSubmit={handleSend} className="p-3 border-t border-gray-200 flex gap-2.5 bg-white pb-6">
+      <form onSubmit={handleSend} className="p-3 border-t border-border-base flex gap-2.5 bg-bg-page pb-6">
         <Input 
           type="text" 
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="메시지를 입력하세요"
-          className="flex-1 rounded-full bg-gray-50"
+          className="flex-1 rounded-full bg-bg-box-light"
           // Override rounded-xl to rounded-full for chat input look
         />
         <Button 

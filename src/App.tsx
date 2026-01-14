@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from '@/features/auth/context/AuthContext';
+import { ThemeProvider } from '@/shared/context/ThemeContext';
 import { MainLayout } from '@/shared/layouts/MainLayout';
 import { SocialLoginHandler } from '@/features/auth/components/SocialLoginHandler';
 
@@ -18,9 +19,10 @@ import CommunityDetail from '@/features/community/pages/CommunityDetail';
 
 function App() {
   return (
-    <AuthProvider>
-      <SocialLoginHandler />
-      <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <SocialLoginHandler />
+        <Routes>
         {/* 모든 페이지를 MainLayout 하나로 통합 */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Navigate to="/products" replace />} />
@@ -42,6 +44,7 @@ function App() {
         </Route>
       </Routes>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -30,10 +30,10 @@ export default function Onboarding() {
 
   return (
     <div className="mx-auto mt-10 max-w-[420px] px-4">
-      <h2 className="mb-4 text-2xl font-bold text-gray-800 border-b-[3px] border-primary inline-block pb-2">추가 정보 입력</h2>
-      <p className="mb-5 text-[#666]">닉네임과 지역, 프로필 이미지를 설정해주세요.</p>
-        
-      {error && <div className="text-[#ff4d4f] text-sm mb-[15px] text-center font-medium">{error}</div>}
+      <h2 className="mb-4 text-2xl font-bold text-text-primary border-b-[3px] border-primary inline-block pb-2">추가 정보 입력</h2>
+      <p className="mb-5 text-text-secondary">닉네임과 지역, 프로필 이미지를 설정해주세요.</p>
+
+      {error && <div className="text-status-error text-sm mb-[15px] text-center font-medium">{error}</div>}
 
       <ProfileEditForm 
             initialProfileImage=""

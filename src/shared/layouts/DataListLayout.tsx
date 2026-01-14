@@ -42,13 +42,13 @@ export function DataListLayout({
   return (
     <div className={`flex flex-col gap-4 ${className}`}>
       {filters && (
-        <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm py-2">
+        <div className="sticky top-0 z-10 bg-bg-page/95 backdrop-blur-sm py-2">
           {filters}
         </div>
       )}
-      
+
       {isEmpty ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+        <div className="flex flex-col items-center justify-center py-20 text-text-muted">
            <div className="text-4xl mb-2">📭</div>
            <p>{emptyMessage}</p>
         </div>
