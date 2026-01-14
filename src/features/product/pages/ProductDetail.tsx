@@ -27,8 +27,15 @@ function ProductDetail() {
       
       <section className="bg-bg-page rounded-2xl border border-border-base shadow-sm p-6 overflow-hidden">
         {product.imageUrl && (
-          <div className="mb-6 rounded-xl overflow-hidden bg-bg-box">
-            <img src={product.imageUrl} alt={product.title} className="w-full max-h-[400px] object-contain" />
+          // 수정됨: bg-bg-box(회색 배경) 제거. 
+          // 필요하다면 border-border-light로 아주 연한 테두리만 추가하거나, 아예 제거하여 깔끔하게 표현
+          <div className="mb-6 rounded-xl overflow-hidden border border-border-light/50">
+            <img 
+              src={product.imageUrl} 
+              alt={product.title} 
+              // object-contain 유지하여 이미지 전체 보임 + 배경은 이제 흰색(섹션 배경)
+              className="w-full max-h-[400px] object-contain" 
+            />
           </div>
         )}
 
@@ -50,8 +57,9 @@ function ProductDetail() {
       </section>
       
       <div className="mt-6 flex gap-3">
-         <Button variant="ghost" size="lg" className="border border-border-base bg-bg-page">
-            ♥ {product.likeCount}
+         {/* 수정됨: 직접 스타일을 넣는 대신 variant="outline" 사용 (StatCard, CoinTab과 통일) */}
+         <Button variant="outline" size="lg" className="gap-2">
+            <span className="text-red-500">♥</span> {product.likeCount}
          </Button>
         <Button
           size="lg"
