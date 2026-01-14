@@ -15,17 +15,23 @@ export interface Product {
   createdAt: string; // Added for UI
 }
 
-export function useProducts(selectedLocation?: string) {
+export function useProducts(selectedLocation?: string, selectedCategory?: string) {
   // useQuery(쿼리키, 패치함수)
   const { data, isLoading, error } = useQuery({
-    queryKey: ['products', selectedLocation], // 키가 바뀌면 자동 재요청됨 (의존성 배열 역할)
+    queryKey: ['products', selectedLocation, selectedCategory], // 키가 바뀌면 자동 재요청됨 (의존성 배열 역할)
     queryFn: () => fetchProducts(selectedLocation),
   });
 
-  return { 
-    products: data ?? [], // 데이터가 없을 때(로딩중) 빈 배열 반환
-    loading: isLoading, 
-    error: error ? (error as Error).message : null 
+  // 클라이언트 사이드 카테고리 필터링
+  const filteredProducts = data?.filter(product => {
+    if (!selectedCategory || selectedCategory === 'all') return true;
+    return product.category === selectedCategory;
+  }) ?? [];
+
+  return {
+    products: filteredProducts, // 필터링된 데이터 반환
+    loading: isLoading,
+    error: error ? (error as Error).message : null
   };
 }
 
