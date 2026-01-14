@@ -4,6 +4,7 @@ import LocationSelector from "@/features/location/components/LocationSelector";
 import { useProducts, LOCATIONS } from "@/features/product/hooks/useProducts";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";
+import Badge from "@/shared/ui/Badge";
 
 function ProductList() {
   const [filterLoc, setFilterLoc] = useState<string>('all');
@@ -15,9 +16,9 @@ function ProductList() {
     <div className="flex flex-col gap-2 bg-bg-page pb-2">
       <LocationSelector selected={filterLoc} onChange={setFilterLoc} />
       {filterLoc !== 'all' && (
-        <span className="inline-block px-3 py-1 bg-orange-100 text-primary rounded-full text-sm font-bold w-fit">
+        <Badge variant="primary" className="text-sm w-fit px-3 py-1">
           {currentLocLabel} · {products.length}개
-        </span>
+        </Badge>
       )}
     </div>
   );

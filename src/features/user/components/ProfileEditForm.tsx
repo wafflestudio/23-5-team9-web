@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { regionApi } from '@/features/location/api/region';
-import { Button } from "@/shared/ui/Button"; // 추가
-import { Input } from "@/shared/ui/Input";   // 추가
+import { Button } from "@/shared/ui/Button";
+import { Input } from "@/shared/ui/Input";
+import { Select } from "@/shared/ui/Select";
+import Avatar from "@/shared/ui/Avatar";
 
 interface Region {
   id: string;
@@ -26,7 +28,6 @@ export default function ProfileEditForm({
   onSubmit
 }: ProfileEditFormProps) {
 
-  // onboarding data
   const [nickname, setNickname] = useState(initialNickname);
   const [regionId, setRegionId] = useState(initialRegionId);
   const [profileImage, setProfileImage] = useState(initialProfileImage);
@@ -36,7 +37,6 @@ export default function ProfileEditForm({
   const [detecting, setDetecting] = useState(false);
 
   useEffect(() => {
-    // Update local state if props change (e.g. data loaded from parent)
     if (initialNickname) setNickname(initialNickname);
     if (initialRegionId) setRegionId(initialRegionId);
     if (initialProfileImage) {
@@ -53,7 +53,6 @@ export default function ProfileEditForm({
         const res = await regionApi.getRegions();
         const data = res.data;
         setRegions(data);
-        // If no region is selected and regions are loaded, select the first one
         if (!regionId && data.length > 0) {
           setRegionId(data[0].id);
         }
@@ -66,7 +65,6 @@ export default function ProfileEditForm({
     fetchRegions();
   }, []);
 
-  // Effect to set default region if loaded and none selected yet (handling race conditions)
   useEffect(() => {
     if (!regionId && regions.length > 0) {
       setRegionId(regions[0].id);
@@ -87,13 +85,11 @@ export default function ProfileEditForm({
           const res = await regionApi.detectRegion(latitude, longitude);
           const detectedRegion = res.data;
 
-          // Check if detected region is in the region list
           const found = regions.find(r => r.id === detectedRegion.id);
           if (found) {
               setRegionId(detectedRegion.id);
               alert(`현재 위치('${detectedRegion.name}')가 선택되었습니다.`);
           } else {
-              // Should not happen if regions are up to date, but if it does:
               setRegions(prev => [...prev, detectedRegion]);
               setRegionId(detectedRegion.id);
                alert(`현재 위치('${detectedRegion.name}')가 선택되었습니다.`);
@@ -113,8 +109,6 @@ export default function ProfileEditForm({
       }
     );
   };
-
-
 
   const generateRandomImage = () => {
     const randomSeed = Math.random().toString(36).substring(7);
@@ -138,16 +132,15 @@ export default function ProfileEditForm({
     }
   };
 
+  const regionOptions = regionsLoading
+    ? [{ value: '', label: '불러오는 중...' }]
+    : regions.map(r => ({ value: r.id, label: r.name }));
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      {/* 프로필 이미지 섹션 */}
       <div className="text-center mb-2">
         <div className="relative inline-block">
-          <img
-              src={profileImage || 'https://via.placeholder.com/100'}
-              alt="Profile"
-              className="w-[120px] h-[120px] rounded-full object-cover border border-border-base bg-bg-box-alt"
-          />
+          <Avatar src={profileImage} alt="Profile" size="xl" />
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-1 w-max">
             <Button type="button" size="sm" variant="secondary" onClick={generateRandomImage} className="text-xs py-1 px-3">
                 랜덤
@@ -168,10 +161,10 @@ export default function ProfileEditForm({
 
       <div>
         <label className="block mb-2 font-bold text-sm text-text-secondary">닉네임</label>
-        <Input 
-            value={nickname} 
-            onChange={e => setNickname(e.target.value)} 
-            required 
+        <Input
+            value={nickname}
+            onChange={e => setNickname(e.target.value)}
+            required
             placeholder="닉네임을 입력하세요"
         />
       </div>
@@ -179,30 +172,22 @@ export default function ProfileEditForm({
       <div>
         <label className="block mb-2 font-bold text-sm text-text-secondary">지역</label>
         <div className="flex gap-2">
-             {/* Select는 Input과 스타일을 맞춰 커스텀하거나 추후 Select 컴포넌트화 필요. 여기서는 Input 클래스를 차용 */}
-            <select
-                value={regionId}
-                onChange={e => setRegionId(e.target.value)}
-                className="w-full rounded-xl bg-bg-box p-4 text-base outline-none transition-all focus:bg-bg-box-hover focus:ring-2 focus:ring-primary/10 flex-1 appearance-none border-none"
-                disabled={regionsLoading}
-            >
-                {regionsLoading ? (
-                    <option value="">불러오는 중...</option>
-                ) : (
-                    regions.map(region => (
-                        <option key={region.id} value={region.id}>{region.name}</option>
-                    ))
-                )}
-            </select>
-            <Button 
-                type="button" 
-                onClick={handleDetectLocation} 
-                disabled={detecting}
-                variant="secondary"
-                className="whitespace-nowrap"
-            >
-                {detecting ? "감지 중..." : "위치 찾기"}
-            </Button>
+          <Select
+            options={regionOptions}
+            value={regionId}
+            onChange={e => setRegionId(e.target.value)}
+            disabled={regionsLoading}
+            className="flex-1"
+          />
+          <Button
+              type="button"
+              onClick={handleDetectLocation}
+              disabled={detecting}
+              variant="secondary"
+              className="whitespace-nowrap"
+          >
+              {detecting ? "감지 중..." : "위치 찾기"}
+          </Button>
         </div>
       </div>
 

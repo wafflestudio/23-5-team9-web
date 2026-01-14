@@ -1,33 +1,48 @@
 import { Button } from '@/shared/ui/Button';
 
-interface Category {
+export interface SelectOption {
   value: string;
   label: string;
 }
 
 interface CategorySelectorProps {
-  categories: Category[];
-  selectedCategory: string;
+  options: SelectOption[];
+  selected: string;
   onSelect: (value: string) => void;
+  className?: string;
+  title?: string;
 }
 
-export default function CategorySelector({ categories, selectedCategory, onSelect }: CategorySelectorProps) {
+export default function CategorySelector({
+  options,
+  selected,
+  onSelect,
+  className = '',
+  title
+}: CategorySelectorProps) {
   return (
-    <div className="flex gap-2 mb-6 flex-wrap">
-      {categories.map((category) => {
-        const isActive = selectedCategory === category.value;
-        return (
-          <Button
-            key={category.value}
-            onClick={() => onSelect(category.value)}
-            variant={isActive ? 'primary' : 'secondary'}
-            size="sm"
-            className="rounded-full"
-          >
-            {category.label}
-          </Button>
-        );
-      })}
+    <div className={className}>
+      {title && (
+        <h3 className="text-base font-bold mb-3 text-text-primary">
+          {title}
+        </h3>
+      )}
+      <div className="flex gap-2 flex-wrap">
+        {options.map((option) => {
+          const isActive = selected === option.value;
+          return (
+            <Button
+              key={option.value}
+              onClick={() => onSelect(option.value)}
+              variant={isActive ? 'primary' : 'secondary'}
+              size="sm"
+              className="rounded-full"
+            >
+              {option.label}
+            </Button>
+          );
+        })}
+      </div>
     </div>
   );
 }
