@@ -1,4 +1,5 @@
 import { LOCATIONS } from '@/features/product/hooks/useProducts';
+import { Button } from '@/shared/ui/Button';
 // import '@/styles/location-selector.css';
 
 interface LocationSelectorProps {
@@ -14,17 +15,15 @@ function LocationSelector({ selected, onChange }: LocationSelectorProps) {
       </h3>
       <div className="flex gap-2 flex-wrap">
         {LOCATIONS.map((location) => (
-          <button
+          <Button
             key={location.value}
             onClick={() => onChange(location.value)}
-            className={`px-4 py-2 text-sm font-bold rounded-full transition-all cursor-pointer ${
-              selected === location.value
-                ? 'bg-primary text-text-inverse shadow-sm'
-                : 'bg-bg-box text-text-body hover:bg-bg-box-hover'
-            }`}
+            variant={selected === location.value ? 'primary' : 'secondary'}
+            size="sm"
+            className="rounded-full"
           >
             {location.label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

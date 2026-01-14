@@ -1,4 +1,5 @@
 import { useState, forwardRef } from 'react';
+import { Button } from '@/shared/ui/Button';
 
 interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -22,14 +23,16 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             } ${className}`}
             {...props}
           />
-          <button
+          <Button
             type="button"
             onClick={() => setShow(!show)}
-            className="absolute right-[15px] top-1/2 -translate-y-1/2 bg-transparent text-text-secondary text-[13px] font-semibold cursor-pointer border-none hover:text-text-body"
+            variant="ghost"
+            size="sm"
+            className="absolute right-[15px] top-1/2 -translate-y-1/2 text-[13px] font-semibold"
             tabIndex={-1}
           >
             {show ? '숨기기' : '보기'}
-          </button>
+          </Button>
         </div>
         {error && <p className="mt-1 text-sm text-status-error ml-1">{error}</p>}
       </div>

@@ -1,4 +1,5 @@
 import { User } from '@/features/user/api/user';
+import { Button } from '@/shared/ui/Button';
 
 interface CoinTabProps {
   user: User;
@@ -16,13 +17,14 @@ const CoinTab = ({ user, onCharge }: CoinTabProps) => (
     <h4 className="mb-5 text-text-secondary">코인 충전하기</h4>
     <div className="grid grid-cols-3 gap-3">
       {[1000, 5000, 10000, 30000, 50000, 100000].map((amount) => (
-        <button
+        <Button
           key={amount}
           onClick={() => onCharge(amount)}
-          className="py-4 bg-bg-page border border-border-medium rounded-lg cursor-pointer text-base font-bold text-text-body transition-all hover:border-primary hover:text-primary hover:bg-[#fff4e6]"
+          variant="outline"
+          className="hover:border-primary hover:text-primary hover:bg-[#fff4e6]"
         >
           +{amount.toLocaleString()}
-        </button>
+        </Button>
       ))}
     </div>
   </div>

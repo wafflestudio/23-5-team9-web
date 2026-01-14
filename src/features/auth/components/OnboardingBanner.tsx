@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import { Button } from '@/shared/ui/Button';
 
 export function OnboardingBanner() {
   const { isLoggedIn, user } = useAuth();
@@ -18,12 +19,14 @@ export function OnboardingBanner() {
   return (
     <div className="bg-primary text-white p-3 text-center flex justify-center gap-2.5 items-center text-sm font-medium animate-fade-in">
       <span>서비스 이용을 위해 닉네임과 지역 설정이 필요합니다!</span>
-      <button
+      <Button
         onClick={() => navigate('/auth/onboarding')}
-        className="bg-text-inverse text-primary border-none py-1 px-3 rounded cursor-pointer font-bold text-xs hover:bg-bg-box-light transition-colors"
+        variant="secondary"
+        size="sm"
+        className="text-xs"
       >
         설정하러 가기
-      </button>
+      </Button>
     </div>
   );
 }

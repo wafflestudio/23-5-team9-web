@@ -33,7 +33,7 @@ function ChatRoom() {
   return (
     <PageContainer fullWidth>
       <div className="p-3 border-b border-border-base flex items-center bg-bg-page sticky top-0 z-10">
-        <button onClick={() => navigate(-1)} className="mr-3 bg-transparent border-none cursor-pointer text-xl flex items-center justify-center p-1">←</button>
+        <Button onClick={() => navigate(-1)} variant="ghost" className="mr-3 text-xl p-1">←</Button>
         <h3 className="m-0 text-lg font-bold">채팅방 {chatId}</h3>
       </div>
 

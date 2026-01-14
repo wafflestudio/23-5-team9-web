@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '@/shared/context/ThemeContext';
+import { Button } from '@/shared/ui/Button';
 
 const MENUS = [
   { id: 'products', label: '중고거래', path: '/products' },
@@ -22,19 +23,21 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const NavItem = ({ label, path, mobile = false }: { label: string, path: string, mobile?: boolean }) => {
     const isActive = pathname.startsWith(path);
-    const baseStyle = mobile
-      ? "block w-full p-4 text-left text-lg hover:bg-bg-box-light cursor-pointer"
-      : "px-3 py-2 text-base font-bold cursor-pointer";
+    const mobileStyle = mobile ? "w-full text-left text-lg" : "";
     const activeStyle = isActive ? "text-primary font-bold" : "text-text-body font-medium";
 
     return (
-      <button onClick={() => handleNav(path)} className={`${baseStyle} ${activeStyle} transition-colors`}>
+      <Button
+        onClick={() => handleNav(path)}
+        variant="ghost"
+        className={`${mobileStyle} ${activeStyle}`}
+      >
         {label}
-      </button>
+      </Button>
     );
   };
 
-  const authItem = { label: isLoggedIn ? '나의 당근' : '로그인', path: isLoggedIn ? '/my' : '/auth/login' };
+  const authItem = { label: isLoggedIn ? '마이캐럿' : '로그인', path: isLoggedIn ? '/my' : '/auth/login' };
 
   return (
     <>
@@ -53,18 +56,19 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
         <div className="flex items-center gap-3">
           {/* 다크모드 토글 */}
-          <button
+          <Button
             onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-bg-box transition-colors"
+            variant="ghost"
+            className="p-2"
             aria-label="테마 전환"
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-          </button>
+          </Button>
 
           {/* 모바일 햄버거 버튼 */}
-          <button className="md:hidden" onClick={() => setIsMenuOpen(true)}>
+          <Button variant="ghost" className="md:hidden" onClick={() => setIsMenuOpen(true)}>
             <MenuIcon />
-          </button>
+          </Button>
         </div>
       </nav>
 
@@ -77,20 +81,20 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
           <div className="flex items-center justify-between p-4">
             <span className="text-lg font-bold text-primary">당근마켓</span>
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-bg-box transition-colors"
+                variant="ghost"
+                className="p-2"
                 aria-label="테마 전환"
               >
                 {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-              </button>
-              <button onClick={() => setIsMenuOpen(false)}><CloseIcon /></button>
+              </Button>
+              <Button variant="ghost" onClick={() => setIsMenuOpen(false)}><CloseIcon /></Button>
             </div>
           </div>
 
           <div className="flex flex-col py-2">
             {MENUS.map(menu => <NavItem key={menu.id} {...menu} mobile />)}
-            <div className="my-2" />
             <NavItem {...authItem} mobile />
           </div>
         </div>

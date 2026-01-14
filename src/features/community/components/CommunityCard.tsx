@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CommunityPost } from '../hooks/useCommunity';
+import { Button } from '@/shared/ui/Button';
 
 interface CommunityCardProps {
   post: CommunityPost;
@@ -61,13 +62,15 @@ function CommunityCard({ post }: CommunityCardProps) {
           <span className="text-text-secondary">{formatTimeAgo(post.createdAt)}</span>
         </div>
         <div className="mt-auto pt-2.5 flex gap-3 items-center">
-          <button
+          <Button
             onClick={handleLikeClick}
-            className={`border-none bg-none cursor-pointer p-1 flex items-center gap-1 text-[13px] ${isLiked ? 'text-primary' : 'text-text-muted'}`}
+            variant="ghost"
+            size="sm"
+            className={`p-1 flex items-center gap-1 text-[13px] ${isLiked ? 'text-primary' : 'text-text-muted'}`}
           >
             <span>{isLiked ? '♥' : '♡'}</span>
             <span>{likeCount}</span>
-          </button>
+          </Button>
           <span className="text-text-muted text-[13px]">
             💬 {post.commentCount}
           </span>

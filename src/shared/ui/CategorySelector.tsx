@@ -1,3 +1,5 @@
+import { Button } from '@/shared/ui/Button';
+
 interface Category {
   value: string;
   label: string;
@@ -15,19 +17,15 @@ export default function CategorySelector({ categories, selectedCategory, onSelec
       {categories.map((category) => {
         const isActive = selectedCategory === category.value;
         return (
-          <button
+          <Button
             key={category.value}
             onClick={() => onSelect(category.value)}
-            className={`
-              px-4 py-2 text-sm font-bold rounded-full transition-all cursor-pointer
-              ${isActive
-                ? 'bg-primary text-text-inverse shadow-sm'
-                : 'bg-bg-box text-text-body hover:bg-bg-box-hover'
-              }
-            `}
+            variant={isActive ? 'primary' : 'secondary'}
+            size="sm"
+            className="rounded-full"
           >
             {category.label}
-          </button>
+          </Button>
         );
       })}
     </div>
