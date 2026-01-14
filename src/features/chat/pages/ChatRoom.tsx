@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { Input } from '@/shared/ui/Input';
-import { Button } from '@/shared/ui/Button';
+import { DetailHeader } from '@/shared/ui/DetailHeader';
+import { DetailSection } from '@/shared/ui/DetailSection';
+import { CommentForm } from '@/shared/ui/CommentForm';
 
 const mockMessages = [
   { id: 1, sender: 'partner', text: '안녕하세요! 이 상품 구매하고 싶어요.', time: '오후 2:00' },
@@ -12,37 +13,28 @@ const mockMessages = [
 
 function ChatRoom() {
   const { chatId } = useParams();
-  const navigate = useNavigate();
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState('');
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
-    
+
     const nextId = messages.length + 1;
-    setMessages([...messages, { 
-      id: nextId, 
-      sender: 'me', 
-      text: newMessage, 
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+    setMessages([...messages, {
+      id: nextId,
+      sender: 'me',
+      text: newMessage,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }]);
     setNewMessage('');
   };
 
   return (
     <PageContainer>
-      <div className="mb-4">
-        <Button
-          variant="ghost"
-          onClick={() => navigate(-1)}
-          className="pl-0 hover:bg-transparent hover:text-primary"
-        >
-          ← 뒤로가기
-        </Button>
-      </div>
+      <DetailHeader />
 
-      <section className="bg-bg-page rounded-2xl border border-border-base shadow-sm overflow-hidden flex flex-col" style={{ height: '70vh' }}>
+      <DetailSection className="flex flex-col p-0" style={{ height: '70vh' }}>
         {/* 채팅방 헤더 */}
         <div className="px-6 py-4 border-b border-border-base">
           <h3 className="text-lg font-bold">채팅방 {chatId}</h3>
@@ -67,23 +59,15 @@ function ChatRoom() {
         </div>
 
         {/* 입력 영역 */}
-        <form onSubmit={handleSend} className="px-6 py-4 border-t border-border-base flex gap-2.5 bg-bg-box/30">
-          <Input
-            type="text"
+        <div className="px-6 py-4 border-t border-border-base bg-bg-box/30">
+          <CommentForm
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            onSubmit={handleSend}
             placeholder="메시지를 입력하세요"
-            className="flex-1 bg-bg-page"
           />
-          <Button
-            type="submit"
-            variant="primary"
-            className="h-auto px-5 whitespace-nowrap"
-          >
-            전송
-          </Button>
-        </form>
-      </section>
+        </div>
+      </DetailSection>
     </PageContainer>
   );
 }

@@ -1,11 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useProduct } from "@/features/product/hooks/useProducts";
 import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Button } from "@/shared/ui/Button";
+import { DetailHeader } from "@/shared/ui/DetailHeader";
+import { DetailSection } from "@/shared/ui/DetailSection";
+import { DetailImage } from "@/shared/ui/DetailImage";
 
 function ProductDetail() {
-  const navigate = useNavigate();
   const { id } = useParams();
   const { product, loading, error } = useProduct(id);
 
@@ -15,28 +17,11 @@ function ProductDetail() {
 
   return (
     <PageContainer>
-       <div className="mb-4">
-        <Button 
-            variant="ghost" 
-            onClick={() => navigate(-1)} 
-            className="pl-0 hover:bg-transparent hover:text-primary"
-        >
-            ← 뒤로가기
-        </Button>
-      </div>
-      
-      <section className="bg-bg-page rounded-2xl border border-border-base shadow-sm p-6 overflow-hidden">
+      <DetailHeader />
+
+      <DetailSection>
         {product.imageUrl && (
-          // 수정됨: bg-bg-box(회색 배경) 제거. 
-          // 필요하다면 border-border-light로 아주 연한 테두리만 추가하거나, 아예 제거하여 깔끔하게 표현
-          <div className="mb-6 rounded-xl overflow-hidden border border-border-light/50">
-            <img 
-              src={product.imageUrl} 
-              alt={product.title} 
-              // object-contain 유지하여 이미지 전체 보임 + 배경은 이제 흰색(섹션 배경)
-              className="w-full max-h-[400px] object-contain" 
-            />
-          </div>
+          <DetailImage src={product.imageUrl} alt={product.title} />
         )}
 
         <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
@@ -54,13 +39,12 @@ function ProductDetail() {
         <div className="mt-6 whitespace-pre-wrap leading-relaxed text-text-body">
           {product.content}
         </div>
-      </section>
-      
+      </DetailSection>
+
       <div className="mt-6 flex gap-3">
-         {/* 수정됨: 직접 스타일을 넣는 대신 variant="outline" 사용 (StatCard, CoinTab과 통일) */}
-         <Button variant="outline" size="lg" className="gap-2">
-            <span className="text-red-500">♥</span> {product.likeCount}
-         </Button>
+        <Button variant="outline" size="lg" className="gap-2">
+          <span className="text-red-500">♥</span> {product.likeCount}
+        </Button>
         <Button
           size="lg"
           fullWidth

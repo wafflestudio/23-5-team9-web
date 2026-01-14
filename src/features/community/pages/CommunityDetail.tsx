@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useCommunityPost, Comment } from "@/features/community/hooks/useCommunity";
 import { Loading } from "@/shared/ui/StatusMessage";
-import { PageContainer } from "@/shared/layouts/PageContainer"; // Layout 추가
-import { Button } from "@/shared/ui/Button"; // Button 추가
-import { Input } from "@/shared/ui/Input";   // Input 추가
+import { PageContainer } from "@/shared/layouts/PageContainer";
+import { Button } from "@/shared/ui/Button";
+import { DetailHeader } from "@/shared/ui/DetailHeader";
+import { DetailSection } from "@/shared/ui/DetailSection";
+import { DetailImage } from "@/shared/ui/DetailImage";
+import { CommentForm } from "@/shared/ui/CommentForm";
 
 function CommunityDetail() {
-  const navigate = useNavigate();
   const { id } = useParams();
   const { post, loading, error } = useCommunityPost(id);
   const [isLiked, setIsLiked] = useState(false);
@@ -68,17 +70,9 @@ function CommunityDetail() {
 
   return (
     <PageContainer>
-      <div className="mb-4">
-        <Button 
-            variant="ghost" 
-            onClick={() => navigate(-1)} 
-            className="pl-0 hover:bg-transparent hover:text-primary"
-        >
-            ← 뒤로가기
-        </Button>
-      </div>
+      <DetailHeader />
 
-      <section className="bg-bg-page rounded-2xl p-6 shadow-sm border border-border-base">
+      <DetailSection>
         <div className="flex items-center gap-2 mb-4">
           <span className="text-xs text-primary bg-primary/10 px-3 py-1 rounded font-bold">
             {post.category}
@@ -86,13 +80,7 @@ function CommunityDetail() {
         </div>
 
         {post.imageUrl && (
-          <div className="mb-5 rounded-xl overflow-hidden">
-            <img
-              src={post.imageUrl}
-              alt={post.title}
-              className="w-full max-h-[400px] object-cover"
-            />
-          </div>
+          <DetailImage src={post.imageUrl} alt={post.title} />
         )}
 
         <h2 className="text-2xl font-bold mb-3">{post.title}</h2>
@@ -113,62 +101,54 @@ function CommunityDetail() {
 
         <div className="flex gap-4 pt-4 border-t border-border-base">
           <Button
-            variant={isLiked ? "primary" : "ghost"}
+            variant={isLiked ? "primary" : "outline"}
             size="sm"
             onClick={handleLikeClick}
-            className={!isLiked ? "bg-bg-box" : ""}
           >
             <span className="mr-2">{isLiked ? '♥' : '♡'}</span>
             좋아요 {likeCount}
           </Button>
-          
+
           <div className="flex items-center gap-2 text-text-secondary text-sm ml-auto">
             <span>💬 {comments.length}</span>
             <span>👁️ {post.viewCount}</span>
           </div>
         </div>
-      </section>
+      </DetailSection>
 
       {/* 댓글 섹션 */}
       <section className="mt-8">
         <h3 className="mb-4 text-lg font-bold">댓글 {comments.length}</h3>
 
-        <form onSubmit={handleCommentSubmit} className="mb-8 flex gap-2">
-            <div className="flex-1">
-                <Input
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="댓글을 입력하세요..."
-                    className="bg-bg-page" 
-                />
-            </div>
-            <Button 
-                type="submit" 
-                disabled={isSubmitting || !newComment.trim()}
-                className="h-auto" // Input 높이에 맞춤
-            >
-                등록
-            </Button>
-        </form>
+        <div className="mb-8">
+          <CommentForm
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onSubmit={handleCommentSubmit}
+            placeholder="댓글을 입력하세요..."
+            submitText="등록"
+            isSubmitting={isSubmitting}
+          />
+        </div>
 
         <div className="flex flex-col gap-4">
-            {comments.map((comment) => (
-              <div key={comment.id} className="p-5 bg-bg-page rounded-xl border border-border-base">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-bold text-sm">{comment.author}</span>
-                  <span className="text-text-secondary text-xs">{formatTimeAgo(comment.createdAt)}</span>
-                </div>
-                <div className="text-sm text-text-primary mb-3">{comment.content}</div>
-                <Button variant="ghost" size="sm" className="h-8 px-2 text-text-secondary">
-                    ♡ {comment.likeCount}
-                </Button>
+          {comments.map((comment) => (
+            <div key={comment.id} className="p-5 bg-bg-page rounded-xl border border-border-base">
+              <div className="flex justify-between items-start mb-2">
+                <span className="font-bold text-sm">{comment.author}</span>
+                <span className="text-text-secondary text-xs">{formatTimeAgo(comment.createdAt)}</span>
               </div>
-            ))}
-            {comments.length === 0 && (
-                <div className="text-center py-10 text-text-secondary">
-                    아직 댓글이 없습니다. 첫 댓글을 남겨보세요!
-                </div>
-            )}
+              <div className="text-sm text-text-primary mb-3">{comment.content}</div>
+              <Button variant="ghost" size="sm" className="h-8 px-2 text-text-secondary">
+                ♡ {comment.likeCount}
+              </Button>
+            </div>
+          ))}
+          {comments.length === 0 && (
+            <div className="text-center py-10 text-text-secondary">
+              아직 댓글이 없습니다. 첫 댓글을 남겨보세요!
+            </div>
+          )}
         </div>
       </section>
     </PageContainer>
