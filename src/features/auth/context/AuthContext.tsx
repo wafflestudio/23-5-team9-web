@@ -6,9 +6,9 @@ interface AuthContextType {
   isLoggedIn: boolean;
   needsOnboarding: boolean;
   user: User | null;
-  login: (token: string, refreshToken: string) => void;
+  login: (token: string, refreshToken: string) => Promise<boolean>;
   logout: () => void;
-  checkAuth: () => Promise<void>;
+  checkAuth: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -31,31 +31,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [navigate]);
 
   // 기존 fetchUserData 로직 이동
-  const checkAuth = useCallback(async () => {
+  const checkAuth = useCallback(async (): Promise<boolean> => {
     const token = localStorage.getItem('token');
     if (!token) {
       setIsLoggedIn(false);
-      return;
+      return false;
     }
 
     try {
       const { data } = await userApi.getMe();
       setUser(data);
       setIsLoggedIn(true);
-      setNeedsOnboarding(!data.nickname || !data.region);
+      const needsOnboard = !data.nickname || !data.region;
+      setNeedsOnboarding(needsOnboard);
+      return needsOnboard;
     } catch (e: any) {
       console.error("Failed to fetch user data:", e);
       if (e.response?.status === 401) {
         logout();
       }
+      return false;
     }
   }, [logout]);
 
-  const login = (token: string, refreshToken: string) => {
+  const login = async (token: string, refreshToken: string): Promise<boolean> => {
     localStorage.setItem('token', token);
     localStorage.setItem('refresh_token', refreshToken);
     setIsLoggedIn(true);
-    checkAuth(); // 로그인 후 유저 정보 및 온보딩 여부 확인
+    return await checkAuth(); // 로그인 후 유저 정보 및 온보딩 여부 확인
   };
 
   // 초기 로드 시 인증 체크 (App.tsx의 useEffect 대체)
