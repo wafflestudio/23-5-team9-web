@@ -1,73 +1,39 @@
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode, useMemo } from 'react';
-import { userApi, User } from '@/features/user/api/user';
+import { createContext, useContext, useCallback, ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { userKeys } from '@/features/user/hooks/useUser';
 
 interface AuthContextType {
-  user: User | null;
-  isLoggedIn: boolean;
-  isLoading: boolean;
-  needsOnboarding: boolean;
-  login: (token: string, refreshToken: string) => Promise<boolean>;
+  login: (token: string, refreshToken: string) => void;
   logout: () => void;
-  checkAuth: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const queryClient = useQueryClient();
+
+  const login = useCallback((token: string, refreshToken: string) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('refresh_token', refreshToken);
+    // 토큰 저장 후 유저 데이터 다시 fetch
+    queryClient.invalidateQueries({ queryKey: userKeys.me() });
+  }, [queryClient]);
 
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
-    setUser(null);
-  }, []);
-
-  const checkAuth = useCallback(async (): Promise<boolean> => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setUser(null);
-      setIsLoading(false);
-      return false;
-    }
-
-    try {
-      const { data } = await userApi.getMe();
-      setUser(data);
-      const needsOnboard = !data.nickname || !data.region;
-      return needsOnboard;
-    } catch (e: any) {
-      console.error("Failed to fetch user data:", e);
-      setUser(null);
-      localStorage.removeItem('token');
-      localStorage.removeItem('refresh_token');
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const login = useCallback(async (token: string, refreshToken: string): Promise<boolean> => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('refresh_token', refreshToken);
-    return await checkAuth();
-  }, [checkAuth]);
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  const isLoggedIn = useMemo(() => !!user, [user]);
-  const needsOnboarding = useMemo(() => !!user && (!user.nickname || !user.region), [user]);
+    // 캐시된 유저 데이터 제거
+    queryClient.setQueryData(userKeys.me(), null);
+    queryClient.removeQueries({ queryKey: userKeys.me() });
+  }, [queryClient]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, isLoading, needsOnboarding, login, logout, checkAuth }}>
+    <AuthContext.Provider value={{ login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// 편하게 쓰기 위한 커스텀 Hook
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within an AuthProvider');

@@ -1,18 +1,14 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useUser } from '@/features/user/hooks/useUser';
 import { Button } from '@/shared/ui/Button';
 
 export function OnboardingBanner() {
-  const { isLoggedIn, user } = useAuth();
+  const { user, needsOnboarding } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 유저 정보가 로드된 상태에서(user !== null), 닉네임이나 지역 정보가 없으면 온보딩 필요
-  // isLoggedIn이 true여도 user가 아직 로드되지 않은 시점(null)에는 배너를 띄우지 않음 (깜빡임 방지)
-  const isProfileIncomplete = user && (!user.nickname || !user.region);
-  
   // 온보딩 페이지가 아닌 곳에서만 배너 노출
-  const shouldShowBanner = isLoggedIn && isProfileIncomplete && location.pathname !== '/auth/onboarding';
+  const shouldShowBanner = user && needsOnboarding && location.pathname !== '/auth/onboarding';
 
   if (!shouldShowBanner) return null;
 

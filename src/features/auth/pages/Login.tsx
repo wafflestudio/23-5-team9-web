@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import { userApi } from '@/features/user/api/user';
 import PasswordInput from '@/shared/ui/PasswordInput';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Input } from '@/shared/ui/Input';
@@ -25,7 +26,12 @@ export default function Login() {
     setError('');
     try {
       const { data } = await authApi.login(form);
-      const needsOnboarding = await login(data.access_token, data.refresh_token);
+      login(data.access_token, data.refresh_token);
+
+      // 유저 정보 조회하여 온보딩 필요 여부 확인
+      const { data: user } = await userApi.getMe();
+      const needsOnboarding = !user.nickname || !user.region;
+
       if (needsOnboarding) {
         navigate('/auth/onboarding');
       } else {

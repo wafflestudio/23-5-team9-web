@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import { userApi } from '@/features/user/api/user';
 
 export function SocialLoginHandler() {
   const location = useLocation();
@@ -16,8 +17,12 @@ export function SocialLoginHandler() {
       // URL 정리
       window.history.replaceState({}, document.title, window.location.pathname);
 
-      // Context의 login 함수 호출 후 온보딩 여부에 따라 리다이렉션
-      login(accessToken, refreshToken).then((needsOnboarding) => {
+      // 토큰 저장
+      login(accessToken, refreshToken);
+
+      // 유저 정보 조회하여 온보딩 필요 여부 확인 후 리다이렉션
+      userApi.getMe().then(({ data: user }) => {
+        const needsOnboarding = !user.nickname || !user.region;
         if (needsOnboarding) {
           navigate('/auth/onboarding');
         } else {
