@@ -41,8 +41,8 @@ export function useUpdateUser() {
       const { data: result } = await userApi.updateOnboard(data);
       return result;
     },
-    onSuccess: (newUser) => {
-      queryClient.setQueryData(userKeys.me(), newUser);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
     },
   });
 }
