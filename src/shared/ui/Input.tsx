@@ -11,7 +11,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="w-full">
         <input
           ref={ref}
-          className={`w-full rounded-xl bg-bg-box p-4 text-base outline-none transition-all placeholder:text-text-placeholder focus:bg-bg-box-hover focus:ring-2 focus:ring-primary/10 ${
+          className={`w-full rounded-xl bg-bg-box p-4 text-base outline-none transition-all placeholder:text-text-placeholder focus:bg-bg-box-hover focus:ring-2 focus:ring-gray-300 ${
              error ? 'ring-2 ring-status-error/20 bg-red-50' : ''
           } ${className}`}
           {...props}
