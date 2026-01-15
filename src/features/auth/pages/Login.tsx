@@ -25,8 +25,12 @@ export default function Login() {
     setError('');
     try {
       const { data } = await authApi.login(form);
-      login(data.access_token, data.refresh_token);
-      navigate('/community');
+      const needsOnboarding = await login(data.access_token, data.refresh_token);
+      if (needsOnboarding) {
+        navigate('/auth/onboarding');
+      } else {
+        navigate('/products');
+      }
     } catch (err: any) {
       setError(err.response?.data?.detail || '이메일 또는 비밀번호가 올바르지 않습니다.');
     } finally {
