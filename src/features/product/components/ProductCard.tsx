@@ -5,12 +5,15 @@ import { Card, CardContent, CardTitle } from '@/shared/ui/Card';
 import Badge from '@/shared/ui/Badge';
 import { Button } from '@/shared/ui/Button';
 import { StatGroup } from '@/shared/ui/Stat';
+import Avatar from '@/shared/ui/Avatar';
+import { useUserProfile } from '@/features/user/hooks/useUser';
 
 const formatPrice = (price: number) => price.toLocaleString() + '원';
 
 export default function ProductCard({ product }: { product: Product }) {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(product.likeCount);
+  const { profile: sellerProfile } = useUserProfile(product.ownerId);
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -24,6 +27,18 @@ export default function ProductCard({ product }: { product: Product }) {
     <Link to={`/products/${product.id}`} className="group text-inherit no-underline">
       <Card>
         <CardContent>
+          {/* 판매자 프로필 */}
+          <div className="flex items-center gap-2 mb-3">
+            <Avatar
+              src={sellerProfile?.profile_image || undefined}
+              alt={sellerProfile?.nickname || '판매자'}
+              size="sm"
+            />
+            <span className="text-sm text-text-secondary truncate">
+              {sellerProfile?.nickname || '알 수 없음'}
+            </span>
+          </div>
+
           <div className="flex items-center gap-2 mb-2">
             {product.isSold && (
               <Badge variant="secondary" className="text-xs">
