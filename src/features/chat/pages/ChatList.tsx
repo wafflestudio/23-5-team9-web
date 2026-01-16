@@ -69,7 +69,7 @@ function ChatList() {
             key={room.roomId}
             room={{
               id: room.roomId,
-              partner: room.opponentNickname || '알 수 없음',
+              partnerId: room.opponentId,
               lastMessage: room.lastMessage || '',
               time: formatTime(room.lastMessageAt),
               unread: room.unreadCount,

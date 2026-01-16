@@ -5,8 +5,9 @@ import { DetailHeader } from '@/shared/ui/DetailHeader';
 import { DetailSection } from '@/shared/ui/DetailSection';
 import { CommentForm } from '@/shared/ui/CommentForm';
 import { Loading, ErrorMessage } from '@/shared/ui/StatusMessage';
-import { fetchMessages, sendMessage, markMessagesAsRead, Message } from '@/features/chat/api/chatApi';
-import { useUser } from '@/features/user/hooks/useUser';
+import { fetchMessages, sendMessage, markMessagesAsRead, fetchChatRooms, Message, ChatRoom as ChatRoomType } from '@/features/chat/api/chatApi';
+import { useUser, useUserProfile } from '@/features/user/hooks/useUser';
+import Avatar from '@/shared/ui/Avatar';
 
 function formatMessageTime(dateString: string): string {
   const date = new Date(dateString);
@@ -22,7 +23,11 @@ function ChatRoom() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const [roomInfo, setRoomInfo] = useState<ChatRoomType | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // opponent_id로 상대방 프로필 조회
+  const { profile: opponentProfile } = useUserProfile(roomInfo?.opponentId);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -38,10 +43,17 @@ function ChatRoom() {
 
     if (!chatId) return;
 
-    const loadMessages = async () => {
+    const loadData = async () => {
       try {
-        const data = await fetchMessages(chatId);
-        setMessages(data);
+        const [messagesData, roomsData] = await Promise.all([
+          fetchMessages(chatId),
+          fetchChatRooms(),
+        ]);
+        setMessages(messagesData);
+        const currentRoom = roomsData.find(r => r.roomId === chatId);
+        if (currentRoom) {
+          setRoomInfo(currentRoom);
+        }
         await markMessagesAsRead(chatId);
       } catch (err) {
         console.error('메시지 조회 실패:', err);
@@ -51,7 +63,7 @@ function ChatRoom() {
       }
     };
 
-    loadMessages();
+    loadData();
 
     // 주기적으로 새 메시지 확인 (폴링)
     const interval = setInterval(async () => {
@@ -96,9 +108,18 @@ function ChatRoom() {
       <DetailHeader />
 
       <DetailSection className="flex flex-col p-0" style={{ height: '70vh' }}>
-        {/* 채팅방 헤더 */}
+        {/* 채팅방 헤더 - 상대방 프로필 */}
         <div className="px-6 py-4 border-b border-border-base">
-          <h3 className="text-lg font-bold">채팅</h3>
+          <div className="flex items-center gap-3">
+            <Avatar
+              src={opponentProfile?.profile_image || undefined}
+              alt={opponentProfile?.nickname || '상대방'}
+              size="sm"
+            />
+            <div className="font-bold text-text-heading">
+              {opponentProfile?.nickname || '알 수 없음'}
+            </div>
+          </div>
         </div>
 
         {/* 메시지 영역 */}

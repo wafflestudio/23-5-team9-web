@@ -4,6 +4,7 @@ import { userApi, OnboardingParams, PatchUserParams } from '@/features/user/api/
 export const userKeys = {
   all: ['user'] as const,
   me: () => [...userKeys.all, 'me'] as const,
+  profile: (userId: string) => [...userKeys.all, 'profile', userId] as const,
 };
 
 export function useUser() {
@@ -59,4 +60,22 @@ export function usePatchUser() {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
     },
   });
+}
+
+export function useUserProfile(userId: string | undefined) {
+  const { data: profile, isLoading, error } = useQuery({
+    queryKey: userKeys.profile(userId || ''),
+    queryFn: async () => {
+      const { data } = await userApi.getUser(userId!);
+      return data;
+    },
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5, // 5분
+  });
+
+  return {
+    profile: profile ?? null,
+    isLoading,
+    error,
+  };
 }

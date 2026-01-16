@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
+import Avatar from '@/shared/ui/Avatar';
+import { useUserProfile } from '@/features/user/hooks/useUser';
 
 interface ChatRoom {
   id: string | number;
-  partner: string;
+  partnerId: string;
   lastMessage: string;
   time: string;
   unread: number;
@@ -14,15 +16,21 @@ interface ChatRoomItemProps {
 
 function ChatRoomItem({ room }: ChatRoomItemProps) {
   const navigate = useNavigate();
+  const { profile } = useUserProfile(room.partnerId);
 
   return (
     <div
-      className="p-4 border-b border-border-base cursor-pointer flex justify-between hover:bg-bg-box-light transition-colors"
+      className="p-4 border-b border-border-base cursor-pointer flex items-center gap-3 hover:bg-bg-box-light transition-colors"
       onClick={() => navigate(`/chat/${room.id}`)}
     >
-      <div className="flex flex-col">
-        <div className="font-bold mb-1.5 min-w-0 truncate">{room.partner}</div>
-        <div className="text-text-secondary text-sm min-w-0 truncate">{room.lastMessage}</div>
+      <Avatar
+        src={profile?.profile_image || undefined}
+        alt={profile?.nickname || '상대방'}
+        size="sm"
+      />
+      <div className="flex-1 min-w-0">
+        <div className="font-bold mb-1.5 truncate">{profile?.nickname || '알 수 없음'}</div>
+        <div className="text-text-secondary text-sm truncate">{room.lastMessage}</div>
       </div>
       <div className="text-right flex flex-col items-end min-w-[60px]">
         <div className="text-text-secondary text-xs mb-1.5">{room.time}</div>
