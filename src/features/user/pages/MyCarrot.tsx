@@ -26,7 +26,7 @@ function MyCarrot() {
     <div className="max-w-[600px] px-5 py-10 mx-auto">
       <div className="flex justify-between items-center mb-[30px]">
         <h2 className="text-2xl font-extrabold m-0">마이캐럿</h2>
-        <Button onClick={() => { logout(); navigate('/products'); }} variant="outline" size="sm">로그아웃</Button>
+        <Button onClick={() => { logout(); navigate('/auth/login'); }} variant="outline" size="sm">로그아웃</Button>
       </div>
 
       <div className="flex gap-2 mb-[30px] border-b border-border-base pb-0">

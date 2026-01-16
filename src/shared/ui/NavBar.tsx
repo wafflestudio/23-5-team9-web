@@ -3,12 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '@/shared/context/ThemeContext';
 import { Button } from '@/shared/ui/Button';
 
-const MENUS = [
-  { id: 'products', label: '중고거래', path: '/products' },
-  { id: 'community', label: '동네생활', path: '/community' },
-  { id: 'map', label: '동네지도', path: '/map' },
-  { id: 'chat', label: '채팅하기', path: '/chat' },
-];
+const MENUS: { id: string; label: string; path: string }[] = [];
 
 export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
@@ -43,7 +38,7 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
     <>
       <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-bg-page px-5 shadow-sm">
         <div className="flex items-center gap-10">
-          <h1 onClick={() => handleNav('/products')} className="cursor-pointer text-2xl font-bold text-primary">
+          <h1 onClick={() => handleNav(isLoggedIn ? '/my' : '/auth/login')} className="cursor-pointer text-2xl font-bold text-primary">
             당근마켓
           </h1>
 

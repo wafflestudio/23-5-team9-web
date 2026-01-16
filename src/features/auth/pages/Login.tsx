@@ -35,7 +35,7 @@ export default function Login() {
       if (needsOnboarding) {
         navigate('/auth/onboarding');
       } else {
-        navigate('/products');
+        navigate('/my');
       }
     } catch (err: any) {
       setError(err.response?.data?.detail || '이메일 또는 비밀번호가 올바르지 않습니다.');

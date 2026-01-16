@@ -26,7 +26,7 @@ export function SocialLoginHandler() {
         if (needsOnboarding) {
           navigate('/auth/onboarding');
         } else {
-          navigate('/products');
+          navigate('/my');
         }
       });
     }

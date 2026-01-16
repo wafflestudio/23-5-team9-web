@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { regionApi } from '@/features/location/api/region';
-import { useGeoLocation } from '@/features/location/hooks/useGeoLocation';
 import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import { Select } from "@/shared/ui/Select";
@@ -10,6 +8,14 @@ interface Region {
   id: string;
   name: string;
 }
+
+const DEFAULT_REGIONS: Region[] = [
+  { id: '1', name: '서울' },
+  { id: '2', name: '부산' },
+  { id: '3', name: '대구' },
+  { id: '4', name: '인천' },
+  { id: '5', name: '광주' },
+];
 
 interface ProfileEditFormProps {
   initialEmail?: string;
@@ -32,11 +38,8 @@ export default function ProfileEditForm({
   const [nickname, setNickname] = useState(initialNickname);
   const [regionId, setRegionId] = useState(initialRegionId);
   const [profileImage, setProfileImage] = useState(initialProfileImage);
-  const [regions, setRegions] = useState<Region[]>([]);
+  const [regions] = useState<Region[]>(DEFAULT_REGIONS);
   const [loading, setLoading] = useState(false);
-  const [regionsLoading, setRegionsLoading] = useState(true);
-
-  const { detectRegion, detecting } = useGeoLocation();
 
   useEffect(() => {
     if (initialNickname) setNickname(initialNickname);
@@ -50,44 +53,10 @@ export default function ProfileEditForm({
   }, [initialNickname, initialRegionId, initialProfileImage]);
 
   useEffect(() => {
-    const fetchRegions = async () => {
-      try {
-        const res = await regionApi.getRegions();
-        const data = res.data;
-        setRegions(data);
-        if (!regionId && data.length > 0) {
-          setRegionId(data[0].id);
-        }
-      } catch (error) {
-        console.error('Error fetching regions:', error);
-      } finally {
-        setRegionsLoading(false);
-      }
-    };
-    fetchRegions();
-  }, []);
-
-  useEffect(() => {
     if (!regionId && regions.length > 0) {
       setRegionId(regions[0].id);
     }
   }, [regions, regionId]);
-
-  const handleDetectLocation = async () => {
-    try {
-      const detectedRegion = await detectRegion();
-
-      const found = regions.find(r => r.id === detectedRegion.id);
-      if (!found) {
-        setRegions(prev => [...prev, detectedRegion]);
-      }
-      setRegionId(detectedRegion.id);
-      alert(`현재 위치('${detectedRegion.name}')가 선택되었습니다.`);
-    } catch (error: any) {
-      console.error("Error detecting location:", error);
-      alert(error.message || "위치 감지 실패");
-    }
-  };
 
   const generateRandomImage = () => {
     const randomSeed = Math.random().toString(36).substring(7);
@@ -111,9 +80,7 @@ export default function ProfileEditForm({
     }
   };
 
-  const regionOptions = regionsLoading
-    ? [{ value: '', label: '불러오는 중...' }]
-    : regions.map(r => ({ value: r.id, label: r.name }));
+  const regionOptions = regions.map(r => ({ value: r.id, label: r.name }));
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -150,24 +117,11 @@ export default function ProfileEditForm({
 
       <div>
         <label className="block mb-2 font-bold text-sm text-text-secondary">지역</label>
-        <div className="flex gap-2">
-          <Select
-            options={regionOptions}
-            value={regionId}
-            onChange={e => setRegionId(e.target.value)}
-            disabled={regionsLoading}
-            className="flex-1"
-          />
-          <Button
-              type="button"
-              onClick={handleDetectLocation}
-              disabled={detecting}
-              variant="secondary"
-              className="whitespace-nowrap"
-          >
-              {detecting ? "감지 중..." : "위치 찾기"}
-          </Button>
-        </div>
+        <Select
+          options={regionOptions}
+          value={regionId}
+          onChange={e => setRegionId(e.target.value)}
+        />
       </div>
 
       <Button
