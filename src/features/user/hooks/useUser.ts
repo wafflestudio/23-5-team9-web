@@ -1,45 +1,28 @@
-// 1. Import Libraries and APIs
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-// useQuery          : GET
-// useMutation       : POST, PUT, PATCH, DELETE
-// useQueryClient
-
 import { userApi, UpdateUserParams } from '@/features/user/api/user';
-// userApi           : getMe(), updateOnboard()
-// UpdateUserParams  : (for Onboarding)
 
-// ===============================================
-
-// 2. Query Key Factory
-// userKeys.me() equals ['user', 'me']
 export const userKeys = {
   all: ['user'] as const,
   me: () => [...userKeys.all, 'me'] as const,
 };
 
-// ===============================================
-
-// 3. useUser hook
 export function useUser() {
-  // (i) check if token is vaild
   const token = localStorage.getItem('token');
   
-  // (ii) if valid, then fetch info
   const { data: user, isLoading, error, refetch } = useQuery({
-    queryKey: userKeys.me(), // ['user', 'me']
+    queryKey: userKeys.me(), 
     queryFn: async () => {
       const { data } = await userApi.getMe();
       return data;
     },
-    enabled: !!token,         // only when token exists 
-    staleTime: 1000 * 60 * 5, // 5 min cache
+    enabled: !!token,        
+    staleTime: 1000 * 60 * 5,
     retry: false, 
   });
 
   const isLoggedIn = !!user;
   const needsOnboarding = !!user && (!user.nickname || !user.region);
 
-  // (iii) provide user info to customers
   return {
     user: user ?? null,
     isLoading,
@@ -50,9 +33,6 @@ export function useUser() {
   };
 }
 
-// ===============================================
-
-// 4. useUpdateUser hook
 export function useUpdateUser() {
   const queryClient = useQueryClient();
 
