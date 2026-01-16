@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
-import { useUpdateUser } from '@/features/user/hooks/useUser';
+import { useOnboarding } from '@/features/user/hooks/useUser';
 
 export default function Onboarding() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const updateUserMutation = useUpdateUser();
+  const onboardingMutation = useOnboarding();
 
   const handleOnboardingSubmit = async (data: { nickname: string; region_id: string; profile_image: string }) => {
      setError('');
@@ -17,7 +17,7 @@ export default function Onboarding() {
       }
 
       try {
-        await updateUserMutation.mutateAsync(data);
+        await onboardingMutation.mutateAsync(data);
         navigate('/community'); // Main page after onboarding
       } catch (err: any) {
         const detail = err.response?.data?.detail || '온보딩에 실패했습니다.';
