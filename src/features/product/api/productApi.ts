@@ -43,7 +43,22 @@ export async function fetchProducts(): Promise<Product[]> {
   return response.data.map(transformProduct);
 }
 
-export async function fetchProductById(id: string): Promise<Product> {
-  const response = await client.get<ProductApiResponse>(`/api/product/${id}`);
+// 내 상품 목록 조회
+export async function fetchMyProducts(): Promise<Product[]> {
+  const response = await client.get<ProductApiResponse[]>('/api/product/me');
+  return response.data.map(transformProduct);
+}
+
+// 상품 등록 요청 타입
+export interface CreateProductRequest {
+  title: string;
+  content: string;
+  price: number;
+  category_id: string;
+}
+
+// 상품 등록
+export async function createProduct(data: CreateProductRequest): Promise<Product> {
+  const response = await client.post<ProductApiResponse>('/api/product/me', data);
   return transformProduct(response.data);
 }

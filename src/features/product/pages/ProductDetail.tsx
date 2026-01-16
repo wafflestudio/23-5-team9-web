@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useProduct } from "@/features/product/hooks/useProducts";
+import { useProducts } from "@/features/product/hooks/useProducts";
 import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Button } from "@/shared/ui/Button";
@@ -10,7 +10,9 @@ import Badge from "@/shared/ui/Badge";
 
 function ProductDetail() {
   const { id } = useParams();
-  const { product, loading, error } = useProduct(id);
+  const { products, loading, error } = useProducts();
+  const product = products.find(p => p.id === id);
+
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 

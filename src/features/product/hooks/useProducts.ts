@@ -1,7 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchProducts, fetchProductById, Product } from '@/features/product/api/productApi';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  fetchProducts,
+  fetchMyProducts,
+  createProduct,
+  Product,
+} from '@/features/product/api/productApi';
 
-export type { Product } from '@/features/product/api/productApi';
+export type { Product, CreateProductRequest } from '@/features/product/api/productApi';
 
 export function useProducts(selectedCategory?: string) {
   const { data, isLoading, error } = useQuery({
@@ -9,7 +14,6 @@ export function useProducts(selectedCategory?: string) {
     queryFn: fetchProducts,
   });
 
-  // 클라이언트 사이드 카테고리 필터링
   const filteredProducts = data?.filter((product: Product) => {
     if (!selectedCategory || selectedCategory === 'all') return true;
     return product.categoryId === selectedCategory;
@@ -22,16 +26,29 @@ export function useProducts(selectedCategory?: string) {
   };
 }
 
-export function useProduct(id: string | undefined) {
+// 내 상품 목록 조회
+export function useMyProducts() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['product', id],
-    queryFn: () => fetchProductById(id!),
-    enabled: !!id,
+    queryKey: ['myProducts'],
+    queryFn: fetchMyProducts,
   });
 
   return {
-    product: data || null,
+    products: data ?? [],
     loading: isLoading,
     error: error ? (error as Error).message : null
   };
+}
+
+// 상품 등록
+export function useCreateProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['myProducts'] });
+    },
+  });
 }
