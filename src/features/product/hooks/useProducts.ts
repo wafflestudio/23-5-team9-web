@@ -27,10 +27,11 @@ export function useProducts(selectedCategory?: string) {
 }
 
 // 내 상품 목록 조회
-export function useMyProducts() {
+export function useMyProducts(options?: { enabled?: boolean }) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['myProducts'],
     queryFn: fetchMyProducts,
+    enabled: options?.enabled ?? true,
   });
 
   return {
