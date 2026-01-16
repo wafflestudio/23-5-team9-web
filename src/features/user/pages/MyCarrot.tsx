@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
 import CoinTab from '@/features/user/components/CoinTab';
 import PasswordTab from '@/features/user/components/PasswordTab';
+import MyProductsTab from '@/features/user/components/MyProductsTab';
 import { useMyCarrotData } from '@/features/user/hooks/useMyCarrotData';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { Loading } from "@/shared/ui/StatusMessage";
@@ -17,6 +18,7 @@ function MyCarrot() {
   if (!user) return <Loading />;
 
   const TABS = [
+    { id: 'products', label: '내 상품' },
     { id: 'info', label: '프로필 수정' },
     { id: 'coin', label: '코인 관리' },
     { id: 'password', label: '비밀번호 변경' },
@@ -49,6 +51,7 @@ function MyCarrot() {
       </div>
 
       <div className="content-area">
+        {activeTab === 'products' && <MyProductsTab />}
         {activeTab === 'info' && (
           <ProfileEditForm
             initialEmail={user.email}

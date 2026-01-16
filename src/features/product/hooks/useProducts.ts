@@ -1,50 +1,54 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchProducts, fetchProductById } from '@/features/product/api/productApi';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  fetchProducts,
+  fetchMyProducts,
+  createProduct,
+  Product,
+} from '@/features/product/api/productApi';
 
-export interface Product {
-  id: number;
-  ownerId: number;
-  title: string;
-  category: string;
-  categoryId: number;
-  content: string;
-  price: number;
-  likeCount: number;
-  location: string; // Added for UI consistency with PostCard
-  imageUrl: string | null; // Added for UI
-  createdAt: string; // Added for UI
-}
+export type { Product, CreateProductRequest } from '@/features/product/api/productApi';
 
-export function useProducts(selectedLocation?: string, selectedCategory?: string) {
-  // useQuery(쿼리키, 패치함수)
+export function useProducts(selectedCategory?: string) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['products', selectedLocation, selectedCategory], // 키가 바뀌면 자동 재요청됨 (의존성 배열 역할)
-    queryFn: () => fetchProducts(selectedLocation),
+    queryKey: ['products', selectedCategory],
+    queryFn: fetchProducts,
   });
 
-  // 클라이언트 사이드 카테고리 필터링
-  const filteredProducts = data?.filter(product => {
+  const filteredProducts = data?.filter((product: Product) => {
     if (!selectedCategory || selectedCategory === 'all') return true;
-    return product.category === selectedCategory;
+    return product.categoryId === selectedCategory;
   }) ?? [];
 
   return {
-    products: filteredProducts, // 필터링된 데이터 반환
+    products: filteredProducts,
     loading: isLoading,
     error: error ? (error as Error).message : null
   };
 }
 
-export function useProduct(id: string | undefined) {
+// 내 상품 목록 조회
+export function useMyProducts() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['product', id],
-    queryFn: () => fetchProductById(id!),
-    enabled: !!id, // id가 있을 때만 쿼리 실행
+    queryKey: ['myProducts'],
+    queryFn: fetchMyProducts,
   });
 
-  return { 
-    product: data || null, 
-    loading: isLoading, 
-    error: error ? (error as Error).message : null 
+  return {
+    products: data ?? [],
+    loading: isLoading,
+    error: error ? (error as Error).message : null
   };
+}
+
+// 상품 등록
+export function useCreateProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['myProducts'] });
+    },
+  });
 }

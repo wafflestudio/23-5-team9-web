@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useProduct } from "@/features/product/hooks/useProducts";
+import { useProducts } from "@/features/product/hooks/useProducts";
 import { Loading, ErrorMessage, EmptyState } from "@/shared/ui/StatusMessage";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Button } from "@/shared/ui/Button";
 import { DetailHeader } from "@/shared/ui/DetailHeader";
 import { DetailSection } from "@/shared/ui/DetailSection";
-import { DetailImage } from "@/shared/ui/DetailImage";
+import Badge from "@/shared/ui/Badge";
 
 function ProductDetail() {
   const { id } = useParams();
-  const { product, loading, error } = useProduct(id);
+  const { products, loading, error } = useProducts();
+  const product = products.find(p => p.id === id);
+
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
@@ -35,25 +37,17 @@ function ProductDetail() {
 
       <DetailSection>
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-xs text-primary bg-primary/10 px-3 py-1 rounded font-bold">
-            {product.category}
-          </span>
+          {product.isSold && (
+            <Badge variant="secondary" className="text-xs">
+              판매완료
+            </Badge>
+          )}
         </div>
-
-        {product.imageUrl && (
-          <DetailImage src={product.imageUrl} alt={product.title} />
-        )}
 
         <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
         <h3 className="text-3xl font-bold mb-6 text-text-heading">{product.price.toLocaleString()}원</h3>
 
-        <div className="flex gap-2 text-text-secondary text-sm pb-6 border-b border-border-base">
-          <span>{product.location}</span>
-          <span>·</span>
-          <span>{new Date(product.createdAt).toLocaleDateString()}</span>
-        </div>
-
-        <div className="mt-6 whitespace-pre-wrap leading-relaxed text-text-body">
+        <div className="mt-6 whitespace-pre-wrap leading-relaxed text-text-body border-t border-border-base pt-6">
           {product.content}
         </div>
 
