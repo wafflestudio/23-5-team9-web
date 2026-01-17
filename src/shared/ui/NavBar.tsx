@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useTheme } from '@/shared/context/ThemeContext';
+import { useTheme } from '@/shared/store/themeStore';
 import { Button } from '@/shared/ui/Button';
 
 const MENUS = [

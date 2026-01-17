@@ -4,7 +4,7 @@ import ProfileEditForm from '@/features/user/components/ProfileEditForm';
 import CoinTab from '@/features/user/components/CoinTab';
 import PasswordTab from '@/features/user/components/PasswordTab';
 import { useMyCarrotData } from '@/features/user/hooks/useMyCarrotData';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/shared/store/authStore';
 import { Loading } from "@/shared/ui/StatusMessage";
 import { Button } from '@/shared/ui/Button';
 import { TabBar, Tab } from '@/shared/ui/TabBar';

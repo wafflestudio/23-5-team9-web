@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/shared/store/authStore';
 import { userApi } from '@/features/user/api/user';
 import PasswordInput from '@/shared/ui/PasswordInput';
 import { PageContainer } from '@/shared/layouts/PageContainer';

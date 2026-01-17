@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/shared/store/authStore';
 import { userApi } from '@/features/user/api/user';
 
 export function SocialLoginHandler() {
