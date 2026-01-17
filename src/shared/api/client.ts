@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { MAIN_API_URL } from './config';
 
 const client: AxiosInstance = axios.create({
@@ -7,6 +7,23 @@ const client: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (error: AxiosError) => void;
+}> = [];
+
+const processQueue = (error: AxiosError | null, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token!);
+    }
+  });
+  failedQueue = [];
+};
 
 // 요청 인터셉터: 모든 요청에 자동으로 토큰 주입
 client.interceptors.request.use((config) => {
@@ -17,17 +34,67 @@ client.interceptors.request.use((config) => {
   return config;
 });
 
-// 응답 인터셉터: 에러 중앙 처리
+// 응답 인터셉터: 에러 중앙 처리 및 토큰 자동 갱신
 client.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // 401 Unauthorized 발생 시 처리
-      // 예: 컴포넌트 레벨에서 로그아웃 처리를 위해 에러를 그대로 전파하거나
-      // 전역 상태 관리를 통해 로그아웃 트리거
-      // 여기서는 일단 에러를 반환하여 호출 측에서 처리하도록 함
-      console.warn('Session expired or unauthorized');
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      // refresh 요청 자체가 401이면 로그아웃
+      if (originalRequest.url?.includes('/api/auth/tokens/refresh')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/auth/login';
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        // 이미 갱신 중이면 대기열에 추가
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return client(originalRequest);
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const refreshToken = localStorage.getItem('refresh_token');
+
+      if (!refreshToken) {
+        localStorage.removeItem('token');
+        window.location.href = '/auth/login';
+        return Promise.reject(error);
+      }
+
+      try {
+        // refresh token으로 새 토큰 발급
+        const response = await axios.get(`${MAIN_API_URL}/api/auth/tokens/refresh`, {
+          headers: { Authorization: `Bearer ${refreshToken}` },
+        });
+
+        const { access_token, refresh_token } = response.data;
+        localStorage.setItem('token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+
+        processQueue(null, access_token);
+
+        originalRequest.headers.Authorization = `Bearer ${access_token}`;
+        return client(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError as AxiosError, null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/auth/login';
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(error);
   }
 );
