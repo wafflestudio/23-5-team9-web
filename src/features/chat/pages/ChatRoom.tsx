@@ -4,6 +4,7 @@ import { Loading, ErrorMessage } from '@/shared/ui/StatusMessage';
 import { fetchMessages, sendMessage, markMessagesAsRead, fetchChatRooms, Message, ChatRoom as ChatRoomType } from '@/features/chat/api/chatApi';
 import { useUser, useUserProfile } from '@/features/user/hooks/useUser';
 import Avatar from '@/shared/ui/Avatar';
+import { DetailHeader } from '@/shared/ui/DetailHeader';
 
 function formatMessageTime(dateString: string): string {
   const date = new Date(dateString);
@@ -191,12 +192,7 @@ function ChatRoom() {
 
       {/* 데스크톱: 카드 레이아웃 */}
       <div className="hidden md:block w-full max-w-[1000px] mx-auto px-4 py-6 min-h-[calc(100vh-60px)]">
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-4 text-text-secondary hover:text-primary transition-colors"
-        >
-          ← 뒤로가기
-        </button>
+        <DetailHeader />
 
         <div className="bg-bg-page rounded-2xl border border-border-base shadow-sm overflow-hidden flex flex-col" style={{ height: '70vh' }}>
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border-base">
