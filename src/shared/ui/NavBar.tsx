@@ -43,11 +43,11 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
       <Button
         onClick={() => handleNav(path)}
         variant="ghost"
-        className={`${mobileStyle} ${activeStyle} relative`}
+        className={`${mobileStyle} ${activeStyle} gap-2`}
       >
         {label}
         {showBadge && (
-          <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs font-bold text-white">
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-bold text-white">
             {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
           </span>
         )}
