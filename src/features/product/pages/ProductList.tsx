@@ -196,7 +196,7 @@ function MyProducts() {
 type TabType = 'all' | 'my';
 
 const TABS: Tab<TabType>[] = [
-  { id: 'all', label: '전체 상품', to: '/products' },
+  { id: 'all', label: '전체 상품', to: '/products/all' },
   { id: 'my', label: '나의 상품', to: '/products/me' },
 ];
 
@@ -206,7 +206,7 @@ interface ProductListProps {
 
 function ProductList({ initialTab = 'all' }: ProductListProps) {
   return (
-    <PageContainer title="중고거래 매물">
+    <PageContainer title="중고거래">
       <TabBar tabs={TABS} activeTab={initialTab} />
       {initialTab === 'all' ? <AllProducts /> : <MyProducts />}
     </PageContainer>

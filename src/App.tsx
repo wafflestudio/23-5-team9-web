@@ -23,9 +23,10 @@ function App() {
         {/* 모든 페이지를 MainLayout 하나로 통합 */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Navigate to="/products" replace />} />
-          
+
           {/* 기존 메인 서비스 */}
-          <Route path="/products" element={<ProductList />} />
+          <Route path="/products" element={<Navigate to="/products/all" replace />} />
+          <Route path="/products/all" element={<ProductList initialTab="all" />} />
           <Route path="/products/me" element={<ProductList initialTab="my" />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/community" element={<CommunityList />} />
