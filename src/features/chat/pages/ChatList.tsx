@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ChatRoomItem from '@/features/chat/components/ChatRoomItem';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { Loading, ErrorMessage, EmptyState } from '@/shared/ui/StatusMessage';
+import { Loading, ErrorMessage, EmptyState, LoginRequired, OnboardingRequired } from '@/shared/ui/StatusMessage';
 import { fetchChatRooms, ChatRoom } from '@/features/chat/api/chatApi';
 import { useUser } from '@/features/user/hooks/useUser';
 import { useChatStore } from '@/shared/store/chatStore';
@@ -25,18 +24,15 @@ function formatTime(dateString: string | null): string {
 }
 
 function ChatList() {
-  const navigate = useNavigate();
-  const { isLoggedIn, isLoading: userLoading } = useUser();
+  const { isLoggedIn, isLoading: userLoading, needsOnboarding } = useUser();
   const { setTotalUnreadCount } = useChatStore();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (userLoading) return;
-
-    if (!isLoggedIn) {
-      navigate('/auth/login');
+    if (userLoading || !isLoggedIn || needsOnboarding) {
+      setLoading(false);
       return;
     }
 
@@ -69,9 +65,27 @@ function ChatList() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [isLoggedIn, userLoading, navigate]);
+  }, [isLoggedIn, userLoading, needsOnboarding, setTotalUnreadCount]);
 
-  if (userLoading || loading) return <Loading />;
+  if (userLoading) return <Loading />;
+
+  if (!isLoggedIn) {
+    return (
+      <PageContainer title="채팅">
+        <LoginRequired message="로그인하고 채팅을 시작하세요" />
+      </PageContainer>
+    );
+  }
+
+  if (needsOnboarding) {
+    return (
+      <PageContainer title="채팅">
+        <OnboardingRequired />
+      </PageContainer>
+    );
+  }
+
+  if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
   if (rooms.length === 0) return (
     <PageContainer title="채팅">
