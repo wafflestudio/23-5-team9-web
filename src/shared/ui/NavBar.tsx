@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '@/shared/store/themeStore';
+import { useChatStore } from '@/shared/store/chatStore';
 import { Button } from '@/shared/ui/Button';
 
 const MENUS = [
@@ -14,7 +15,17 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { totalUnreadCount, fetchUnreadCount } = useChatStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // 로그인 상태일 때 읽지 않은 메시지 수 폴링
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 3000);
+    return () => clearInterval(interval);
+  }, [isLoggedIn, fetchUnreadCount]);
 
   const handleNav = (path: string) => {
     navigate(path);
@@ -25,14 +36,21 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
     const isActive = pathname.startsWith(path);
     const mobileStyle = mobile ? "w-full text-left text-lg" : "";
     const activeStyle = isActive ? "text-primary font-bold" : "text-text-body font-medium";
+    const isChat = path === '/chat';
+    const showBadge = isChat && totalUnreadCount > 0;
 
     return (
       <Button
         onClick={() => handleNav(path)}
         variant="ghost"
-        className={`${mobileStyle} ${activeStyle}`}
+        className={`${mobileStyle} ${activeStyle} relative`}
       >
         {label}
+        {showBadge && (
+          <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs font-bold text-white">
+            {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
+          </span>
+        )}
       </Button>
     );
   };

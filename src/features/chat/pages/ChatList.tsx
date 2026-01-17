@@ -5,6 +5,7 @@ import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Loading, ErrorMessage, EmptyState } from '@/shared/ui/StatusMessage';
 import { fetchChatRooms, ChatRoom } from '@/features/chat/api/chatApi';
 import { useUser } from '@/features/user/hooks/useUser';
+import { useChatStore } from '@/shared/store/chatStore';
 
 function formatTime(dateString: string | null): string {
   if (!dateString) return '';
@@ -26,6 +27,7 @@ function formatTime(dateString: string | null): string {
 function ChatList() {
   const navigate = useNavigate();
   const { isLoggedIn, isLoading: userLoading } = useUser();
+  const { setTotalUnreadCount } = useChatStore();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +44,8 @@ function ChatList() {
       try {
         const data = await fetchChatRooms();
         setRooms(data);
+        const total = data.reduce((sum, room) => sum + room.unreadCount, 0);
+        setTotalUnreadCount(total);
       } catch (err) {
         console.error('채팅방 목록 조회 실패:', err);
         setError('채팅방 목록을 불러올 수 없습니다.');
@@ -57,6 +61,8 @@ function ChatList() {
       try {
         const data = await fetchChatRooms();
         setRooms(data);
+        const total = data.reduce((sum, room) => sum + room.unreadCount, 0);
+        setTotalUnreadCount(total);
       } catch (err) {
         console.error('채팅방 목록 갱신 실패:', err);
       }
