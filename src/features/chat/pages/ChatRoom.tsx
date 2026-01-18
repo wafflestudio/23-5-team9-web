@@ -183,7 +183,7 @@ function ChatRoom() {
         {/* 송금 메뉴 */}
         {showTransferMenu && (
           <div className="px-4 py-3 bg-bg-box border-b border-border-base">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-2">
               <Input
                 type="number"
                 placeholder="송금할 금액"
@@ -195,9 +195,21 @@ function ChatRoom() {
                 onClick={handleTransfer}
                 disabled={transferring || !transferAmount}
                 size="sm"
+                className="whitespace-nowrap"
               >
                 {transferring ? '송금 중...' : '송금'}
               </Button>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {[1000, 5000, 10000, 50000].map((amount) => (
+                <button
+                  key={amount}
+                  onClick={() => setTransferAmount(String((parseInt(transferAmount, 10) || 0) + amount))}
+                  className="px-3 py-1.5 text-xs border border-border-medium rounded-lg text-text-body hover:border-primary hover:text-primary hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors"
+                >
+                  +{amount.toLocaleString()}
+                </button>
+              ))}
             </div>
             <p className="text-xs text-text-secondary mt-2">
               {opponentProfile?.nickname || '상대방'}에게 코인을 송금합니다
@@ -286,7 +298,7 @@ function ChatRoom() {
           {/* 송금 메뉴 (데스크톱) */}
           {showTransferMenu && (
             <div className="px-4 py-3 bg-bg-box border-b border-border-base">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-2">
                 <Input
                   type="number"
                   placeholder="송금할 금액"
@@ -298,9 +310,21 @@ function ChatRoom() {
                   onClick={handleTransfer}
                   disabled={transferring || !transferAmount}
                   size="sm"
+                  className="whitespace-nowrap"
                 >
                   {transferring ? '송금 중...' : '송금'}
                 </Button>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {[1000, 5000, 10000, 50000].map((amount) => (
+                  <button
+                    key={amount}
+                    onClick={() => setTransferAmount(String((parseInt(transferAmount, 10) || 0) + amount))}
+                    className="px-3 py-1.5 text-xs border border-border-medium rounded-lg text-text-body hover:border-primary hover:text-primary hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors"
+                  >
+                    +{amount.toLocaleString()}
+                  </button>
+                ))}
               </div>
               <p className="text-xs text-text-secondary mt-2">
                 {opponentProfile?.nickname || '상대방'}에게 코인을 송금합니다
