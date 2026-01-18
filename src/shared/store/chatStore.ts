@@ -13,7 +13,7 @@ export const useChatStore = create<ChatState>((set) => ({
   fetchUnreadCount: async () => {
     try {
       const rooms = await fetchChatRooms();
-      const total = rooms.reduce((sum, room) => sum + room.unreadCount, 0);
+      const total = rooms.reduce((sum, room) => sum + room.unread_count, 0);
       set({ totalUnreadCount: total });
     } catch (err) {
       console.error('읽지 않은 메시지 수 조회 실패:', err);

@@ -12,7 +12,7 @@ function ProductDetail() {
   const { products, loading, error } = useProducts();
   const { user, isLoggedIn } = useUser();
   const product = products.find(p => p.id === id);
-  const { profile: sellerProfile } = useUserProfile(product?.ownerId);
+  const { profile: sellerProfile } = useUserProfile(product?.owner_id);
 
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -20,7 +20,7 @@ function ProductDetail() {
 
   useEffect(() => {
     if (product) {
-      setLikeCount(product.likeCount);
+      setLikeCount(product.like_count);
     }
   }, [product]);
 
@@ -39,14 +39,14 @@ function ProductDetail() {
       return;
     }
 
-    if (String(user?.id) === product.ownerId) {
+    if (String(user?.id) === product.owner_id) {
       alert('본인의 상품입니다.');
       return;
     }
 
     setChatLoading(true);
     try {
-      const roomId = await createOrGetRoom(product.ownerId);
+      const roomId = await createOrGetRoom(product.owner_id);
       navigate(`/chat/${roomId}`);
     } catch (err) {
       console.error('채팅방 생성 실패:', err);
@@ -79,7 +79,7 @@ function ProductDetail() {
 
       <DetailSection>
         <div className="flex items-center gap-2 mb-4">
-          {product.isSold && (
+          {product.is_sold && (
             <Badge variant="secondary" className="text-xs">
               판매완료
             </Badge>

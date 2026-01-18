@@ -40,10 +40,10 @@ const MyProductsTab = () => {
                   <p className="text-primary font-bold mt-1">{formatPrice(product.price)}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  {product.isSold && (
+                  {product.is_sold && (
                     <Badge variant="secondary" className="text-xs">판매완료</Badge>
                   )}
-                  <span className="text-xs text-text-muted">♡ {product.likeCount}</span>
+                  <span className="text-xs text-text-muted">♡ {product.like_count}</span>
                 </div>
               </div>
             </Link>

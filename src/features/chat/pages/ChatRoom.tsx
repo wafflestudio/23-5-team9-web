@@ -23,7 +23,7 @@ function ChatRoom() {
   const mobileMessagesEndRef = useRef<HTMLDivElement>(null);
   const desktopMessagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { profile: opponentProfile } = useUserProfile(roomInfo?.opponentId);
+  const { profile: opponentProfile } = useUserProfile(roomInfo?.opponent_id);
   const [showTransferMenu, setShowTransferMenu] = useState(false);
 
   const scrollToBottom = () => {
@@ -48,7 +48,7 @@ function ChatRoom() {
           fetchChatRooms(),
         ]);
         setMessages(messagesData);
-        const currentRoom = roomsData.find(r => r.roomId === chatId);
+        const currentRoom = roomsData.find(r => r.room_id === chatId);
         if (currentRoom) {
           setRoomInfo(currentRoom);
         }
@@ -106,7 +106,7 @@ function ChatRoom() {
     if (index === messages.length - 1) return true;
     const current = messages[index];
     const next = messages[index + 1];
-    return current.senderId !== next.senderId;
+    return current.sender_id !== next.sender_id;
   };
 
   if (userLoading || loading) return <Loading />;
@@ -145,7 +145,7 @@ function ChatRoom() {
           <TransferMenu
             userId={user?.id}
             currentCoin={user?.coin || 0}
-            recipientId={roomInfo?.opponentId}
+            recipientId={roomInfo?.opponent_id}
             recipientName={opponentProfile?.nickname || '상대방'}
           />
         )}
@@ -158,7 +158,7 @@ function ChatRoom() {
             </div>
           ) : (
             messages.map((msg, index) => {
-              const isMe = msg.senderId === String(user?.id);
+              const isMe = msg.sender_id === String(user?.id);
               const showTime = shouldShowTime(index);
 
               return (
@@ -177,7 +177,7 @@ function ChatRoom() {
                   </div>
                   {showTime && (
                     <span className="text-[11px] text-text-tertiary pb-0.5 shrink-0">
-                      {formatMessageTime(msg.createdAt)}
+                      {formatMessageTime(msg.created_at)}
                     </span>
                   )}
                 </div>
@@ -233,7 +233,7 @@ function ChatRoom() {
             <TransferMenu
               userId={user?.id}
               currentCoin={user?.coin || 0}
-              recipientId={roomInfo?.opponentId}
+              recipientId={roomInfo?.opponent_id}
               recipientName={opponentProfile?.nickname || '상대방'}
             />
           )}
@@ -245,7 +245,7 @@ function ChatRoom() {
               </div>
             ) : (
               messages.map((msg, index) => {
-                const isMe = msg.senderId === String(user?.id);
+                const isMe = msg.sender_id === String(user?.id);
                 const showTime = shouldShowTime(index);
 
                 return (
@@ -264,7 +264,7 @@ function ChatRoom() {
                     </div>
                     {showTime && (
                       <span className="text-[11px] text-text-tertiary pb-0.5 shrink-0">
-                        {formatMessageTime(msg.createdAt)}
+                        {formatMessageTime(msg.created_at)}
                       </span>
                     )}
                   </div>

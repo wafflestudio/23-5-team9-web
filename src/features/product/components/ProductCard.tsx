@@ -8,8 +8,8 @@ const formatPrice = (price: number) => price.toLocaleString() + '원';
 
 export default function ProductCard({ product }: { product: Product }) {
   const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(product.likeCount);
-  const { profile: sellerProfile } = useUserProfile(product.ownerId);
+  const [likeCount, setLikeCount] = useState(product.like_count);
+  const { profile: sellerProfile } = useUserProfile(product.owner_id);
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
 
           <div className="flex items-center gap-2 mb-2">
-            {product.isSold && (
+            {product.is_sold && (
               <Badge variant="secondary" className="text-xs">
                 판매완료
               </Badge>

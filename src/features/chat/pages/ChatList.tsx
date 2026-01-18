@@ -40,7 +40,7 @@ function ChatList() {
       try {
         const data = await fetchChatRooms();
         setRooms(data);
-        const total = data.reduce((sum, room) => sum + room.unreadCount, 0);
+        const total = data.reduce((sum, room) => sum + room.unread_count, 0);
         setTotalUnreadCount(total);
       } catch (err) {
         console.error('채팅방 목록 조회 실패:', err);
@@ -57,7 +57,7 @@ function ChatList() {
       try {
         const data = await fetchChatRooms();
         setRooms(data);
-        const total = data.reduce((sum, room) => sum + room.unreadCount, 0);
+        const total = data.reduce((sum, room) => sum + room.unread_count, 0);
         setTotalUnreadCount(total);
       } catch (err) {
         console.error('채팅방 목록 갱신 실패:', err);
@@ -98,13 +98,13 @@ function ChatList() {
       <div className="flex flex-col">
         {rooms.map((room) => (
           <ChatRoomItem
-            key={room.roomId}
+            key={room.room_id}
             room={{
-              id: room.roomId,
-              partnerId: room.opponentId,
-              lastMessage: room.lastMessage || '',
-              time: formatTime(room.lastMessageAt),
-              unread: room.unreadCount,
+              id: room.room_id,
+              partnerId: room.opponent_id,
+              lastMessage: room.last_message || '',
+              time: formatTime(room.last_message_at),
+              unread: room.unread_count,
             }}
           />
         ))}

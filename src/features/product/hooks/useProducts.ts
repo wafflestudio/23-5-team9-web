@@ -16,7 +16,7 @@ export function useProducts(selectedCategory?: string) {
 
   const filteredProducts = data?.filter((product: Product) => {
     if (!selectedCategory || selectedCategory === 'all') return true;
-    return product.categoryId === selectedCategory;
+    return product.category_id === selectedCategory;
   }) ?? [];
 
   return {
