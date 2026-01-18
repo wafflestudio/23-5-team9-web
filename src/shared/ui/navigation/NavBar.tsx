@@ -15,17 +15,21 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { totalUnreadCount, fetchUnreadCount } = useChatStore();
+  const { totalUnreadCount, fetchUnreadCount, setTotalUnreadCount } = useChatStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // 로그인 상태일 때 읽지 않은 메시지 수 폴링
+
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn) {
+      setTotalUnreadCount(0);
+      return;
+    }
 
     fetchUnreadCount();
     const interval = setInterval(fetchUnreadCount, 3000);
     return () => clearInterval(interval);
-  }, [isLoggedIn, fetchUnreadCount]);
+  }, [isLoggedIn, fetchUnreadCount, setTotalUnreadCount]);
 
   const handleNav = (path: string) => {
     navigate(path);
