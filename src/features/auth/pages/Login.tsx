@@ -9,6 +9,12 @@ import { Input } from '@/shared/ui/Input';
 import { Button } from '@/shared/ui/Button';
 import { GoogleIcon } from '@/shared/ui/Icons';
 
+// 이메일 형식 검증 함수
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -18,12 +24,34 @@ export default function Login() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    // 입력 중일 때는 에러 메시지 제거
+    if (error) setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    // 클라이언트 측 이메일 검증
+    if (!form.email.trim()) {
+      setError('이메일을 입력해주세요.');
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidEmail(form.email)) {
+      setError('올바른 이메일 형식을 입력해주세요.');
+      setLoading(false);
+      return;
+    }
+
+    if (!form.password) {
+      setError('비밀번호를 입력해주세요.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data } = await authApi.login(form);
       login(data.access_token, data.refresh_token);
@@ -38,7 +66,21 @@ export default function Login() {
         navigate('/products');
       }
     } catch (err: any) {
-      setError(err.response?.data?.detail || '이메일 또는 비밀번호가 올바르지 않습니다.');
+      // 다양한 형태의 에러 응답 처리
+      let errorMessage = '이메일 또는 비밀번호가 올바르지 않습니다.';
+      
+      if (err.response?.data) {
+        // detail, message, error 등 다양한 필드명 확인
+        errorMessage = err.response.data.detail || 
+                      err.response.data.message || 
+                      err.response.data.error || 
+                      errorMessage;
+      } else if (err.message) {
+        // 네트워크 에러 등
+        errorMessage = '네트워크 오류가 발생했습니다. 다시 시도해주세요.';
+      }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
