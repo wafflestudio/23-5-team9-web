@@ -25,7 +25,6 @@ export interface PatchUserParams {
     coin?: number;
 }
 
-// 다른 사용자 프로필 조회 응답 타입
 export interface PublicUserProfile {
     id: string;
     nickname: string | null;
