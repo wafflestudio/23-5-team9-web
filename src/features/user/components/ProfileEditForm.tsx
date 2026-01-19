@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { regionApi } from '@/features/location/api/region';
+import { Region, regionApi } from '@/features/location/api/region';
 import { useGeoLocation } from '@/features/location/hooks/useGeoLocation';
 import { Button, Input, Select, Avatar } from '@/shared/ui';
-
-interface Region {
-  id: string;
-  name: string;
-}
 
 interface ProfileEditFormProps {
   initialEmail?: string;
@@ -37,14 +32,20 @@ export default function ProfileEditForm({
 
   useEffect(() => {
     if (initialNickname) setNickname(initialNickname);
+  }, [initialNickname]);
+
+  useEffect(() => {
     if (initialRegionId) setRegionId(initialRegionId);
+  }, [initialRegionId]);
+
+  useEffect(() => {
     if (initialProfileImage) {
       setProfileImage(initialProfileImage);
     } else {
       const randomSeed = Math.random().toString(36).substring(7);
       setProfileImage(`https://robohash.org/${randomSeed}?set=set4`);
     }
-  }, [initialNickname, initialRegionId, initialProfileImage]);
+  }, [initialProfileImage]);
 
   useEffect(() => {
     const fetchRegions = async () => {
@@ -63,12 +64,6 @@ export default function ProfileEditForm({
     };
     fetchRegions();
   }, []);
-
-  useEffect(() => {
-    if (!regionId && regions.length > 0) {
-      setRegionId(regions[0].id);
-    }
-  }, [regions, regionId]);
 
   const handleDetectLocation = async () => {
     try {
