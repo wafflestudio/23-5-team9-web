@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductCard from "@/features/product/components/ProductCard";
 import { useProducts, useMyProducts, useCreateProduct } from "@/features/product/hooks/useProducts";
@@ -6,7 +6,7 @@ import { useUser } from '@/features/user/hooks/useUser';
 import { PRODUCT_CATEGORIES } from "@/shared/constants/data";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";
-import { Badge, Button, Input, CategorySelector, LoginRequired, OnboardingRequired } from '@/shared/ui';
+import { Badge, Button, Input, LoginRequired, OnboardingRequired } from '@/shared/ui';
 import type { Product } from "@/features/product/api/productApi";
 
 type TabType = 'all' | 'my';
@@ -95,48 +95,83 @@ interface ProductFiltersProps {
 }
 
 function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSearchQuery, productCount, activeTab, onToggleTab }: ProductFiltersProps) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const selectedLabel = PRODUCT_CATEGORIES.find(c => c.value === filterCategory)?.label || '전체';
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <div className="flex flex-col gap-3 bg-bg-page pb-2">
-      <div className="relative">
-        <Input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="상품명, 내용 검색"
-          className="pl-10"
-        />
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">
-          🔍
-        </span>
-      </div>
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <Input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="상품명, 내용 검색"
+            className="pl-10"
+          />
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">
+            🔍
+          </span>
+        </div>
 
-      <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-        {/* 나의 상품 버튼 - 카테고리 필터 맨 앞에 배치 */}
+        {/* 나의 상품 버튼 */}
         <Button
           onClick={onToggleTab}
           variant={activeTab === 'my' ? 'primary' : 'secondary'}
           size="sm"
           className="rounded-full flex-shrink-0"
         >
-          📦 {activeTab === 'my' ? '나의 상품' : '나의 상품'}
+          📦  나의 상품
         </Button>
 
-        {/* 구분선 */}
-        <div className="h-6 w-px bg-border-base flex-shrink-0" />
+        {/* 카테고리 드롭다운 */}
+        <div className="relative" ref={dropdownRef}>
+          <Button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            variant={filterCategory !== 'all' ? 'primary' : 'secondary'}
+            size="sm"
+            className="rounded-full flex-shrink-0"
+          >
+            {selectedLabel} ▾
+          </Button>
 
-        {/* 카테고리 필터 */}
-        <CategorySelector
-          options={PRODUCT_CATEGORIES}
-          selected={filterCategory}
-          onSelect={setFilterCategory}
-          className="flex-1"
-        />
+          {isDropdownOpen && (
+            <div className="absolute right-0 top-full mt-1 bg-bg-box border border-border-base rounded-lg shadow-lg z-50 min-w-[140px] overflow-hidden">
+              {PRODUCT_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => {
+                    setFilterCategory(cat.value);
+                    setIsDropdownOpen(false);
+                  }}
+                  className={`w-full px-3 py-2 text-left text-sm hover:bg-bg-box-hover ${
+                    filterCategory === cat.value ? 'text-primary font-medium' : 'text-text-body'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <Badge variant="primary" className="text-sm w-fit px-3 py-1">
         {activeTab === 'my' ? '나의 상품' : '전체 상품'}
         {(filterCategory !== 'all' || searchQuery) && ' · '}
-        {filterCategory !== 'all' && PRODUCT_CATEGORIES.find(c => c.value === filterCategory)?.label}
+        {filterCategory !== 'all' && selectedLabel}
         {filterCategory !== 'all' && searchQuery && ' · '}
         {searchQuery && `"${searchQuery}"`}
         {' · '}{productCount}개
