@@ -45,7 +45,6 @@ const ProductForm = ({ onSuccess }: { onSuccess: () => void }) => {
   };
 
   return (
-    // 수정: bg-bg-elevated -> bg-bg-box-light (index.css 토큰 사용)
     <form onSubmit={handleSubmit} className="mb-6 p-4 border border-border-base rounded-lg bg-bg-box-light">
       <h4 className="font-bold mb-4 text-text-heading">새 상품 등록</h4>
 
@@ -96,11 +95,19 @@ interface ProductFiltersProps {
   searchQuery: string;
   setSearchQuery: (value: string) => void;
   activeTab: TabType;
-  showForm: boolean;
-  setShowForm: (value: boolean) => void;
+  onRegisterClick?: () => void;
+  isFormOpen?: boolean;
 }
 
-function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSearchQuery, activeTab, showForm, setShowForm }: ProductFiltersProps) {
+function ProductFilters({ 
+  filterCategory, 
+  setFilterCategory, 
+  searchQuery, 
+  setSearchQuery, 
+  activeTab,
+  onRegisterClick,
+  isFormOpen 
+}: ProductFiltersProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -120,62 +127,74 @@ function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSea
     <div className="flex flex-col bg-bg-page">
       <TabBar tabs={PRODUCT_TABS} activeTab={activeTab} />
 
-      {/* mx-auto와 w-fit으로 검색바를 중앙 정렬 */}
-      <div className="relative flex justify-center items-center mb-6 w-fit mx-auto" ref={dropdownRef}>
+      {/* 검색창과 버튼을 감싸는 컨테이너 */}
+      <div className="flex justify-center items-center mb-6 gap-3 px-4">
         
-        {/* 검색바 컨테이너 */}
-        {/* 수정: bg-white -> bg-bg-page (다크모드 대응) */}
-        <div className="flex items-center bg-bg-page rounded-lg border border-border-base overflow-hidden transition-shadow">
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-1 px-4 py-3 text-base font-bold text-text-body hover:bg-bg-box-light transition-colors whitespace-nowrap"
-          >
-            {selectedLabel} 
-            <span className={`text-[10px] text-text-secondary transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
-              ▼
-            </span>
-          </button>
+        {/* 검색창 영역 */}
+        <div className="relative" ref={dropdownRef}>
+          {/* 검색창 컨테이너 */}
+          <div className="flex items-center bg-bg-page rounded-lg border border-border-base overflow-hidden transition-shadow">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-bold text-text-body hover:bg-bg-box-light transition-colors whitespace-nowrap"
+            >
+              {selectedLabel} 
+              <span className={`text-[10px] text-text-secondary transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
+                ▼
+              </span>
+            </button>
 
-          <div className="w-px h-4 bg-border-base" />
+            <div className="w-px h-3.5 bg-border-base" />
 
-          <div className="flex items-center px-4">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="검색어를 입력해주세요"
-              className="py-3 text-base font-medium outline-none bg-transparent min-w-[300px] text-text-primary placeholder:text-text-secondary/50"
-            />
-          </div>
-        </div>
-
-        {/* 1 & 2 개선: 위치를 left-0, 너비를 w-full로 맞추고 스크롤 가능하게 변경 */}
-        {isDropdownOpen && (
-          // 수정: bg-white -> bg-bg-page (다크모드 대응)
-          <div className="absolute left-0 top-[calc(100%+4px)] w-full bg-bg-page border border-border-base rounded-lg z-50 overflow-hidden shadow-lg">
-            <div className="max-h-60 overflow-y-auto py-1 custom-scrollbar">
-              {PRODUCT_CATEGORIES.map((cat) => (
-                <button
-                  key={cat.value}
-                  onClick={() => {
-                    setFilterCategory(cat.value);
-                    setIsDropdownOpen(false);
-                  }}
-                  className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
-                    filterCategory === cat.value 
-                      ? 'bg-primary/5 text-primary font-bold' 
-                      : 'text-text-body hover:bg-bg-box-light'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
+            <div className="flex items-center px-3">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="검색어를 입력해주세요"
+                className="py-1.5 text-sm font-medium outline-none bg-transparent min-w-[200px] md:min-w-[280px] text-text-primary placeholder:text-text-secondary/50"
+              />
             </div>
           </div>
+
+          {/* 드롭다운 메뉴 */}
+          {isDropdownOpen && (
+            <div className="absolute left-0 top-[calc(100%+4px)] w-full bg-bg-page border border-border-base rounded-lg z-50 overflow-hidden shadow-lg">
+              <div className="max-h-60 overflow-y-auto py-1 custom-scrollbar">
+                {PRODUCT_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => {
+                      setFilterCategory(cat.value);
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm transition-colors ${
+                      filterCategory === cat.value 
+                        ? 'bg-primary/5 text-primary font-bold' 
+                        : 'text-text-body hover:bg-bg-box-light'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 새 상품 등록 버튼 */}
+        {onRegisterClick && (
+          <Button 
+            onClick={onRegisterClick} 
+            variant={isFormOpen ? 'secondary' : 'primary'}
+            // 수정: CategorySelector와 동일한 스타일 적용 (size="sm", rounded-full)
+            size="sm"
+            className="rounded-full whitespace-nowrap"
+          >
+            {isFormOpen ? '취소' : '+ 새 상품 등록'}
+          </Button>
         )}
       </div>
-
-      {/* 새 상품 등록 버튼 생략 */}
     </div>
   );
 }
@@ -208,7 +227,6 @@ function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps
   const allProductsQuery = useProducts(filterCategory, searchQuery);
   const myProductsQuery = useMyProducts({ enabled: isMyProducts && isLoggedIn && !needsOnboarding });
 
-  // 내 상품일 경우 클라이언트 필터링 적용
   const filteredMyProducts = myProductsQuery.products.filter(product => {
     if (filterCategory && filterCategory !== 'all') {
       if (product.category_id !== filterCategory) return false;
@@ -242,8 +260,8 @@ function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
       activeTab={activeTab}
-      showForm={showForm}
-      setShowForm={setShowForm}
+      onRegisterClick={isMyProducts ? () => setShowForm(!showForm) : undefined}
+      isFormOpen={showForm}
     />
   );
 
