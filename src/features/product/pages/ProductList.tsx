@@ -16,7 +16,7 @@ const PRODUCT_TABS: Tab<TabType>[] = [
   { id: 'my', label: '나의 상품', to: '/products/me' },
 ];
 
-const ProductForm = ({ onSuccess }: { onSuccess: () => void }) => {
+const ProductForm = ({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [price, setPrice] = useState('');
@@ -82,9 +82,14 @@ const ProductForm = ({ onSuccess }: { onSuccess: () => void }) => {
             />
           </div>
 
-          <Button type="submit" fullWidth disabled={createProduct.isPending}>
-            {createProduct.isPending ? '등록 중...' : '상품 등록'}
-          </Button>
+          <div className="flex gap-2 pt-2 border-t border-border-base">
+            <Button type="button" variant="secondary" fullWidth onClick={onCancel}>
+              취소
+            </Button>
+            <Button type="submit" fullWidth disabled={createProduct.isPending}>
+              {createProduct.isPending ? '등록 중...' : '상품 등록'}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
@@ -223,13 +228,13 @@ function ProductFilters({
     <div className="flex flex-col bg-bg-page">
       <TabBar tabs={PRODUCT_TABS} activeTab={activeTab} />
 
-      {/* 검색창과 버튼을 감싸는 컨테이너 */}
-      <div className="flex justify-center items-center mb-6 gap-3 px-4">
+      {/* 검색창과 버튼을 감싸는 컨테이너 - 모바일 대응 수정 */}
+      <div className="flex flex-col md:flex-row justify-center items-center mb-6 gap-3 px-4">
         
         {/* 검색창 영역 */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative w-full md:w-auto" ref={dropdownRef}>
           {/* 검색창 컨테이너 - shared/ui Input 스타일 적용 */}
-          <div className="flex items-center bg-bg-page border border-border-medium rounded-xl overflow-hidden transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20">
+          <div className="flex items-center bg-bg-page border border-border-medium rounded-xl overflow-hidden transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 w-full">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-text-body hover:bg-gray-50 transition-colors whitespace-nowrap"
@@ -276,16 +281,15 @@ function ProductFilters({
           )}
         </div>
 
-        {/* 새 상품 등록 버튼 */}
-        {onRegisterClick && (
+        {/* 새 상품 등록 버튼 - 모바일에서 아래로 이동 및 편집창 열려있으면 숨김 */}
+        {onRegisterClick && !isFormOpen && (
           <Button 
             onClick={onRegisterClick} 
-            variant={isFormOpen ? 'secondary' : 'primary'}
-            // 수정: CategorySelector와 동일한 스타일 적용 (size="sm", rounded-full)
+            variant="primary"
             size="sm"
-            className="rounded-full whitespace-nowrap"
+            className="rounded-full whitespace-nowrap w-full md:w-auto"
           >
-            {isFormOpen ? '취소' : '+ 새 상품 등록'}
+            + 새 상품 등록
           </Button>
         )}
       </div>
@@ -377,7 +381,7 @@ function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
       activeTab={activeTab}
-      onRegisterClick={isMyProducts ? () => { setShowForm(!showForm); setEditingProduct(null); } : undefined}
+      onRegisterClick={isMyProducts ? () => { setShowForm(true); setEditingProduct(null); } : undefined}
       isFormOpen={showForm}
     />
   );
@@ -396,7 +400,7 @@ function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps
         <OnboardingRequired />
       ) : (
         <>
-          {showForm && <ProductForm onSuccess={() => setShowForm(false)} />}
+          {showForm && <ProductForm onSuccess={() => setShowForm(false)} onCancel={() => setShowForm(false)} />}
           {editingProduct && (
             <EditProductForm
               product={editingProduct}
