@@ -1,15 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ProductCard from "@/features/product/components/ProductCard";
 import { useProducts, useMyProducts, useCreateProduct } from "@/features/product/hooks/useProducts";
 import { useUser } from '@/features/user/hooks/useUser';
 import { PRODUCT_CATEGORIES } from "@/shared/constants/data";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";
-import { Badge, Button, Input, LoginRequired, OnboardingRequired } from '@/shared/ui';
+import { Button, Input, LoginRequired, OnboardingRequired, TabBar } from '@/shared/ui';
+import type { Tab } from '@/shared/ui';
 import type { Product } from "@/features/product/api/productApi";
 
 type TabType = 'all' | 'my';
+
+const PRODUCT_TABS: Tab<TabType>[] = [
+  { id: 'all', label: '전체 상품', to: '/products/all' },
+  { id: 'my', label: '나의 상품', to: '/products/me' },
+];
 
 const ProductForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const [title, setTitle] = useState('');
@@ -40,12 +45,13 @@ const ProductForm = ({ onSuccess }: { onSuccess: () => void }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 p-4 border border-border-base rounded-lg bg-bg-elevated">
-      <h4 className="font-bold mb-4">새 상품 등록</h4>
+    // 수정: bg-bg-elevated -> bg-bg-box-light (index.css 토큰 사용)
+    <form onSubmit={handleSubmit} className="mb-6 p-4 border border-border-base rounded-lg bg-bg-box-light">
+      <h4 className="font-bold mb-4 text-text-heading">새 상품 등록</h4>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">제목</label>
+          <label className="block text-sm font-medium mb-1 text-text-primary">제목</label>
           <Input
             type="text"
             value={title}
@@ -55,18 +61,18 @@ const ProductForm = ({ onSuccess }: { onSuccess: () => void }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">내용</label>
+          <label className="block text-sm font-medium mb-1 text-text-primary">내용</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={3}
-            className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-page text-text-body focus:outline-none focus:border-primary resize-none"
+            className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-page text-text-body focus:outline-none focus:border-primary resize-none placeholder:text-text-placeholder"
             placeholder="상품 설명을 입력하세요"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">가격 (원)</label>
+          <label className="block text-sm font-medium mb-1 text-text-primary">가격 (원)</label>
           <Input
             type="number"
             value={price}
@@ -89,12 +95,12 @@ interface ProductFiltersProps {
   setFilterCategory: (value: string) => void;
   searchQuery: string;
   setSearchQuery: (value: string) => void;
-  productCount: number;
   activeTab: TabType;
-  onToggleTab: () => void;
+  showForm: boolean;
+  setShowForm: (value: boolean) => void;
 }
 
-function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSearchQuery, productCount, activeTab, onToggleTab }: ProductFiltersProps) {
+function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSearchQuery, activeTab, showForm, setShowForm }: ProductFiltersProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -111,44 +117,43 @@ function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSea
   }, []);
 
   return (
-    <div className="flex flex-col gap-3 bg-bg-page pb-2">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="상품명, 내용 검색"
-            className="pl-10"
-          />
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">
-            🔍
-          </span>
+    <div className="flex flex-col bg-bg-page">
+      <TabBar tabs={PRODUCT_TABS} activeTab={activeTab} />
+
+      {/* mx-auto와 w-fit으로 검색바를 중앙 정렬 */}
+      <div className="relative flex justify-center items-center mb-6 w-fit mx-auto" ref={dropdownRef}>
+        
+        {/* 검색바 컨테이너 */}
+        {/* 수정: bg-white -> bg-bg-page (다크모드 대응) */}
+        <div className="flex items-center bg-bg-page rounded-lg border border-border-base overflow-hidden transition-shadow">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex items-center gap-1 px-4 py-3 text-base font-bold text-text-body hover:bg-bg-box-light transition-colors whitespace-nowrap"
+          >
+            {selectedLabel} 
+            <span className={`text-[10px] text-text-secondary transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
+              ▼
+            </span>
+          </button>
+
+          <div className="w-px h-4 bg-border-base" />
+
+          <div className="flex items-center px-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="검색어를 입력해주세요"
+              className="py-3 text-base font-medium outline-none bg-transparent min-w-[300px] text-text-primary placeholder:text-text-secondary/50"
+            />
+          </div>
         </div>
 
-        {/* 나의 상품 버튼 */}
-        <Button
-          onClick={onToggleTab}
-          variant={activeTab === 'my' ? 'primary' : 'secondary'}
-          size="sm"
-          className="rounded-full flex-shrink-0"
-        >
-          📦  나의 상품
-        </Button>
-
-        {/* 카테고리 드롭다운 */}
-        <div className="relative" ref={dropdownRef}>
-          <Button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            variant={filterCategory !== 'all' ? 'primary' : 'secondary'}
-            size="sm"
-            className="rounded-full flex-shrink-0"
-          >
-            {selectedLabel} ▾
-          </Button>
-
-          {isDropdownOpen && (
-            <div className="absolute right-0 top-full mt-1 bg-bg-box border border-border-base rounded-lg shadow-lg z-50 min-w-[140px] overflow-hidden">
+        {/* 1 & 2 개선: 위치를 left-0, 너비를 w-full로 맞추고 스크롤 가능하게 변경 */}
+        {isDropdownOpen && (
+          // 수정: bg-white -> bg-bg-page (다크모드 대응)
+          <div className="absolute left-0 top-[calc(100%+4px)] w-full bg-bg-page border border-border-base rounded-lg z-50 overflow-hidden shadow-lg">
+            <div className="max-h-60 overflow-y-auto py-1 custom-scrollbar">
               {PRODUCT_CATEGORIES.map((cat) => (
                 <button
                   key={cat.value}
@@ -156,26 +161,21 @@ function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSea
                     setFilterCategory(cat.value);
                     setIsDropdownOpen(false);
                   }}
-                  className={`w-full px-3 py-2 text-left text-sm hover:bg-bg-box-hover ${
-                    filterCategory === cat.value ? 'text-primary font-medium' : 'text-text-body'
+                  className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
+                    filterCategory === cat.value 
+                      ? 'bg-primary/5 text-primary font-bold' 
+                      : 'text-text-body hover:bg-bg-box-light'
                   }`}
                 >
                   {cat.label}
                 </button>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      <Badge variant="primary" className="text-sm w-fit px-3 py-1">
-        {activeTab === 'my' ? '나의 상품' : '전체 상품'}
-        {(filterCategory !== 'all' || searchQuery) && ' · '}
-        {filterCategory !== 'all' && selectedLabel}
-        {filterCategory !== 'all' && searchQuery && ' · '}
-        {searchQuery && `"${searchQuery}"`}
-        {' · '}{productCount}개
-      </Badge>
+      {/* 새 상품 등록 버튼 생략 */}
     </div>
   );
 }
@@ -200,15 +200,10 @@ interface ProductContentProps {
 }
 
 function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps) {
-  const navigate = useNavigate();
   const { isLoggedIn, needsOnboarding } = useUser();
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
-
-  const handleToggleTab = () => {
-    navigate(activeTab === 'all' ? '/products/me' : '/products/all');
-  };
 
   const allProductsQuery = useProducts(filterCategory, searchQuery);
   const myProductsQuery = useMyProducts({ enabled: isMyProducts && isLoggedIn && !needsOnboarding });
@@ -246,18 +241,10 @@ function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps
       setFilterCategory={setFilterCategory}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
-      productCount={products.length}
       activeTab={activeTab}
-      onToggleTab={handleToggleTab}
+      showForm={showForm}
+      setShowForm={setShowForm}
     />
-  );
-
-  const headerActions = isMyProducts && (
-    <div className="flex justify-end mb-4">
-      <Button onClick={() => setShowForm(!showForm)} size="sm">
-        {showForm ? '취소' : '+ 새 상품 등록'}
-      </Button>
-    </div>
   );
 
   return (
@@ -268,7 +255,6 @@ function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps
       emptyMessage={searchQuery ? "검색 결과가 없습니다." : isMyProducts ? "등록한 상품이 없습니다." : "등록된 상품이 없습니다."}
       filters={filters}
     >
-      {headerActions}
       {showForm && <ProductForm onSuccess={() => setShowForm(false)} />}
       <ProductGrid products={products} />
     </DataListLayout>

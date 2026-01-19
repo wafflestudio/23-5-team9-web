@@ -12,25 +12,25 @@
   --bg-page: #ffffff;           /* 전체 페이지 배경 */
   --bg-box: #f3f4f6;            /* 입력창, 카드 등 컨텐츠 박스 배경 (gray-100) */
   --bg-box-hover: #e5e7eb;      /* 박스 호버 상태 (gray-200) */
-  --bg-box-light: #f9fafb;      /* 매우 밝은 박스 배경 (gray-50) */
-  --bg-box-alt: #f8f9fa;        /* 대체 박스 배경 (기존 bg-gray) */
+  --bg-box-light: #f9fafb;      /* 매우 밝은 박스 배경 (gray-50) - 버튼/검색창 배경으로 사용 */
+  --bg-box-alt: #f8f9fa;        /* 대체 박스 배경 */
 
   /* Semantic Colors - Text */
   --text-primary: #1e293b;      /* 주 텍스트 (slate-800) */
   --text-heading: #0f172a;      /* 제목 텍스트 (slate-900) */
   --text-body: #334155;         /* 본문 텍스트 (slate-700) */
-  --text-secondary: #64748b;    /* 보조 텍스트 (slate-500, gray-500) */
+  --text-secondary: #64748b;    /* 보조 텍스트 (slate-500) */
   --text-tertiary: #6b7280;     /* 3차 텍스트 (gray-500) */
   --text-muted: #9ca3af;        /* 약한 텍스트 (gray-400) */
   --text-disabled: #d1d5db;     /* 비활성 텍스트 (gray-300) */
   --text-inverse: #ffffff;      /* 반전 텍스트 (버튼 등) */
   --text-placeholder: #9ca3af;  /* placeholder 텍스트 (gray-400) */
 
-  /* Semantic Colors - Borders */
-  --border-light: #f3f4f6;      /* 매우 밝은 테두리 (gray-100) */
-  --border-base: #e5e7eb;       /* 기본 테두리 (gray-200) */
-  --border-medium: #d1d5db;     /* 중간 테두리 (gray-300) */
-  --border-dark: #9ca3af;       /* 진한 테두리 (gray-400) */
+  /* Semantic Colors - Borders (가독성을 위해 전체적으로 한 단계 진하게 변경) */
+  --border-light: #e5e7eb;      /* 매우 밝은 테두리 (gray-200) - 기존 gray-100에서 변경 */
+  --border-base: #d1d5db;       /* 기본 테두리 (gray-300) - 기존 gray-200에서 변경 (카드, 검색창 등) */
+  --border-medium: #9ca3af;     /* 중간 테두리 (gray-400) - 기존 gray-300에서 변경 */
+  --border-dark: #6b7280;       /* 진한 테두리 (gray-500) - 기존 gray-400에서 변경 */
 
   /* Semantic Colors - Status */
   --status-error: #ef4444;      /* 에러 (red-500) */
@@ -92,14 +92,14 @@
   --color-brand: #ff6f0f;
   --color-brand-hover: #ff8534;
 
-  /* Background Colors - 더 부드러운 다크 톤 */
+  /* Background Colors */
   --bg-page: #1a1a1a;
   --bg-box: #262626;
   --bg-box-hover: #303030;
-  --bg-box-light: #222222;
+  --bg-box-light: #222222;     /* 다크모드에서는 밝은 회색 대신 어두운 회색 */
   --bg-box-alt: #242424;
 
-  /* Text Colors - 더 높은 가독성 */
+  /* Text Colors */
   --text-primary: #f5f5f5;
   --text-heading: #ffffff;
   --text-body: #e0e0e0;
@@ -110,13 +110,13 @@
   --text-inverse: #ffffff;
   --text-placeholder: #808080;
 
-  /* Border Colors - 더 부드러운 경계 */
-  --border-light: #2d2d2d;
-  --border-base: #3a3a3a;
-  --border-medium: #4a4a4a;
-  --border-dark: #5a5a5a;
+  /* Border Colors - 배경색과 확실히 구분되도록 명도 상향 */
+  --border-light: #404040;      /* neutral-700 */
+  --border-base: #525252;       /* neutral-600 (기존 #3a3a3a 대비 훨씬 잘 보임) */
+  --border-medium: #737373;     /* neutral-500 */
+  --border-dark: #a3a3a3;       /* neutral-400 */
 
-  /* Status Colors - 더 밝고 눈에 잘 띄는 색상 */
+  /* Status Colors */
   --status-error: #f87171;
   --status-success: #34d399;
   --status-warning: #fbbf24;

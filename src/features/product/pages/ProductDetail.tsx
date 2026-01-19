@@ -5,6 +5,7 @@ import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
 import { createOrGetRoom } from "@/features/chat/api/chatApi";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Badge, Avatar } from '@/shared/ui';
+import ProductCard from "@/features/product/components/ProductCard";
 
 function ProductDetail() {
   const { id } = useParams();
@@ -115,6 +116,26 @@ function ProductDetail() {
           {chatLoading ? '채팅방 연결 중...' : '채팅하기'}
         </Button>
       </div>
+
+      {/* 판매자의 판매 물품 */}
+      {(() => {
+        const sellerProducts = products.filter(
+          p => p.owner_id === product.owner_id
+        );
+        if (sellerProducts.length === 0) return null;
+        return (
+          <div className="mt-8">
+            <h3 className="text-lg font-bold mb-4">
+              {sellerProfile?.nickname || '판매자'}의 판매 물품
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {sellerProducts.slice(0, 4).map(p => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
+        );
+      })()}
     </PageContainer>
   );
 }

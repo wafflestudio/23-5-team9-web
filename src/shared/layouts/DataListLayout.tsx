@@ -71,13 +71,12 @@ export function DataListLayout({
         </div>
       )}
 
-      {isEmpty ? (
+      {children}
+      {isEmpty && (
         <div className="flex flex-col items-center justify-center py-20 text-text-muted">
            <div className="text-4xl mb-2">📭</div>
            <p>{emptyMessage}</p>
         </div>
-      ) : (
-        children
       )}
     </div>
   );
