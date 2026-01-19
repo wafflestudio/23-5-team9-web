@@ -110,32 +110,37 @@ function ProductFilters({ filterCategory, setFilterCategory, searchQuery, setSea
         </span>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+        {/* 나의 상품 버튼 - 카테고리 필터 맨 앞에 배치 */}
+        <Button
+          onClick={onToggleTab}
+          variant={activeTab === 'my' ? 'primary' : 'secondary'}
+          size="sm"
+          className="rounded-full flex-shrink-0"
+        >
+          📦 {activeTab === 'my' ? '나의 상품' : '나의 상품'}
+        </Button>
+
+        {/* 구분선 */}
+        <div className="h-6 w-px bg-border-base flex-shrink-0" />
+
+        {/* 카테고리 필터 */}
         <CategorySelector
           options={PRODUCT_CATEGORIES}
           selected={filterCategory}
           onSelect={setFilterCategory}
-          className="overflow-x-auto scrollbar-hide flex-1"
+          className="flex-1"
         />
-
-        <Button
-          onClick={onToggleTab}
-          variant="secondary"
-          size="sm"
-          className="rounded-full flex-shrink-0"
-        >
-          {activeTab === 'all' ? '나의 상품' : '전체 상품'}
-        </Button>
       </div>
 
-      {(filterCategory !== 'all' || searchQuery) && (
-        <Badge variant="primary" className="text-sm w-fit px-3 py-1">
-          {filterCategory !== 'all' && PRODUCT_CATEGORIES.find(c => c.value === filterCategory)?.label}
-          {filterCategory !== 'all' && searchQuery && ' · '}
-          {searchQuery && `"${searchQuery}"`}
-          {' · '}{productCount}개
-        </Badge>
-      )}
+      <Badge variant="primary" className="text-sm w-fit px-3 py-1">
+        {activeTab === 'my' ? '나의 상품' : '전체 상품'}
+        {(filterCategory !== 'all' || searchQuery) && ' · '}
+        {filterCategory !== 'all' && PRODUCT_CATEGORIES.find(c => c.value === filterCategory)?.label}
+        {filterCategory !== 'all' && searchQuery && ' · '}
+        {searchQuery && `"${searchQuery}"`}
+        {' · '}{productCount}개
+      </Badge>
     </div>
   );
 }
