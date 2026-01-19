@@ -8,15 +8,25 @@ import {
 
 export type { Product, CreateProductRequest } from '@/features/product/api/productApi';
 
-export function useProducts(selectedCategory?: string) {
+export function useProducts(selectedCategory?: string, searchQuery?: string) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['products', selectedCategory],
+    queryKey: ['products'],
     queryFn: fetchProducts,
   });
 
   const filteredProducts = data?.filter((product: Product) => {
-    if (!selectedCategory || selectedCategory === 'all') return true;
-    return product.category_id === selectedCategory;
+    // 카테고리 필터
+    if (selectedCategory && selectedCategory !== 'all') {
+      if (product.category_id !== selectedCategory) return false;
+    }
+    // 검색 필터
+    if (searchQuery && searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      const matchesTitle = product.title.toLowerCase().includes(query);
+      const matchesContent = product.content.toLowerCase().includes(query);
+      if (!matchesTitle && !matchesContent) return false;
+    }
+    return true;
   }) ?? [];
 
   return {

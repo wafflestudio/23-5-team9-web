@@ -21,7 +21,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link to={`/products/${product.id}`} className="group text-inherit no-underline">
-      <Card>
+      <Card className="border border-border-base rounded-lg p-3">
         <CardContent>
           {/* 판매자 프로필 */}
           <div className="flex items-center gap-2 mb-3">
@@ -42,15 +42,15 @@ export default function ProductCard({ product }: { product: Product }) {
               </Badge>
             )}
           </div>
-          <CardTitle className="tracking-tighter break-keep">
+          <CardTitle className="tracking-tighter break-keep text-text-heading">
             {product.title}
           </CardTitle>
-          <div className="mb-1 text-[15px] font-extrabold text-text-heading">
-            {formatPrice(product.price)}
-          </div>
           <p className="text-sm text-text-muted line-clamp-2 mb-2">
             {product.content}
           </p>
+          <div className="mb-1 text-[15px] font-extrabold text-primary">
+            {formatPrice(product.price)}
+          </div>
           <StatGroup className="mt-auto pt-2.5">
             <Button
               onClick={handleLikeClick}
