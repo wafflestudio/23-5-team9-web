@@ -7,7 +7,6 @@ import { Badge } from '../feedback';
 
 const MENUS = [
   { id: 'products', label: '중고거래', path: '/products' },
-  { id: 'community', label: '동네생활', path: '/community' },
   { id: 'map', label: '동네지도', path: '/map' },
   { id: 'chat', label: '채팅하기', path: '/chat' },
 ];

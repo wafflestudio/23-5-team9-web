@@ -5,7 +5,7 @@ import { useUser } from '@/features/user/hooks/useUser';
 import { PRODUCT_CATEGORIES } from "@/shared/constants/data";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";
-import { Button, Input, LoginRequired, OnboardingRequired, TabBar } from '@/shared/ui';
+import { Button, Input, LoginRequired, OnboardingRequired, TabBar, Card, CardContent } from '@/shared/ui';
 import type { Tab } from '@/shared/ui';
 import type { Product } from "@/features/product/api/productApi";
 
@@ -45,47 +45,49 @@ const ProductForm = ({ onSuccess }: { onSuccess: () => void }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 p-4 border border-border-base rounded-lg bg-bg-box-light">
-      <h4 className="font-bold mb-4 text-text-heading">새 상품 등록</h4>
+    <Card className="mb-6 border border-border-base rounded-lg p-3">
+      <CardContent>
+        <h4 className="text-base font-medium text-text-heading mb-4">새 상품 등록</h4>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1 text-text-primary">제목</label>
-          <Input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="상품 제목을 입력하세요"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm text-text-secondary mb-1">제목</label>
+            <Input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="상품 제목을 입력하세요"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 text-text-primary">내용</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={3}
-            className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-page text-text-body focus:outline-none focus:border-primary resize-none placeholder:text-text-placeholder"
-            placeholder="상품 설명을 입력하세요"
-          />
-        </div>
+          <div>
+            <label className="block text-sm text-text-secondary mb-1">내용</label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={3}
+              className="w-full rounded-xl bg-bg-box p-4 text-base outline-none transition-all placeholder:text-text-placeholder focus:bg-bg-box-hover focus:ring-2 focus:ring-gray-300 resize-none"
+              placeholder="상품 설명을 입력하세요"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 text-text-primary">가격 (원)</label>
-          <Input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="가격을 입력하세요"
-            min="0"
-          />
-        </div>
+          <div>
+            <label className="block text-sm text-text-secondary mb-1">가격 (원)</label>
+            <Input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="가격을 입력하세요"
+              min="0"
+            />
+          </div>
 
-        <Button type="submit" fullWidth disabled={createProduct.isPending}>
-          {createProduct.isPending ? '등록 중...' : '상품 등록'}
-        </Button>
-      </div>
-    </form>
+          <Button type="submit" fullWidth disabled={createProduct.isPending}>
+            {createProduct.isPending ? '등록 중...' : '상품 등록'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -121,63 +123,65 @@ const EditProductForm = ({ product, onSuccess, onCancel }: { product: Product; o
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 p-4 border border-border-base rounded-lg bg-bg-box-light">
-      <h4 className="font-bold mb-4 text-text-heading">상품 수정</h4>
+    <Card className="mb-6 border border-border-base rounded-lg p-3">
+      <CardContent>
+        <h4 className="text-base font-medium text-text-heading mb-4">상품 수정</h4>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1 text-text-primary">제목</label>
-          <Input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="상품 제목을 입력하세요"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm text-text-secondary mb-1">제목</label>
+            <Input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="상품 제목을 입력하세요"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 text-text-primary">내용</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={3}
-            className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-page text-text-body focus:outline-none focus:border-primary resize-none placeholder:text-text-placeholder"
-            placeholder="상품 설명을 입력하세요"
-          />
-        </div>
+          <div>
+            <label className="block text-sm text-text-secondary mb-1">내용</label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={3}
+              className="w-full rounded-xl bg-bg-box p-4 text-base outline-none transition-all placeholder:text-text-placeholder focus:bg-bg-box-hover focus:ring-2 focus:ring-gray-300 resize-none"
+              placeholder="상품 설명을 입력하세요"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 text-text-primary">가격 (원)</label>
-          <Input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="가격을 입력하세요"
-            min="0"
-          />
-        </div>
+          <div>
+            <label className="block text-sm text-text-secondary mb-1">가격 (원)</label>
+            <Input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="가격을 입력하세요"
+              min="0"
+            />
+          </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="is_sold"
-            checked={isSold}
-            onChange={(e) => setIsSold(e.target.checked)}
-            className="w-4 h-4"
-          />
-          <label htmlFor="is_sold" className="text-sm font-medium text-text-primary">판매 완료</label>
-        </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="is_sold"
+              checked={isSold}
+              onChange={(e) => setIsSold(e.target.checked)}
+              className="w-4 h-4 accent-primary"
+            />
+            <label htmlFor="is_sold" className="text-sm text-text-secondary">판매 완료</label>
+          </div>
 
-        <div className="flex gap-2">
-          <Button type="button" variant="secondary" fullWidth onClick={onCancel}>
-            취소
-          </Button>
-          <Button type="submit" fullWidth disabled={updateProduct.isPending}>
-            {updateProduct.isPending ? '수정 중...' : '수정 완료'}
-          </Button>
-        </div>
-      </div>
-    </form>
+          <div className="flex gap-2 pt-2 border-t border-border-base">
+            <Button type="button" variant="secondary" fullWidth onClick={onCancel}>
+              취소
+            </Button>
+            <Button type="submit" fullWidth disabled={updateProduct.isPending}>
+              {updateProduct.isPending ? '수정 중...' : '수정 완료'}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 

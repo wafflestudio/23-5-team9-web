@@ -9,11 +9,10 @@ import Onboarding from '@/features/auth/pages/Onboarding';
 import ChatList from '@/features/chat/pages/ChatList';
 import ChatRoom from '@/features/chat/pages/ChatRoom';
 import MyCarrot from '@/features/user/pages/MyCarrot';
+import UserProfile from '@/features/user/pages/UserProfile';
 import NeighborhoodMap from '@/features/location/pages/NeighborhoodMap';
 import ProductList from '@/features/product/pages/ProductList';
 import ProductDetail from '@/features/product/pages/ProductDetail';
-import CommunityList from '@/features/community/pages/CommunityList';
-import CommunityDetail from '@/features/community/pages/CommunityDetail';
 
 function App() {
   return (
@@ -29,11 +28,10 @@ function App() {
           <Route path="/products/all" element={<ProductList initialTab="all" />} />
           <Route path="/products/me" element={<ProductList initialTab="my" />} />
           <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path="/community" element={<CommunityList />} />
-          <Route path="/community/:id" element={<CommunityDetail />} />
           <Route path="/map" element={<NeighborhoodMap/>}/>
           <Route path="/chat" element={<ChatList />} />
           <Route path="/chat/:chatId" element={<ChatRoom />} />
+          <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/my" element={<Navigate to="/my/profile" replace />} />
           <Route path="/my/profile" element={<MyCarrot initialTab="profile" />} />
           <Route path="/my/coin" element={<MyCarrot initialTab="coin" />} />

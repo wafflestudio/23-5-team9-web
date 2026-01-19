@@ -63,7 +63,10 @@ function ProductDetail() {
 
       {/* 판매자 프로필 */}
       <DetailSection className="mb-4">
-        <div className="flex items-center gap-3">
+        <div
+          className="flex items-center gap-3 cursor-pointer hover:bg-bg-base rounded-lg p-2 -m-2 transition-colors"
+          onClick={() => navigate(`/user/${product.owner_id}`)}
+        >
           <Avatar
             src={sellerProfile?.profile_image || undefined}
             alt={sellerProfile?.nickname || '판매자'}
@@ -87,8 +90,8 @@ function ProductDetail() {
           )}
         </div>
 
-        <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
-        <h3 className="text-3xl font-bold mb-6 text-text-heading">{product.price.toLocaleString()}원</h3>
+        <h2 className="text-2xl font-bold mb-2 text-text-heading">{product.title}</h2>
+        <h3 className="text-3xl font-bold mb-6 text-primary">{product.price.toLocaleString()}원</h3>
 
         <div className="mt-6 whitespace-pre-wrap leading-relaxed text-text-body border-t border-border-base pt-6">
           {product.content}

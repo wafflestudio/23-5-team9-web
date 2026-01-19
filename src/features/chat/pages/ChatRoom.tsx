@@ -125,14 +125,19 @@ function ChatRoom() {
           >
             ←
           </button>
-          <Avatar
-            src={opponentProfile?.profile_image || undefined}
-            alt={opponentProfile?.nickname || '상대방'}
-            size="sm"
-          />
-          <span className="font-semibold text-text-heading flex-1">
-            {opponentProfile?.nickname || '알 수 없음'}
-          </span>
+          <div
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity flex-1"
+            onClick={() => roomInfo?.opponent_id && navigate(`/user/${roomInfo.opponent_id}`)}
+          >
+            <Avatar
+              src={opponentProfile?.profile_image || undefined}
+              alt={opponentProfile?.nickname || '상대방'}
+              size="sm"
+            />
+            <span className="font-semibold text-text-heading">
+              {opponentProfile?.nickname || '알 수 없음'}
+            </span>
+          </div>
           <button
             onClick={() => setShowTransferMenu(!showTransferMenu)}
             className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
@@ -212,14 +217,19 @@ function ChatRoom() {
 
         <div className="bg-bg-page rounded-2xl border border-border-base shadow-sm overflow-hidden flex flex-col" style={{ height: '70vh' }}>
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border-base">
-            <Avatar
-              src={opponentProfile?.profile_image || undefined}
-              alt={opponentProfile?.nickname || '상대방'}
-              size="sm"
-            />
-            <span className="font-semibold text-text-heading flex-1">
-              {opponentProfile?.nickname || '알 수 없음'}
-            </span>
+            <div
+              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity flex-1"
+              onClick={() => roomInfo?.opponent_id && navigate(`/user/${roomInfo.opponent_id}`)}
+            >
+              <Avatar
+                src={opponentProfile?.profile_image || undefined}
+                alt={opponentProfile?.nickname || '상대방'}
+                size="sm"
+              />
+              <span className="font-semibold text-text-heading">
+                {opponentProfile?.nickname || '알 수 없음'}
+              </span>
+            </div>
             <button
               onClick={() => setShowTransferMenu(!showTransferMenu)}
               className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"

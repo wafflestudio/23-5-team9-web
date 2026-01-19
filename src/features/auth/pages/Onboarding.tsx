@@ -7,7 +7,7 @@ export default function Onboarding() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/community';
+  const redirect = searchParams.get('redirect') || '/products';
   const onboardingMutation = useOnboarding();
 
   const handleOnboardingSubmit = async (data: { nickname: string; region_id: string; profile_image: string }) => {
