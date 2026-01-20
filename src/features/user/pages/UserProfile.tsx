@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUserProfile, useUser } from "@/features/user/hooks/useUser";
-import { useProducts } from "@/features/product/hooks/useProducts";
+import { useUserProducts } from "@/features/product/hooks/useProducts";
 import { createOrGetRoom } from "@/features/chat/api/chatApi";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, Avatar } from '@/shared/ui';
@@ -12,12 +12,10 @@ function UserProfile() {
   const navigate = useNavigate();
   const { profile, isLoading: profileLoading, error: profileError } = useUserProfile(userId);
   const { user, isLoggedIn } = useUser();
-  const { products, loading: productsLoading } = useProducts();
+  const { products, loading: productsLoading } = useUserProducts(userId!);
   const [chatLoading, setChatLoading] = useState(false);
 
   const isMyProfile = user?.id && String(user.id) === userId;
-
-  const userProducts = products.filter(p => p.owner_id === userId);
 
   const handleChatClick = async () => {
     if (!isLoggedIn) {
@@ -82,11 +80,11 @@ function UserProfile() {
         <h2 className="text-lg font-bold mb-4 text-text-heading">
           {profile.nickname || '사용자'}의 판매 상품
         </h2>
-        {userProducts.length === 0 ? (
+        {products.length === 0 ? (
           <EmptyState message="판매 중인 상품이 없습니다." />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {userProducts.map(p => (
+            {products.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>

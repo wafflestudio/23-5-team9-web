@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   fetchProducts,
+  fetchUserProducts,
   fetchMyProducts,
   createProduct,
   updateProduct,
@@ -14,6 +15,38 @@ export function useProducts(selectedCategory?: string, searchQuery?: string) {
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
+
+  const filteredProducts = data?.filter((product: Product) => {
+    // 카테고리 필터
+    if (selectedCategory && selectedCategory !== 'all') {
+      if (product.category_id !== selectedCategory) return false;
+    }
+    // 검색 필터
+    if (searchQuery && searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      const matchesTitle = product.title.toLowerCase().includes(query);
+      const matchesContent = product.content.toLowerCase().includes(query);
+      if (!matchesTitle && !matchesContent) return false;
+    }
+    return true;
+  }) ?? [];
+
+  return {
+    products: filteredProducts,
+    loading: isLoading,
+    error: error ? (error as Error).message : null
+  };
+}
+
+export function useUserProducts(user_id: string, selectedCategory?: string, searchQuery?: string) {
+  
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['products', user_id],
+    queryFn: () => fetchUserProducts(user_id),
+  });
+
+  console.log(user_id); 
+  console.log(data)
 
   const filteredProducts = data?.filter((product: Product) => {
     // 카테고리 필터
