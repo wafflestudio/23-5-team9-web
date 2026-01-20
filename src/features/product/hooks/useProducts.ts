@@ -6,9 +6,8 @@ import {
   updateProduct,
   deleteProduct,
   Product,
+  UpdateProductRequest
 } from '@/features/product/api/productApi';
-
-export type { Product, CreateProductRequest, UpdateProductRequest, DeleteProductRequest } from '@/features/product/api/productApi';
 
 export function useProducts(selectedCategory?: string, searchQuery?: string) {
   const { data, isLoading, error } = useQuery({
@@ -71,7 +70,8 @@ export function useUpdateProduct() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateProduct,
+    // 두 개의 인자를 하나의 객체({ id, data })로 받아서 updateProduct에 전달합니다.
+    mutationFn: ({ id, data }: { id: string; data: UpdateProductRequest }) => updateProduct(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       queryClient.invalidateQueries({ queryKey: ['myProducts'] });
@@ -84,7 +84,7 @@ export function useDeleteProduct() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteProduct,
+    mutationFn: (id : string) => deleteProduct(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       queryClient.invalidateQueries({ queryKey: ['myProducts'] });

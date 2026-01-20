@@ -19,7 +19,6 @@ export interface CreateProductRequest {
 }
 
 export interface UpdateProductRequest {
-  id: string;
   title: string;
   content: string;
   price: number;
@@ -27,9 +26,6 @@ export interface UpdateProductRequest {
   is_sold: boolean;
 }
 
-export interface DeleteProductRequest {
-  id: string;
-}
 
 export async function fetchProducts(): Promise<Product[]> {
   try {
@@ -58,13 +54,13 @@ export async function createProduct(data: CreateProductRequest): Promise<Product
 }
 
 // 상품 수정
-export async function updateProduct(data: UpdateProductRequest): Promise<Product> {
-  const response = await client.patch<Product>('/api/product/me', data);
+export async function updateProduct(product_id: string, data: UpdateProductRequest): Promise<Product> {
+  const response = await client.patch<Product>(`/api/product/${product_id}`, data);
   return response.data;
 }
 
 // 상품 삭제
-export async function deleteProduct(data: DeleteProductRequest): Promise<Product> {
-  const response = await client.delete<Product>('/api/product/me', { data });
+export async function deleteProduct(product_id: string): Promise<Product> {
+  const response = await client.delete<Product>(`/api/product/${product_id}`, { });
   return response.data;
 }

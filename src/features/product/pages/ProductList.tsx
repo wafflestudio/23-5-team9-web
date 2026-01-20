@@ -112,14 +112,13 @@ const EditProductForm = ({ product, onSuccess, onCancel }: { product: Product; o
     }
 
     try {
-      await updateProduct.mutateAsync({
-        id: product.id,
+      await updateProduct.mutateAsync({ id: product.id, data: {
         title: title.trim(),
         content: content.trim(),
         price: Number(price),
         category_id: product.category_id,
         is_sold: isSold,
-      });
+      }});
       alert('상품이 수정되었습니다.');
       onSuccess();
     } catch {
@@ -363,7 +362,7 @@ function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps
       return;
     }
     try {
-      await deleteProduct.mutateAsync({ id: product.id });
+      await deleteProduct.mutateAsync(product.id);
       alert('상품이 삭제되었습니다.');
     } catch {
       alert('상품 삭제에 실패했습니다.');
