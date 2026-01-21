@@ -48,6 +48,11 @@ export function useOnboarding() {
   });
 }
 
+export function resetMe() {
+  const queryClient = useQueryClient();
+  queryClient.invalidateQueries({ queryKey: userKeys.me() });
+}
+
 export function usePatchUser() {
   const queryClient = useQueryClient();
 

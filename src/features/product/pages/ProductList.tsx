@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"; // useNavigate 추가
 import ProductCard from "@/features/product/components/ProductCard";
 import { useProducts } from "@/features/product/hooks/useProducts"; // useUserProducts 등 제거
-import { useUser } from '@/features/user/hooks/useUser';
 import { PRODUCT_CATEGORIES } from "@/shared/constants/data";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";
@@ -90,18 +89,6 @@ const ProductFilterBar = ({
   setSearchQuery: (val: string) => void;
 }) => {
   const navigate = useNavigate();
-  const { isLoggedIn } = useUser();
-
-  const handleProfileClick = () => {
-    if (!isLoggedIn) {
-      if(confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        navigate('/auth/login');
-      }
-      return;
-    }
-    // 요청하신 내 프로필(상품 관리) 페이지로 이동
-    navigate('/user/me');
-  };
 
   return (
     <div className="flex flex-col bg-bg-page">
@@ -127,8 +114,8 @@ const ProductFilterBar = ({
 
         {/* 내 프로필 / 상품 관리 버튼 추가 */}
         <Button 
-          onClick={handleProfileClick} 
-          variant="secondary"
+          onClick={() => navigate('/user/me')} 
+          variant="outline"
           size="sm"
           className="rounded-xl whitespace-nowrap w-full md:w-auto h-[42px]"
         >

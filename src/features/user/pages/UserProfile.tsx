@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUserProfile, useUser } from "@/features/user/hooks/useUser";
 import { useUserProducts, useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/features/product/hooks/useProducts";
@@ -7,10 +7,8 @@ import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, Avatar, Input, Card, CardContent } from '@/shared/ui';
 import ProductCard from "@/features/product/components/ProductCard";
 import type { Product } from "@/features/product/api/productApi";
+import { LoginRequired, OnboardingRequired } from '@/shared/ui';
 
-// ----------------------------------------------------------------------
-// 1. Sub-component: ProductUpsertForm (등록/수정 폼)
-// ----------------------------------------------------------------------
 
 const ProductUpsertForm = ({ 
   initialData, 
@@ -21,6 +19,7 @@ const ProductUpsertForm = ({
   onSuccess: () => void; 
   onCancel: () => void; 
 }) => {
+  // ... (기존 로직 유지)
   const isEditMode = !!initialData;
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
@@ -134,8 +133,9 @@ const ProductUpsertForm = ({
   );
 };
 
+
 // ----------------------------------------------------------------------
-// 2. Main Component: UserProfile
+// 2. Main Component: UserProfile (수정됨)
 // ----------------------------------------------------------------------
 
 function UserProfile() {
@@ -144,7 +144,7 @@ function UserProfile() {
   
   // Hooks
   const { profile, isLoading: profileLoading, error: profileError } = useUserProfile(userId);
-  const { user, isLoggedIn } = useUser();
+  const { user, isLoggedIn, needsOnboarding } = useUser();
   const { products, loading: productsLoading } = useUserProducts(userId!);
   const deleteProduct = useDeleteProduct();
 
@@ -155,6 +155,30 @@ function UserProfile() {
 
   // Checks
   const isMyProfile = (user?.id && String(user.id) === userId) || userId === 'me';
+
+  // reset My Data
+  useEffect(() => {
+    if (isMyProfile && userId !== 'me') {
+      // replace: true를 써야 뒤로가기 했을 때 다시 리다이렉트 되는 루프를 막습니다.
+      navigate('/user/me', { replace: true });
+    }
+  }, [isMyProfile, userId, navigate]);
+
+  if (!isLoggedIn) {
+      return (
+        <PageContainer title="중고거래">
+          <LoginRequired/>
+        </PageContainer>
+      );
+    }
+  
+    if (needsOnboarding) {
+      return (
+        <PageContainer title="중고거래">
+          <OnboardingRequired />
+        </PageContainer>
+      );
+    }
 
   // Handlers
   const handleChatClick = async () => {
@@ -171,6 +195,11 @@ function UserProfile() {
     } finally {
       setChatLoading(false);
     }
+  };
+
+  // ✅ 추가됨: 프로필 수정 페이지로 이동하는 핸들러
+  const handleProfileEditClick = () => {
+    navigate('/my/profile')
   };
 
   const handleEditClick = (product: Product) => {
@@ -234,11 +263,24 @@ function UserProfile() {
               {chatLoading ? '채팅방 연결 중...' : '채팅하기'}
             </Button>
           ) : (
-            // 내 프로필일 경우: 상품 등록 버튼 표시 (선택 사항)
+            // ✅ 수정됨: 내 프로필일 경우 [프로필 수정] 및 [상품 등록] 버튼 표시
             !isFormOpen && (
-              <Button size="sm" variant="outline" onClick={handleRegisterClick}>
-                + 상품 등록하기
-              </Button>
+              <div className="flex gap-2 w-full mt-2">
+                <Button 
+                  variant="outline" 
+                  fullWidth 
+                  onClick={handleProfileEditClick}
+                >
+                  프로필 수정
+                </Button>
+                <Button 
+                  variant="outline" 
+                  fullWidth 
+                  onClick={handleRegisterClick}
+                >
+                  + 상품 등록
+                </Button>
+              </div>
             )
           )}
         </div>
