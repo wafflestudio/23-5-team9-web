@@ -1,222 +1,36 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from "react-router-dom"; // useNavigate 추가
 import ProductCard from "@/features/product/components/ProductCard";
-import { useProducts, useUserProducts, useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/features/product/hooks/useProducts";
+import { useProducts } from "@/features/product/hooks/useProducts"; // useUserProducts 등 제거
 import { useUser } from '@/features/user/hooks/useUser';
 import { PRODUCT_CATEGORIES } from "@/shared/constants/data";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";
-import { Button, Input, LoginRequired, OnboardingRequired, TabBar, Card, CardContent } from '@/shared/ui';
-import type { Tab } from '@/shared/ui';
-import type { Product } from "@/features/product/api/productApi";
+import { Button } from '@/shared/ui'; // 불필요한 import 제거
 
-type TabType = 'all' | 'my';
+// ----------------------------------------------------------------------
+// 1. Sub-components (Logic & UI Separation)
+// ----------------------------------------------------------------------
 
-const PRODUCT_TABS: Tab<TabType>[] = [
-  { id: 'all', label: '전체 상품', to: '/products/all' },
-  { id: 'my', label: '나의 상품', to: '/products/me' },
-];
-
-const ProductForm = ({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [price, setPrice] = useState('');
-  const createProduct = useCreateProduct();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!title.trim() || !content.trim() || !price) {
-      alert('모든 필드를 입력해주세요.');
-      return;
-    }
-
-    try {
-      await createProduct.mutateAsync({
-        title: title.trim(),
-        content: content.trim(),
-        price: Number(price),
-        category_id: '1',
-      });
-      alert('상품이 등록되었습니다.');
-      onSuccess();
-    } catch {
-      alert('상품 등록에 실패했습니다.');
-    }
-  };
-
-  return (
-    <Card className="mb-6 border border-border-base rounded-lg p-3">
-      <CardContent>
-        <h4 className="text-base font-medium text-text-heading mb-4">새 상품 등록</h4>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm text-text-secondary mb-1">제목</label>
-            <Input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="상품 제목을 입력하세요"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm text-text-secondary mb-1">내용</label>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={3}
-              className="w-full rounded-xl bg-bg-page border border-border-medium p-4 text-base outline-none transition-all placeholder:text-text-placeholder focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none"
-              placeholder="상품 설명을 입력하세요"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm text-text-secondary mb-1">가격 (원)</label>
-            <Input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="가격을 입력하세요"
-              min="0"
-            />
-          </div>
-
-          <div className="flex gap-2 pt-2 border-t border-border-base">
-            <Button type="button" variant="secondary" fullWidth onClick={onCancel}>
-              취소
-            </Button>
-            <Button type="submit" fullWidth disabled={createProduct.isPending}>
-              {createProduct.isPending ? '등록 중...' : '상품 등록'}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  );
-};
-
-const EditProductForm = ({ product, onSuccess, onCancel }: { product: Product; onSuccess: () => void; onCancel: () => void }) => {
-  const [title, setTitle] = useState(product.title);
-  const [content, setContent] = useState(product.content);
-  const [price, setPrice] = useState(String(product.price));
-  const [isSold, setIsSold] = useState(product.is_sold);
-  const updateProduct = useUpdateProduct();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!title.trim() || !content.trim() || !price) {
-      alert('모든 필드를 입력해주세요.');
-      return;
-    }
-
-    try {
-      await updateProduct.mutateAsync({ id: product.id, data: {
-        title: title.trim(),
-        content: content.trim(),
-        price: Number(price),
-        category_id: product.category_id,
-        is_sold: isSold,
-      }});
-      alert('상품이 수정되었습니다.');
-      onSuccess();
-    } catch {
-      alert('상품 수정에 실패했습니다.');
-    }
-  };
-
-  return (
-    <Card className="mb-6 border border-border-base rounded-lg p-3">
-      <CardContent>
-        <h4 className="text-base font-medium text-text-heading mb-4">상품 수정</h4>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm text-text-secondary mb-1">제목</label>
-            <Input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="상품 제목을 입력하세요"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm text-text-secondary mb-1">내용</label>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={3}
-              className="w-full rounded-xl bg-bg-page border border-border-medium p-4 text-base outline-none transition-all placeholder:text-text-placeholder focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none"
-              placeholder="상품 설명을 입력하세요"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm text-text-secondary mb-1">가격 (원)</label>
-            <Input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="가격을 입력하세요"
-              min="0"
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="is_sold"
-              checked={isSold}
-              onChange={(e) => setIsSold(e.target.checked)}
-              className="w-4 h-4 accent-primary"
-            />
-            <label htmlFor="is_sold" className="text-sm text-text-secondary">판매 완료</label>
-          </div>
-
-          <div className="flex gap-2 pt-2 border-t border-border-base">
-            <Button type="button" variant="secondary" fullWidth onClick={onCancel}>
-              취소
-            </Button>
-            <Button type="submit" fullWidth disabled={updateProduct.isPending}>
-              {updateProduct.isPending ? '수정 중...' : '수정 완료'}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  );
-};
-
-interface ProductFiltersProps {
-  filterCategory: string;
-  setFilterCategory: (value: string) => void;
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
-  activeTab: TabType;
-  onRegisterClick?: () => void;
-  isFormOpen?: boolean;
-}
-
-function ProductFilters({ 
-  filterCategory, 
-  setFilterCategory, 
-  searchQuery, 
-  setSearchQuery, 
-  activeTab,
-  onRegisterClick,
-  isFormOpen 
-}: ProductFiltersProps) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+/**
+ * 카테고리 선택 드롭다운 컴포넌트
+ */
+const CategoryDropdown = ({ 
+  currentValue, 
+  onSelect 
+}: { 
+  currentValue: string; 
+  onSelect: (value: string) => void; 
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const selectedLabel = PRODUCT_CATEGORIES.find(c => c.value === filterCategory)?.label || '전체';
+  
+  const selectedLabel = PRODUCT_CATEGORIES.find(c => c.value === currentValue)?.label || '전체';
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsDropdownOpen(false);
+        setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -224,25 +38,80 @@ function ProductFilters({
   }, []);
 
   return (
-    <div className="flex flex-col bg-bg-page">
-      <TabBar tabs={PRODUCT_TABS} activeTab={activeTab} />
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-text-body hover:bg-gray-50 transition-colors whitespace-nowrap"
+      >
+        {selectedLabel}
+        <span className={`text-[10px] text-text-secondary transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+          ▼
+        </span>
+      </button>
 
-      {/* 검색창과 버튼을 감싸는 컨테이너 - 모바일 대응 수정 */}
-      <div className="flex flex-col md:flex-row justify-center items-center mb-6 gap-3 px-4">
-        
-        {/* 검색창 영역 */}
-        <div className="relative w-full md:w-auto" ref={dropdownRef}>
-          {/* 검색창 컨테이너 - shared/ui Input 스타일 적용 */}
+      {isOpen && (
+        <div className="absolute left-0 top-[calc(100%+4px)] w-full min-w-[120px] bg-bg-page border border-border-medium rounded-xl z-50 overflow-hidden shadow-lg">
+          <div className="max-h-60 overflow-y-auto py-1 custom-scrollbar">
+            {PRODUCT_CATEGORIES.map((cat) => (
+              <button
+                key={cat.value}
+                onClick={() => {
+                  onSelect(cat.value);
+                  setIsOpen(false);
+                }}
+                className={`w-full px-3 py-2 text-left text-sm transition-colors ${
+                  currentValue === cat.value
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'text-text-body hover:bg-gray-50'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
+ * 필터 바 (검색, 카테고리, 내 프로필 이동 버튼)
+ */
+const ProductFilterBar = ({
+  filterCategory,
+  setFilterCategory,
+  searchQuery,
+  setSearchQuery,
+}: {
+  filterCategory: string;
+  setFilterCategory: (val: string) => void;
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
+}) => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useUser();
+
+  const handleProfileClick = () => {
+    if (!isLoggedIn) {
+      if(confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?')) {
+        navigate('/auth/login');
+      }
+      return;
+    }
+    // 요청하신 내 프로필(상품 관리) 페이지로 이동
+    navigate('/user/me');
+  };
+
+  return (
+    <div className="flex flex-col bg-bg-page">
+      {/* 탭바 제거됨 */}
+
+      <div className="flex flex-col md:flex-row justify-center items-center mb-6 gap-3 px-4 pt-4">
+        <div className="relative w-full md:w-auto flex-1 max-w-2xl">
           <div className="flex items-center bg-bg-page border border-border-medium rounded-xl overflow-hidden transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 w-full">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-1 px-3 py-2.5 text-sm font-medium text-text-body hover:bg-gray-50 transition-colors whitespace-nowrap"
-            >
-              {selectedLabel}
-              <span className={`text-[10px] text-text-secondary transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </button>
+            
+            <CategoryDropdown currentValue={filterCategory} onSelect={setFilterCategory} />
 
             <div className="w-px h-4 bg-gray-300" />
 
@@ -251,182 +120,86 @@ function ProductFilters({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="검색어를 입력해주세요"
-              className="flex-1 px-3 py-2.5 text-sm outline-none bg-transparent min-w-[180px] md:min-w-[260px] text-text-primary placeholder:text-text-placeholder"
+              className="flex-1 px-3 py-2.5 text-sm outline-none bg-transparent min-w-[180px] text-text-primary placeholder:text-text-placeholder"
             />
           </div>
-
-          {/* 드롭다운 메뉴 */}
-          {isDropdownOpen && (
-            <div className="absolute left-0 top-[calc(100%+4px)] w-full bg-bg-page border border-border-medium rounded-xl z-50 overflow-hidden shadow-lg">
-              <div className="max-h-60 overflow-y-auto py-1 custom-scrollbar">
-                {PRODUCT_CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.value}
-                    onClick={() => {
-                      setFilterCategory(cat.value);
-                      setIsDropdownOpen(false);
-                    }}
-                    className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-                      filterCategory === cat.value
-                        ? 'bg-primary/10 text-primary font-medium'
-                        : 'text-text-body hover:bg-gray-50'
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* 새 상품 등록 버튼 - 모바일에서 아래로 이동 및 편집창 열려있으면 숨김 */}
-        {onRegisterClick && !isFormOpen && (
-          <Button 
-            onClick={onRegisterClick} 
-            variant="primary"
-            size="sm"
-            className="rounded-full whitespace-nowrap w-full md:w-auto"
-          >
-            + 새 상품 등록
-          </Button>
-        )}
+        {/* 내 프로필 / 상품 관리 버튼 추가 */}
+        <Button 
+          onClick={handleProfileClick} 
+          variant="secondary"
+          size="sm"
+          className="rounded-xl whitespace-nowrap w-full md:w-auto h-[42px]"
+        >
+          내 프로필 / 상품 관리
+        </Button>
       </div>
     </div>
   );
-}
+};
 
-interface ProductGridProps {
-  products: Product[];
-  showActions?: boolean;
-  onEdit?: (product: Product) => void;
-  onDelete?: (product: Product) => void;
-}
+// ----------------------------------------------------------------------
+// 2. Hooks
+// ----------------------------------------------------------------------
 
-function ProductGrid({ products, showActions, onEdit, onDelete }: ProductGridProps) {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {products.map(product => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          showActions={showActions}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
-    </div>
-  );
-}
-
-interface ProductContentProps {
-  isMyProducts?: boolean;
-  activeTab: TabType;
-}
-
-function ProductContent({ isMyProducts = false, activeTab }: ProductContentProps) {
-  const { isLoggedIn, needsOnboarding } = useUser();
+/**
+ * 상품 데이터 로딩 및 필터링 로직 (전체 상품만 조회)
+ */
+const useProductFilterLogic = () => {
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const deleteProduct = useDeleteProduct();
 
-  const allProductsQuery = useProducts(filterCategory, searchQuery);
-  const myProductsQuery = useUserProducts('me');
-
-  const filteredMyProducts = myProductsQuery.products.filter(product => {
-    if (filterCategory && filterCategory !== 'all') {
-      if (product.category_id !== filterCategory) return false;
-    }
-    if (searchQuery && searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      const matchesTitle = product.title.toLowerCase().includes(query);
-      const matchesContent = product.content.toLowerCase().includes(query);
-      if (!matchesTitle && !matchesContent) return false;
-    }
-    return true;
-  });
-
-  const { products, loading, error } = isMyProducts
-    ? { products: filteredMyProducts, loading: myProductsQuery.loading, error: myProductsQuery.error }
-    : allProductsQuery;
-
-  const handleEdit = (product: Product) => {
-    setEditingProduct(product);
-    setShowForm(false);
+  // 전체 상품 조회 (서버 사이드 필터링)
+  const { products, loading, error } = useProducts(filterCategory, searchQuery);
+  
+  return {
+    products,
+    loading,
+    error,
+    filterCategory, setFilterCategory,
+    searchQuery, setSearchQuery
   };
+};
 
-  const handleDelete = async (product: Product) => {
-    if (!confirm('정말로 이 상품을 삭제하시겠습니까?')) {
-      return;
-    }
-    try {
-      await deleteProduct.mutateAsync(product.id);
-      alert('상품이 삭제되었습니다.');
-    } catch {
-      alert('상품 삭제에 실패했습니다.');
-    }
-  };
+// ----------------------------------------------------------------------
+// 3. Main Components
+// ----------------------------------------------------------------------
 
-  // 로그인/온보딩 필요 여부 체크
-  const needsLogin = isMyProducts && !isLoggedIn;
-  const needsOnboardingCheck = isMyProducts && isLoggedIn && needsOnboarding;
+function ProductList() {
+  // 데이터 & 필터 훅 (단순화됨)
+  const { 
+    products, loading, error, 
+    filterCategory, setFilterCategory, 
+    searchQuery, setSearchQuery 
+  } = useProductFilterLogic();
 
-  const filters = (
-    <ProductFilters
-      filterCategory={filterCategory}
-      setFilterCategory={setFilterCategory}
-      searchQuery={searchQuery}
-      setSearchQuery={setSearchQuery}
-      activeTab={activeTab}
-      onRegisterClick={isMyProducts ? () => { setShowForm(true); setEditingProduct(null); } : undefined}
-      isFormOpen={showForm}
-    />
-  );
-
-  return (
-    <DataListLayout
-      isLoading={!needsLogin && !needsOnboardingCheck && loading}
-      error={!needsLogin && !needsOnboardingCheck ? error : null}
-      isEmpty={!needsLogin && !needsOnboardingCheck && products.length === 0}
-      emptyMessage={searchQuery ? "검색 결과가 없습니다." : isMyProducts ? "등록한 상품이 없습니다." : "등록된 상품이 없습니다."}
-      filters={filters}
-    >
-      {needsLogin ? (
-        <LoginRequired message="로그인하고 내 상품을 관리하세요" />
-      ) : needsOnboardingCheck ? (
-        <OnboardingRequired />
-      ) : (
-        <>
-          {showForm && <ProductForm onSuccess={() => setShowForm(false)} onCancel={() => setShowForm(false)} />}
-          {editingProduct && (
-            <EditProductForm
-              product={editingProduct}
-              onSuccess={() => setEditingProduct(null)}
-              onCancel={() => setEditingProduct(null)}
-            />
-          )}
-          <ProductGrid
-            products={products}
-            showActions={isMyProducts}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        </>
-      )}
-    </DataListLayout>
-  );
-}
-
-interface ProductListProps {
-  initialTab?: TabType;
-}
-
-function ProductList({ initialTab = 'all' }: ProductListProps) {
   return (
     <PageContainer title="중고거래">
-      {initialTab === 'all' ? <ProductContent activeTab="all" /> : <ProductContent isMyProducts activeTab="my" />}
+      <DataListLayout
+        isLoading={loading}
+        error={error}
+        isEmpty={products.length === 0}
+        emptyMessage={searchQuery ? "검색 결과가 없습니다." : "등록된 상품이 없습니다."}
+        filters={
+          <ProductFilterBar
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+        }
+      >
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              // showActions, onEdit, onDelete 제거 (관리 기능은 프로필 페이지로 위임)
+            />
+          ))}
+        </div>
+      </DataListLayout>
     </PageContainer>
   );
 }
