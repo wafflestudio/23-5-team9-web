@@ -30,7 +30,7 @@ function App() {
           <Route path="/chat" element={<ChatList />} />
           <Route path="/chat/:chatId" element={<ChatRoom />} />
           <Route path="/user/me" element={<UserProfile />} />
-          <Route path="/my" element={<Navigate to="/my/profile" replace />} />
+          <Route path="/my" element={<MyCarrot />} />
           <Route path="/my/profile" element={<MyCarrot initialTab="profile" />} />
           <Route path="/my/coin" element={<MyCarrot initialTab="coin" />} />
           <Route path="/my/password" element={<MyCarrot initialTab="password" />} />
