@@ -183,21 +183,7 @@ function ProductDetail() {
       <DetailSection>
         {/* 판매완료 배지 */}
         <div className="flex items-center gap-2 mb-4">
-          {isEditing ? (
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={editForm.is_sold}
-                onChange={(e) => handleFormChange('is_sold', e.target.checked)}
-                className="w-4 h-4 accent-primary"
-              />
-              <span className={`text-xs px-2 py-1 rounded ${editForm.is_sold ? 'bg-gray-200 text-gray-600' : 'text-primary'}`}>
-                {editForm.is_sold ? '판매완료' : '판매중'}
-              </span>
-            </label>
-          ) : (
-            product.is_sold && <Badge variant="secondary" className="text-xs">판매완료</Badge>
-          )}
+          {product.is_sold && <Badge variant="secondary" className="text-xs">판매완료</Badge>}
         </div>
 
         {/* 제목 및 가격 */}
@@ -208,7 +194,7 @@ function ProductDetail() {
               value={editForm.title}
               onChange={(e) => handleFormChange('title', e.target.value)}
               placeholder="상품 제목"
-              className="w-full text-2xl font-bold mb-2 text-text-heading bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1"
+              className="w-full text-2xl font-bold text-text-heading bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 mb-2"
             />
             <div className="flex items-baseline gap-1 mb-6">
               <input
@@ -246,8 +232,8 @@ function ProductDetail() {
           )}
         </div>
 
-        {/* 좋아요 버튼 (상단 구분선 border-t 복구) */}
-        <div className="flex gap-4 pt-6 mt-6 border-t border-border-base">
+        {/* 좋아요 버튼 + 수정/삭제 버튼 (상단 구분선 border-t 복구) */}
+        <div className="flex items-center justify-between pt-6 mt-6 border-t border-border-base">
           <Button
             variant={isLiked ? "primary" : "outline"}
             size="sm"
@@ -256,40 +242,53 @@ function ProductDetail() {
             <span className="mr-2">{isLiked ? '♥' : '♡'}</span>
             좋아요 {product.like_count + (isLiked ? 1 : 0)}
           </Button>
+
+          {isOwner && (
+            <div className="flex gap-2">
+              {isEditing ? (
+                <>
+                  <label className="flex items-center gap-2 cursor-pointer mr-2">
+                    <input
+                      type="checkbox"
+                      checked={editForm.is_sold}
+                      onChange={(e) => handleFormChange('is_sold', e.target.checked)}
+                      className="w-4 h-4 accent-primary"
+                    />
+                    <span className="text-sm text-text-secondary">판매완료</span>
+                  </label>
+                  <Button size="sm" variant="secondary" onClick={handleCancelEdit}>
+                    취소
+                  </Button>
+                  <Button size="sm" onClick={handleSaveEdit} disabled={updateProduct.isPending}>
+                    {updateProduct.isPending ? '저장 중...' : '저장'}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button size="sm" variant="secondary" onClick={handleEditClick}>
+                    수정
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={handleDeleteClick} disabled={deleteProduct.isPending}>
+                    삭제
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </DetailSection>
 
-      {/* 하단 버튼 */}
-      <div className="mt-6 space-y-3">
-        {isOwner ? (
-          isEditing ? (
-            <div className="flex gap-3">
-              <Button size="lg" fullWidth variant="secondary" onClick={handleCancelEdit}>
-                취소
-              </Button>
-              <Button size="lg" fullWidth onClick={handleSaveEdit} disabled={updateProduct.isPending}>
-                {updateProduct.isPending ? '저장 중...' : '저장하기'}
-              </Button>
-            </div>
-          ) : (
-            <div className="flex gap-3">
-              <Button size="lg" fullWidth variant="secondary" onClick={handleEditClick}>
-                수정하기
-              </Button>
-              <Button size="lg" fullWidth variant="ghost" onClick={handleDeleteClick} disabled={deleteProduct.isPending}>
-                {deleteProduct.isPending ? '삭제 중...' : '삭제하기'}
-              </Button>
-            </div>
-          )
-        ) : (
+      {/* 하단 버튼 - 비로그인/다른 사용자용 채팅 버튼 */}
+      {!isOwner && (
+        <div className="mt-6">
           <Button size="lg" fullWidth onClick={handleChatClick} disabled={chatLoading}>
             {chatLoading ? '채팅방 연결 중...' : '채팅하기'}
           </Button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* 판매자의 다른 상품 */}
-      {!isEditing && products && (
+      {products && (
         <SellerProductList
           products={products}
           currentOwnerId={product.owner_id}
