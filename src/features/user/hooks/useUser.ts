@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi, OnboardingParams, PatchUserParams } from '@/features/user/api/user';
+import { handleAuthError } from '@/shared/utils/authErrorHandler';
 
 export const userKeys = {
   all: ['user'] as const,
@@ -9,12 +10,22 @@ export const userKeys = {
 
 export function useUser() {
   const token = localStorage.getItem('token');
+  const queryClient = useQueryClient();
 
   const { data: user, isLoading, error, refetch } = useQuery({
     queryKey: userKeys.me(),
     queryFn: async () => {
-      const { data } = await userApi.getMe();
-      return data;
+      try {
+        const { data } = await userApi.getMe();
+        return data;
+      } catch (err: any) {
+        // 401 에러 시 토큰과 캐시 정리
+        if (handleAuthError(err)) {
+          queryClient.setQueryData(userKeys.me(), null);
+          queryClient.removeQueries({ queryKey: userKeys.me() });
+        }
+        throw err;
+      }
     },
     enabled: !!token,
     staleTime: 1000 * 60 * 5, // 5분

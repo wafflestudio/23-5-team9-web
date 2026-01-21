@@ -64,7 +64,7 @@ client.interceptors.response.use(
 
       if (!refreshToken) {
         localStorage.removeItem('token');
-        window.location.href = `${import.meta.env.BASE_URL}auth/login`;
+        isRefreshing = false;
         return Promise.reject(error);
       }
 
@@ -86,7 +86,6 @@ client.interceptors.response.use(
         processQueue(refreshError as AxiosError, null);
         localStorage.removeItem('token');
         localStorage.removeItem('refresh_token');
-        window.location.href = `${import.meta.env.BASE_URL}auth/login`;
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
