@@ -174,7 +174,7 @@ function ChatRoom() {
       </div>
 
       {/* 데스크톱: 카드 레이아웃 */}
-      <div className="hidden md:block w-full max-w-250 mx-auto px-4 py-6 min-h-[calc(100vh-60px)]">
+      <div className="hidden md:block w-full max-w-[1000px] mx-auto px-4 py-6 min-h-[calc(100vh-60px)]">
         <DetailHeader />
 
         <div className="bg-bg-page rounded-lg border border-border-medium overflow-hidden flex flex-col" style={{ height: '70vh' }}>
