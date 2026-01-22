@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { User } from '@/features/user/api/user';
 import { Button, StatCard } from '@/shared/ui';
 
+import { useUser } from '@/features/user/hooks/useUser';
+import { PageContainer } from '@/shared/layouts/PageContainer';
+import { OnboardingRequired } from '@/shared/ui';
+
 interface CoinTabProps {
   user: User;
   onDeposit: (amount: number) => void;
@@ -20,6 +24,17 @@ const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
       onWithdraw(amount);
     }
   };
+
+   const { needsOnboarding } = useUser();
+  
+    if (needsOnboarding) {
+        return (
+          <PageContainer title="채팅">
+            <OnboardingRequired />
+          </PageContainer>
+        );
+      }
+  
 
   return (
     <div className="text-center py-5">

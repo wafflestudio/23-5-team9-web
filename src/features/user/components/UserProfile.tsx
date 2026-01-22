@@ -5,6 +5,10 @@ import { EmptyState, Button, DetailSection } from '@/shared/ui';
 import ProductCard from "@/features/product/components/ProductCard";
 import ProductForm from "@/features/product/components/ProductForm";
 
+import { useUser } from '@/features/user/hooks/useUser';
+import { PageContainer } from '@/shared/layouts/PageContainer';
+import { OnboardingRequired } from '@/shared/ui';
+
 const UserProfile = () => {
   const navigate = useNavigate();
   const { products } = useUserProducts('me');
@@ -25,6 +29,16 @@ const UserProfile = () => {
   const handleCancel = () => {
     setShowForm(false);
   };
+
+  const { needsOnboarding } = useUser();
+
+  if (needsOnboarding) {
+      return (
+        <PageContainer title="채팅">
+          <OnboardingRequired />
+        </PageContainer>
+      );
+    }
 
   return (
     <div className="flex flex-col gap-6">
