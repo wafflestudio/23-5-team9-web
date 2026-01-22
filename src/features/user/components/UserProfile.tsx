@@ -36,7 +36,6 @@ const UserProfile = () => {
         </div>
       ) : (
         <DetailSection>
-          <h3 className="text-lg font-bold mb-4">새 상품 등록</h3>
           <ProductForm
             onSubmit={handleSubmit}
             onCancel={handleCancel}

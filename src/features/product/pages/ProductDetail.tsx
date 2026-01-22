@@ -13,8 +13,11 @@ import { ProductFormFields } from "@/features/product/components/ProductForm";
 // ----------------------------------------------------------------------
 
 // 판매자 프로필 카드
-const SellerProfileCard = ({ profile }: { profile: any }) => (
-  <div className="flex items-center gap-3">
+const SellerProfileCard = ({ profile, onClick }: { profile: any; onClick?: () => void }) => (
+  <div
+    className={`flex items-center gap-3 ${onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+    onClick={onClick}
+  >
     <Avatar src={profile?.profile_image} alt={profile?.nickname} size="sm" />
     <div>
       <div className="font-semibold text-text-heading">{profile?.nickname || '알 수 없음'}</div>
@@ -26,17 +29,19 @@ const SellerProfileCard = ({ profile }: { profile: any }) => (
 // 판매자 섹션 (프로필 + 채팅 버튼)
 const SellerSection = ({
   profile,
+  onProfileClick,
   onChatClick,
   chatLoading,
   showChatButton
 }: {
   profile: any,
+  onProfileClick: () => void,
   onChatClick: () => void,
   chatLoading: boolean,
   showChatButton: boolean
 }) => (
   <div className="flex items-center justify-between">
-    <SellerProfileCard profile={profile} />
+    <SellerProfileCard profile={profile} onClick={onProfileClick} />
     {showChatButton && (
       <Button size="sm" onClick={onChatClick} disabled={chatLoading}>
         {chatLoading ? '연결 중...' : '채팅하기'}
@@ -189,6 +194,7 @@ function ProductDetail() {
       <DetailSection className="mb-4">
         <SellerSection
           profile={sellerProfile}
+          onProfileClick={() => product?.owner_id && navigate(`/user/${product.owner_id}`)}
           onChatClick={handleChatClick}
           chatLoading={createRoom.isPending}
           showChatButton={!isOwner}

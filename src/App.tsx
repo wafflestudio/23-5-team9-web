@@ -9,6 +9,7 @@ import Onboarding from '@/features/auth/pages/Onboarding';
 import ChatList from '@/features/chat/pages/ChatList';
 import ChatRoom from '@/features/chat/pages/ChatRoom';
 import MyCarrot from '@/features/user/pages/MyCarrot';
+import SellerProfile from '@/features/user/pages/SellerProfile';
 import ProductList from '@/features/product/pages/ProductList';
 import ProductDetail from '@/features/product/pages/ProductDetail';
 
@@ -24,6 +25,7 @@ function App() {
           {/* 기존 메인 서비스 */}
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/user/:userId" element={<SellerProfile />} />
           <Route path="/chat" element={<ChatList />} />
           <Route path="/chat/:chatId" element={<ChatRoom />} />
           <Route path="/my" element={<MyCarrot />} />
