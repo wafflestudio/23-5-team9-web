@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
+import UserProfile from '@/features/user/components/UserProfile';
 import CoinTab from '@/features/pay/components/CoinTab';
 import PasswordTab from '@/features/user/components/PasswordTab';
 import { useMyPay } from '@/features/pay/hooks/useMyPay';
@@ -9,9 +10,9 @@ import { Loading, Button, Avatar } from '@/shared/ui';
 import { useOnboarding } from '@/features/user/hooks/useUser';
 import { useUser } from '@/features/user/hooks/useUser';
 
-type TabType = 'profile' | 'coin' | 'password';
+type TabType = 'products' | 'profile' | 'coin' | 'password';
 
-const MENU_ITEMS: { id: TabType | 'products'; label: string; to: string }[] = [
+const MENU_ITEMS: { id: TabType; label: string; to: string }[] = [
   { id: 'products', label: '내 상품 관리', to: '/my/products' },
   { id: 'profile', label: '프로필 수정', to: '/my/profile' },
   { id: 'coin', label: '코인 관리', to: '/my/coin' },
@@ -101,6 +102,7 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
       </div>
 
       <div className="content-area">
+        {initialTab === 'products' && <UserProfile />}
         {initialTab === 'profile' && (
           <ProfileEditForm
             initialEmail={user.email}

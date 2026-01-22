@@ -134,7 +134,7 @@ function ChatRoom() {
                   className={`flex items-end gap-1.5 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
                 >
                   <div
-                    className={`max-w-[75%] px-3 py-2 text-[15px] leading-relaxed break-words ${
+                    className={`max-w-[75%] px-3 py-2 text-[15px] leading-relaxed wrap-break-word ${
                       isMe
                         ? 'bg-primary text-white rounded-lg'
                         : 'bg-bg-page text-text-heading rounded-lg border border-border-medium'
@@ -174,7 +174,7 @@ function ChatRoom() {
       </div>
 
       {/* 데스크톱: 카드 레이아웃 */}
-      <div className="hidden md:block w-full max-w-[1000px] mx-auto px-4 py-6 min-h-[calc(100vh-60px)]">
+      <div className="hidden md:block w-full max-w-250 mx-auto px-4 py-6 min-h-[calc(100vh-60px)]">
         <DetailHeader />
 
         <div className="bg-bg-page rounded-lg border border-border-medium overflow-hidden flex flex-col" style={{ height: '70vh' }}>
@@ -225,7 +225,7 @@ function ChatRoom() {
                     className={`flex items-end gap-1.5 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
                   >
                     <div
-                      className={`max-w-[75%] px-3 py-2 text-[15px] leading-relaxed break-words ${
+                      className={`max-w-[75%] px-3 py-2 text-[15px] leading-relaxed wrap-break-word ${
                         isMe
                           ? 'bg-primary text-white rounded-lg'
                           : 'bg-bg-page text-text-heading rounded-2xl rounded-bl-sm border border-border-base'

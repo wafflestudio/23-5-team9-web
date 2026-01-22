@@ -45,7 +45,7 @@ function ChatRoomItem({ room }: ChatRoomItemProps) {
         <div className="font-bold mb-1.5 truncate">{profile?.nickname || '알 수 없음'}</div>
         <div className="text-text-secondary text-sm truncate">{displayMessage}</div>
       </div>
-      <div className="text-right flex flex-col items-end min-w-[60px]">
+      <div className="text-right flex flex-col items-end min-w-15">
         <div className="text-text-secondary text-xs mb-1.5">{displayTime}</div>
         {room.unread_count > 0 && (
           <Badge variant="notification">{room.unread_count > 99 ? '99+' : room.unread_count}</Badge>

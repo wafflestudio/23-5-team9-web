@@ -6,6 +6,7 @@ import { useCreateRoom } from "@/features/chat/hooks/useChat";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Badge, Avatar } from '@/shared/ui';
 import ProductCard from "@/features/product/components/ProductCard";
+import { ProductFormFields } from "@/features/product/components/ProductForm";
 
 // ----------------------------------------------------------------------
 // 1. UI Components (디자인 복구됨)
@@ -201,51 +202,23 @@ function ProductDetail() {
           {product.is_sold && <Badge variant="secondary" className="text-xs">판매완료</Badge>}
         </div>
 
-        {/* 제목 및 가격 */}
+        {/* 제목, 가격, 본문 */}
         {isEditing ? (
-          <>
-            <input
-              type="text"
-              value={editForm.title}
-              onChange={(e) => handleFormChange('title', e.target.value)}
-              placeholder="상품 제목"
-              className="w-full text-2xl font-bold text-text-heading bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 mb-2"
-            />
-            <div className="flex items-baseline gap-1 mb-6">
-              <input
-                type="number"
-                value={editForm.price}
-                onChange={(e) => handleFormChange('price', e.target.value)}
-                placeholder="가격"
-                min="0"
-                className="text-3xl font-bold text-primary bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 w-40"
-              />
-              <span className="text-3xl font-bold text-primary">원</span>
-            </div>
-          </>
+          <ProductFormFields
+            formState={editForm}
+            onChange={handleFormChange}
+          />
         ) : (
           <>
             <h2 className="text-2xl font-bold mb-2 text-text-heading">{product.title}</h2>
             <h3 className="text-3xl font-bold mb-6 text-primary">{product.price.toLocaleString()}원</h3>
+            <div className="mt-6 border-t border-border-base pt-6">
+              <div className="whitespace-pre-wrap leading-relaxed text-text-body">
+                {product.content}
+              </div>
+            </div>
           </>
         )}
-
-        {/* 본문 (상단 구분선 border-t 복구) */}
-        <div className="mt-6 border-t border-border-base pt-6">
-          {isEditing ? (
-            <textarea
-              value={editForm.content}
-              onChange={(e) => handleFormChange('content', e.target.value)}
-              rows={6}
-              className="w-full bg-transparent text-text-body leading-relaxed outline-none border-b border-dashed border-border-medium focus:border-primary resize-none"
-              placeholder="상품 설명을 입력하세요"
-            />
-          ) : (
-            <div className="whitespace-pre-wrap leading-relaxed text-text-body">
-              {product.content}
-            </div>
-          )}
-        </div>
 
         {/* 좋아요 버튼 + 수정/삭제 버튼 (상단 구분선 border-t 복구) */}
         <div className="flex items-center justify-between pt-6 mt-6 border-t border-border-base">
