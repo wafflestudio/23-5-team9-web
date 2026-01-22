@@ -28,11 +28,12 @@ export function useAuth() {
     queryClient.invalidateQueries({ queryKey: userKeys.me() });
   };
 
- const logout = () => {
+  const logout = () => {
     storeLogout();
+    // user 데이터를 null로 설정하여 즉시 로그아웃 상태 반영 (re-render 트리거)
     queryClient.setQueryData(userKeys.me(), null);
-    queryClient.removeQueries({ queryKey: userKeys.me() });
-    queryClient.removeQueries({ queryKey: userKeys.profile('me') });
+    // 모든 쿼리 제거 (이전 사용자 데이터가 남지 않도록)
+    queryClient.removeQueries();
   };
 
   return { login, logout };
