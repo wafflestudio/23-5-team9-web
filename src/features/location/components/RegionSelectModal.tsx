@@ -188,7 +188,6 @@ export default function RegionSelectModal({
           options={sidoOptions}
           value={selectedSido}
           onChange={handleSidoChange}
-          className="w-full"
         />
 
         <Select
@@ -196,7 +195,6 @@ export default function RegionSelectModal({
           value={selectedSigugun}
           onChange={handleSigugunChange}
           disabled={!selectedSido}
-          className="w-full"
         />
 
         <Select
@@ -204,7 +202,6 @@ export default function RegionSelectModal({
           value={selectedDongId}
           onChange={handleDongChange}
           disabled={!selectedSigugun}
-          className="w-full"
         />
 
         {/* 버튼 영역 */}

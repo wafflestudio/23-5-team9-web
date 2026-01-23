@@ -33,7 +33,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
         onClick={onClose}
       />
       {/* 모달 컨텐츠 */}
-      <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-bg-page rounded-xl shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
         {title && (
           <div className="flex items-center justify-between p-4 border-b border-border-light">
             <h2 className="text-lg font-bold text-text-primary">{title}</h2>
