@@ -28,11 +28,13 @@ export interface UpdateProductRequest {
   is_sold: boolean;
 }
 
-export async function fetchProducts(): Promise<Product[]> {
+export async function fetchProducts(regionId?: string): Promise<Product[]> {
+  const params = regionId ? { region: regionId } : {};
   const response = await client.get<Product[]>('/api/product/', {
+    params,
     skipAuth: true,
-  } as any); 
-  
+  } as any);
+
   return response.data;
 }
 

@@ -3,6 +3,9 @@ import ProductCard from "@/features/product/components/ProductCard";
 import { useProducts } from "@/features/product/hooks/useProducts";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";
+import { useRegionSelection } from "@/features/location/hooks/useRegionSelection";
+import RegionSelector from "@/features/location/components/RegionSelector";
+import RegionSelectModal from "@/features/location/components/RegionSelectModal";
 
 // ----------------------------------------------------------------------
 // 1. Sub-components (Logic & UI Separation)
@@ -36,13 +39,13 @@ const SearchBar = ({
 // ----------------------------------------------------------------------
 
 /**
- * 상품 데이터 로딩 및 필터링 로직 (전체 상품만 조회)
+ * 상품 데이터 로딩 및 필터링 로직 (지역 기반 조회)
  */
-const useProductFilterLogic = () => {
+const useProductFilterLogic = (regionId?: string) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // 전체 상품 조회
-  const { products, loading, error } = useProducts(undefined, searchQuery);
+  // 지역 기반 상품 조회
+  const { products, loading, error } = useProducts(undefined, searchQuery, regionId);
 
   return {
     products,
@@ -57,15 +60,29 @@ const useProductFilterLogic = () => {
 // ----------------------------------------------------------------------
 
 function ProductList() {
-  // 데이터 & 필터 훅 (단순화됨)
+  // 지역 선택 훅
+  const {
+    currentRegionId,
+    currentRegionName,
+    isModalOpen,
+    openModal,
+    closeModal,
+    handleRegionSelect,
+  } = useRegionSelection();
+
+  // 데이터 & 필터 훅 (지역 기반)
   const {
     products, loading, error,
     searchQuery, setSearchQuery
-  } = useProductFilterLogic();
+  } = useProductFilterLogic(currentRegionId);
 
   return (
     <PageContainer title="중고거래">
-      <div className="mb-6 flex justify-center">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <RegionSelector
+          regionName={currentRegionName}
+          onClick={openModal}
+        />
         <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -82,11 +99,16 @@ function ProductList() {
             <ProductCard
               key={product.id}
               product={product}
-              // showActions, onEdit, onDelete 제거 (관리 기능은 프로필 페이지로 위임)
             />
           ))}
         </div>
       </DataListLayout>
+      <RegionSelectModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSelect={handleRegionSelect}
+        initialRegionId={currentRegionId}
+      />
     </PageContainer>
   );
 }

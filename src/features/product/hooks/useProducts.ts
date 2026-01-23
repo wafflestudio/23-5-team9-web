@@ -17,6 +17,7 @@ export const productKeys = {
 
   lists: () => [...productKeys.all, 'list'] as const,
   listAll: () => [...productKeys.lists(), 'all'] as const,
+  listByRegion: (regionId?: string) => [...productKeys.lists(), 'region', regionId ?? 'all'] as const,
   listBySeller: (userId: string) => [...productKeys.lists(), 'seller', userId] as const,
 
   details: () => [...productKeys.all, 'detail'] as const,
@@ -46,14 +47,14 @@ export function isProductMatched(
   return true;
 }
 
-export function useProducts(selectedCategory?: string, searchQuery?: string) {
+export function useProducts(selectedCategory?: string, searchQuery?: string, regionId?: string) {
   const { data, isLoading, error } = useQuery({
-    queryKey: productKeys.listAll(), // ['products', 'list', 'all']
-    queryFn: fetchProducts,
+    queryKey: productKeys.listByRegion(regionId),
+    queryFn: () => fetchProducts(regionId),
   });
 
   const filteredProducts = useMemo(() => {
-    return data?.filter((product: Product) => 
+    return data?.filter((product: Product) =>
       isProductMatched(product, selectedCategory, searchQuery)
     ) ?? [];
   }, [data, selectedCategory, searchQuery]);
