@@ -6,7 +6,10 @@ export interface User {
     nickname: string | null;
     region: {
         id: string;
-        name: string;
+        sido: string;
+        sigugun: string;
+        dong: string;
+        full_name: string;
     } | null;
     profile_image: string | null;
     coin: number;
