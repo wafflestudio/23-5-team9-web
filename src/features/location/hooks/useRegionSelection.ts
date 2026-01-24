@@ -9,71 +9,75 @@ export function useRegionSelection() {
   const { regionId, regionName, setRegion } = useRegionStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [urlRegionName, setUrlRegionName] = useState<string | null>(null);
-
+  
+  // URL 값을 진실의 원천으로 간주
   const urlRegionId = searchParams.get('region');
 
-  // URL에 region 파라미터가 있으면 해당 지역 이름 가져오기
+  // 1. 초기 진입 및 URL 변경 감지 -> Store 동기화 (단방향 흐름)
   useEffect(() => {
-    if (urlRegionId) {
-      // URL의 regionId가 store와 같으면 store의 이름 사용
-      if (urlRegionId === regionId) {
-        setUrlRegionName(regionName);
-      } else {
-        // URL의 region ID로 지역 정보 가져오기
-        fetchRegionById(urlRegionId)
-          .then((region) => {
-            const name = `${region.sigugun} ${region.dong}`;
-            setUrlRegionName(name);
-            setRegion(region.id, name);
-          })
-          .catch(() => {
-            // 잘못된 region ID면 기본값으로 리다이렉트
-            setSearchParams({ region: DEFAULT_REGION_ID }, { replace: true });
-          });
+    let ignore = false; // Race Condition 방지용 플래그
+
+    const syncRegion = async () => {
+      // Case A: URL에 지역 정보가 없으면 -> 현재 Store 값(혹은 기본값)을 URL에 반영
+      if (!urlRegionId) {
+        setSearchParams({ region: regionId || DEFAULT_REGION_ID }, { replace: true });
+        return;
       }
-    } else {
-      // URL에 region이 없으면 현재 regionId를 URL에 추가
-      setUrlRegionName(null);
-      setSearchParams({ region: regionId }, { replace: true });
-    }
-  }, [urlRegionId, regionId, regionName]);
 
-  // 로그인 시 사용자 지역으로 자동 동기화
+      // Case B: URL과 Store가 이미 일치하면 할 일 없음 (무한 루프 방지)
+      if (urlRegionId === regionId) return;
+
+      // Case C: URL이 변경됨 -> 서버에서 정보 가져와서 Store 업데이트
+      try {
+        const region = await fetchRegionById(urlRegionId);
+        if (!ignore) {
+          const name = `${region.sigugun} ${region.dong}`;
+          setRegion(region.id, name);
+        }
+      } catch (error) {
+        if (!ignore) {
+          // 실패 시 기본값으로 복구
+          setSearchParams({ region: DEFAULT_REGION_ID }, { replace: true });
+        }
+      }
+    };
+
+    syncRegion();
+
+    return () => { ignore = true; };
+  }, [urlRegionId, regionId, setRegion, setSearchParams]);
+
+
+  // 2. 사용자 로그인 시 지역 동기화 (이전 로직 유지하되 간결하게)
   useEffect(() => {
-    if (isLoggedIn && user?.region && user?.id) {
+    if (isLoggedIn && user?.region?.id) {
       const lastUserId = localStorage.getItem('lastUserId');
-      const savedRegionId = localStorage.getItem('selectedRegionId');
-
-      // 새 사용자이거나, 저장된 지역이 없거나 기본값인 경우 사용자 지역으로 설정
-      const isNewUser = lastUserId !== String(user.id);
-      const needsRegionSync = !savedRegionId || savedRegionId === DEFAULT_REGION_ID;
-
-      if (isNewUser || needsRegionSync) {
+      const isNewLogin = lastUserId !== String(user.id);
+      
+      // "새로운 로그인"이거나 "현재 선택된 지역이 없을 때"만 유저 지역으로 이동
+      if (isNewLogin || !regionId) {
         localStorage.setItem('lastUserId', String(user.id));
-        setRegion(user.region.id, `${user.region.sigugun} ${user.region.dong}`);
+        // Store를 직접 바꾸지 않고 URL만 바꿈 -> 위 1번 useEffect가 감지해서 Store 업데이트함 (단방향 유지)
         setSearchParams({ region: user.region.id }, { replace: true });
       }
     }
-  }, [isLoggedIn, user?.region, user?.id]);
+  }, [isLoggedIn, user, regionId, setSearchParams]);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
+  
+  // 핸들러: Store를 직접 set 하지 않고 URL만 변경
   const handleRegionSelect = (id: string, name: string) => {
-    setRegion(id, name);
     setSearchParams({ region: id }, { replace: true });
+    // 여기서 setRegion(id, name)을 호출하지 않음으로써 
+    // URL 변경 -> useEffect 감지 -> fetch/setRegion 흐름을 탐.
+    // (단, UX 반응속도를 위해 Optimistic update가 필요하다면 setRegion을 같이 호출해도 됨)
   };
 
-  // URL의 region 파라미터를 우선 사용
-  const currentRegionId = urlRegionId || regionId;
-
   return {
-    currentRegionId,
-    currentRegionName: urlRegionName || regionName || DEFAULT_REGION_NAME,
+    currentRegionId: regionId || DEFAULT_REGION_ID,
+    currentRegionName: regionName || DEFAULT_REGION_NAME,
     isModalOpen,
-    openModal,
-    closeModal,
+    openModal: () => setIsModalOpen(true),
+    closeModal: () => setIsModalOpen(false),
     handleRegionSelect,
   };
 }
