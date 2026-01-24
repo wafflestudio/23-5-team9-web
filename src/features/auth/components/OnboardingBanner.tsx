@@ -7,8 +7,9 @@ export function OnboardingBanner() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 온보딩 페이지가 아닌 곳에서만 배너 노출
-  const shouldShowBanner = user && needsOnboarding && location.pathname !== '/auth/onboarding';
+  // 온보딩 페이지와 채팅방에서는 배너 숨김
+  const isChatRoom = location.pathname.startsWith('/chat/');
+  const shouldShowBanner = user && needsOnboarding && location.pathname !== '/auth/onboarding' && !isChatRoom;
 
   if (!shouldShowBanner) return null;
 
