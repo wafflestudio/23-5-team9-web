@@ -34,38 +34,28 @@ const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUse
   if (isTransfer) {
     return (
       <div
-        className={`flex items-center gap-3 p-4 rounded-lg border ${
-          isPositive ? 'bg-blue-50 border-blue-200' : 'bg-purple-50 border-purple-200'
+        className={`flex items-center gap-3 p-4 rounded-lg border-l-4 ${
+          isPositive
+            ? 'bg-blue-500/10 border-l-blue-500'
+            : 'bg-purple-500/10 border-l-purple-500'
         }`}
       >
-        {/* Other party's avatar */}
         <Avatar
           src={otherParty?.profile_image}
           alt={otherParty?.nickname || '사용자'}
           size="sm"
         />
-
         <div className="flex-1 text-left">
-          <div className="flex items-center gap-2">
-            <span
-              className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                isPositive ? 'bg-blue-500 text-white' : 'bg-purple-500 text-white'
-              }`}
-            >
-              {label}
-            </span>
-            <p className="text-sm font-medium text-text-primary">
-              {otherParty?.nickname || '알 수 없음'}
-            </p>
-          </div>
-          <p className="text-xs text-text-tertiary mt-1">
+          <p className="text-sm font-medium text-text-primary">
+            {label} · {otherParty?.nickname || '알 수 없음'}
+          </p>
+          <p className="text-xs text-text-tertiary">
             {new Date(tx.details.time).toLocaleString('ko-KR')}
           </p>
         </div>
-
         <span
           className={`font-bold text-lg ${
-            isPositive ? 'text-blue-600' : 'text-purple-600'
+            isPositive ? 'text-blue-500' : 'text-purple-500'
           }`}
         >
           {isPositive ? '+' : '-'}
@@ -129,7 +119,7 @@ function TransactionHistory() {
       ) : (
         <div className="space-y-3">
           {transactions.map((tx) => (
-            <TransactionItem key={tx.id} tx={tx} currentUserId={user?.id} />
+            <TransactionItem key={tx.id} tx={tx} currentUserId={user?.id?.toString()} />
           ))}
           {hasMore && (
             <Button
