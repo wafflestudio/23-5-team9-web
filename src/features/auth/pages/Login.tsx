@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
@@ -6,13 +7,7 @@ import { useAuth } from '@/shared/store/authStore';
 import { userApi } from '@/features/user/api/user';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Input, PasswordInput, Button, GoogleIcon } from '@/shared/ui';
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { loginSchema, type LoginForm } from '../schemas';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,7 +16,13 @@ export default function Login() {
   const redirect = searchParams.get('redirect') || '/products';
   const [serverError, setServerError] = useState('');
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const onSubmit = async (form: LoginForm) => {
     setServerError('');
@@ -54,18 +55,15 @@ export default function Login() {
           <Input
             type="email"
             placeholder="이메일"
-            {...register('email', {
-              required: '이메일을 입력해주세요.',
-              pattern: { value: EMAIL_REGEX, message: '올바른 이메일 형식을 입력해주세요.' }
-            })}
+            {...register('email')}
+            error={errors.email?.message}
           />
-          {errors.email && <span className="text-sm text-status-error">{errors.email.message}</span>}
 
           <PasswordInput
             placeholder="비밀번호"
-            {...register('password', { required: '비밀번호를 입력해주세요.' })}
+            {...register('password')}
+            error={errors.password?.message}
           />
-          {errors.password && <span className="text-sm text-status-error">{errors.password.message}</span>}
 
           <Button type="submit" disabled={isSubmitting} variant="primary" fullWidth className="mt-4 text-lg">
             {isSubmitting ? '로그인 중...' : '로그인'}
