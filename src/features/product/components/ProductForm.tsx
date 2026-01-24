@@ -1,12 +1,9 @@
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/ui';
+import { productFormSchema, type ProductFormData } from '../schemas';
 
-export interface ProductFormData {
-  title: string;
-  price: number;
-  content: string;
-  is_sold?: boolean;
-}
+export type { ProductFormData };
 
 interface ProductFormProps {
   initialData?: Partial<ProductFormData>;
@@ -25,7 +22,12 @@ const ProductForm = ({
   showIsSold = false,
   isLoading = false,
 }: ProductFormProps) => {
-  const { register, handleSubmit } = useForm<ProductFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProductFormData>({
+    resolver: zodResolver(productFormSchema),
     defaultValues: {
       title: initialData?.title ?? '',
       price: initialData?.price ?? 0,
@@ -34,36 +36,34 @@ const ProductForm = ({
     },
   });
 
-  const onFormSubmit = async (data: ProductFormData) => {
-    if (!data.title.trim() || !data.content.trim() || !data.price) {
-      alert('모든 필드를 입력해주세요.');
-      return;
-    }
-    await onSubmit({
-      ...data,
-      title: data.title.trim(),
-      content: data.content.trim(),
-    });
-  };
-
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)}>
-      <input
-        type="text"
-        {...register('title')}
-        placeholder="상품 제목을 입력하세요"
-        className="w-full text-2xl font-bold text-text-heading bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 mb-2"
-      />
-
-      <div className="flex items-baseline gap-1 mb-6">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="mb-2">
         <input
-          type="number"
-          {...register('price', { valueAsNumber: true })}
-          placeholder="가격"
-          min="0"
-          className="text-3xl font-bold text-primary bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 w-40"
+          type="text"
+          {...register('title')}
+          placeholder="상품 제목을 입력하세요"
+          className="w-full text-2xl font-bold text-text-heading bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1"
         />
-        <span className="text-3xl font-bold text-primary">원</span>
+        {errors.title && (
+          <p className="mt-1 text-sm text-status-error">{errors.title.message}</p>
+        )}
+      </div>
+
+      <div className="mb-6">
+        <div className="flex items-baseline gap-1">
+          <input
+            type="number"
+            {...register('price', { valueAsNumber: true })}
+            placeholder="가격"
+            min="0"
+            className="text-3xl font-bold text-primary bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 w-40"
+          />
+          <span className="text-3xl font-bold text-primary">원</span>
+        </div>
+        {errors.price && (
+          <p className="mt-1 text-sm text-status-error">{errors.price.message}</p>
+        )}
       </div>
 
       <div className="mt-6 border-t border-border-base pt-6">
@@ -73,6 +73,9 @@ const ProductForm = ({
           className="w-full bg-transparent text-text-body leading-relaxed outline-none border-b border-dashed border-border-medium focus:border-primary resize-none"
           placeholder="상품 설명을 입력하세요"
         />
+        {errors.content && (
+          <p className="mt-1 text-sm text-status-error">{errors.content.message}</p>
+        )}
       </div>
 
       <div className="flex items-center justify-end pt-6 mt-6 border-t border-border-base">
