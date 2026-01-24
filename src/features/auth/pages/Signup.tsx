@@ -33,9 +33,8 @@ export default function Signup({ onSignup }: SignupPageProps) {
     try {
       await authApi.signup({ email: form.email, password: form.password });
       await new Promise(resolve => setTimeout(resolve, 500));
-      const loginRes = await authApi.login({ email: form.email, password: form.password });
+      const data = await authApi.login({ email: form.email, password: form.password });
 
-      const data = loginRes.data;
       login(data.access_token, data.refresh_token);
 
       onSignup?.();

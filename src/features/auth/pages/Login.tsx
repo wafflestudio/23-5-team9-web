@@ -27,10 +27,10 @@ export default function Login() {
   const onSubmit = async (form: LoginForm) => {
     setServerError('');
     try {
-      const { data } = await authApi.login(form);
+      const data = await authApi.login(form);
       login(data.access_token, data.refresh_token);
 
-      const { data: user } = await userApi.getMe();
+      const user = await userApi.getMe();
       const needsOnboarding = !user.nickname || !user.region;
 
       navigate(needsOnboarding

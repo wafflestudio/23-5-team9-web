@@ -35,11 +35,23 @@ export interface PublicUserProfile {
 }
 
 export const userApi = {
-    getMe: () => client.get<User>('/api/user/me'),
+    getMe: async (): Promise<User> => {
+        const response = await client.get<User>('/api/user/me');
+        return response.data;
+    },
 
-    onboardMe: (data: OnboardingParams) => client.post<User>('/api/user/me/onboard', data),
+    onboardMe: async (data: OnboardingParams): Promise<User> => {
+        const response = await client.post<User>('/api/user/me/onboard', data);
+        return response.data;
+    },
 
-    patchMe: (data: PatchUserParams) => client.patch<User>('/api/user/me', data),
+    patchMe: async (data: PatchUserParams): Promise<User> => {
+        const response = await client.patch<User>('/api/user/me', data);
+        return response.data;
+    },
 
-    getUser: (userId: string) => client.get<PublicUserProfile>(`/api/user/${userId}`),
+    getUser: async (userId: string): Promise<PublicUserProfile> => {
+        const response = await client.get<PublicUserProfile>(`/api/user/${userId}`);
+        return response.data;
+    },
 };

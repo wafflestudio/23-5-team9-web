@@ -22,8 +22,7 @@ export function useUser(options: UseUserOptions = {}) {
     queryKey: userKeys.me(),
     queryFn: async () => {
       try {
-        const { data } = await userApi.getMe();
-        return data;
+        return await userApi.getMe();
       } catch (err: any) {
         // 401 에러 시 로그아웃 처리 (AuthQuerySync가 캐시 정리)
         if (isAuthError(err)) {
@@ -55,10 +54,7 @@ export function useOnboarding() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: OnboardingParams) => {
-      const { data: result } = await userApi.onboardMe(data);
-      return result;
-    },
+    mutationFn: (data: OnboardingParams) => userApi.onboardMe(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
@@ -69,10 +65,7 @@ export function usePatchUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: PatchUserParams) => {
-      const { data: result } = await userApi.patchMe(data);
-      return result;
-    },
+    mutationFn: (data: PatchUserParams) => userApi.patchMe(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
@@ -82,10 +75,7 @@ export function usePatchUser() {
 export function useUserProfile(userId: string | undefined) {
   const { data: profile, isLoading, error } = useQuery({
     queryKey: userKeys.profile(userId || ''),
-    queryFn: async () => {
-      const { data } = await userApi.getUser(userId!);
-      return data;
-    },
+    queryFn: () => userApi.getUser(userId!),
     enabled: !!userId,
     staleTime: 1000 * 60 * 5, // 5분
   });

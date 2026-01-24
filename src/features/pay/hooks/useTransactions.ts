@@ -18,13 +18,10 @@ export function useTransactions() {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: transactionKeys.list(offset),
-    queryFn: async () => {
-      const { data } = await payApi.getTransactions({
-        limit: ITEMS_PER_PAGE,
-        offset,
-      });
-      return data;
-    },
+    queryFn: () => payApi.getTransactions({
+      limit: ITEMS_PER_PAGE,
+      offset,
+    }),
     enabled: !!token,
     staleTime: 1000 * 60,
   });
