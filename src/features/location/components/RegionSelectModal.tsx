@@ -189,9 +189,9 @@ export default function RegionSelectModal({
         </Button>
 
         <div className="relative flex items-center my-2">
-          <div className="flex-grow border-t border-border-light"></div>
-          <span className="flex-shrink mx-4 text-text-secondary text-sm">{t.location.orSelectDirectly}</span>
-          <div className="flex-grow border-t border-border-light"></div>
+          <div className="grow border-t border-border-light"></div>
+          <span className="shrink mx-4 text-text-secondary text-sm">{t.location.orSelectDirectly}</span>
+          <div className="grow border-t border-border-light"></div>
         </div>
 
         {/* 3단 드롭다운 */}
