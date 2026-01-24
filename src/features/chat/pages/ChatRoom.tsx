@@ -48,7 +48,7 @@ function ChatRoom() {
   if (error) return <ErrorMessage message="메시지를 불러올 수 없습니다." />;
 
   return (
-    <div className="w-full md:max-w-[1000px] md:mx-auto md:px-4 md:py-6 md:min-h-[calc(100vh-60px)]">
+    <div className="w-full md:max-w-250 md:mx-auto md:px-4 md:py-6 md:min-h-[calc(100vh-60px)]">
       <div className="hidden md:block">
         <DetailHeader />
       </div>
