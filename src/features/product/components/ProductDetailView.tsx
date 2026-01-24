@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Button, Badge } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
+import { translateMultiple } from '@/shared/lib/translate';
 import type { Product } from '@/features/product/api/productApi';
 
 interface ProductDetailViewProps {
@@ -22,19 +24,60 @@ export function ProductDetailView({
   onDelete,
 }: ProductDetailViewProps) {
   const t = useTranslation();
+  const [isTranslated, setIsTranslated] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translatedTitle, setTranslatedTitle] = useState('');
+  const [translatedContent, setTranslatedContent] = useState('');
+
+  const handleTranslate = async () => {
+    if (isTranslated) {
+      setIsTranslated(false);
+      return;
+    }
+
+    if (translatedTitle && translatedContent) {
+      setIsTranslated(true);
+      return;
+    }
+
+    setIsTranslating(true);
+    try {
+      const results = await translateMultiple([product.title, product.content]);
+      setTranslatedTitle(results[0].translatedText);
+      setTranslatedContent(results[1].translatedText);
+      setIsTranslated(true);
+    } catch {
+      alert(t.product.translateFailed);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  const displayTitle = isTranslated ? translatedTitle : product.title;
+  const displayContent = isTranslated ? translatedContent : product.content;
 
   return (
     <>
-      <div className="flex items-center gap-2 mb-4">
-        {product.is_sold && <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          {product.is_sold && <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>}
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleTranslate}
+          disabled={isTranslating}
+        >
+          {isTranslating ? t.product.translating : isTranslated ? t.product.showOriginal : t.product.translate}
+        </Button>
       </div>
 
-      <h2 className="text-2xl font-bold mb-2 text-text-heading">{product.title}</h2>
+      <h2 className="text-2xl font-bold mb-2 text-text-heading">{displayTitle}</h2>
       <h3 className="text-3xl font-bold mb-6 text-primary">{product.price.toLocaleString()}{t.common.won}</h3>
 
       <div className="mt-6 border-t border-border-base pt-6">
         <div className="whitespace-pre-wrap leading-relaxed text-text-body">
-          {product.content}
+          {displayContent}
         </div>
       </div>
 
