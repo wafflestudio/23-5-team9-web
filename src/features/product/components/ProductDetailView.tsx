@@ -31,9 +31,16 @@ export function ProductDetailView({
   const [translatedTitle, setTranslatedTitle] = useState('');
   const [translatedContent, setTranslatedContent] = useState('');
 
-  // 현재 언어에 따라 번역 방향 결정: ko → en, en → ko
-  const targetLang = language === 'en' ? 'en' : 'ko';
-  const sourceLang = language === 'en' ? 'ko' : 'en';
+  // 게시물 언어 감지 (한글 포함 여부로 판단)
+  const hasKorean = /[가-힣]/.test(product.title + product.content);
+  const postLang = hasKorean ? 'ko' : 'en';
+
+  // 게시물 언어와 사용자 언어가 다를 때만 번역 필요
+  const needsTranslation = postLang !== language;
+
+  // 내 언어로 번역
+  const targetLang = language;
+  const sourceLang = postLang;
 
   const handleTranslate = async () => {
     if (isTranslated) {
@@ -68,14 +75,16 @@ export function ProductDetailView({
         <div className="flex items-center gap-2">
           {product.is_sold && <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>}
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleTranslate}
-          disabled={isTranslating}
-        >
-          {isTranslating ? t.product.translating : isTranslated ? t.product.showOriginal : t.product.translate}
-        </Button>
+        {needsTranslation && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleTranslate}
+            disabled={isTranslating}
+          >
+            {isTranslating ? t.product.translating : isTranslated ? t.product.showOriginal : t.product.translate}
+          </Button>
+        )}
       </div>
 
       <h2 className="text-2xl font-bold mb-2 text-text-heading">{displayTitle}</h2>
