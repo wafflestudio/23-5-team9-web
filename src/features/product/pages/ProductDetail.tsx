@@ -3,7 +3,7 @@ import { PageContainer } from "@/shared/layouts/PageContainer";
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Avatar } from '@/shared/ui';
 import ProductCard from "@/features/product/components/ProductCard";
 import { ProductDetailView } from "@/features/product/components/ProductDetailView";
-import { ProductEditForm } from "@/features/product/components/ProductEditForm";
+import ProductForm from "@/features/product/components/ProductForm";
 import { useProductDetailLogic } from "@/features/product/hooks/useProductDetailLogic";
 
 // ----------------------------------------------------------------------
@@ -112,11 +112,13 @@ function ProductDetail() {
 
       <DetailSection>
         {isEditing ? (
-          <ProductEditForm
-            product={product}
-            isUpdating={isUpdating}
+          <ProductForm
+            initialData={product}
             onSubmit={handleEdit}
             onCancel={cancelEditing}
+            submitLabel="저장"
+            showIsSold={true}
+            isLoading={isUpdating}
           />
         ) : (
           <ProductDetailView

@@ -4,13 +4,7 @@ import { useProduct, useUserProducts, useDeleteProduct, useUpdateProduct } from 
 import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
 import { useCreateRoom } from "@/features/chat/hooks/useChat";
 import type { UpdateProductRequest } from "@/features/product/api/productApi";
-
-export interface ProductEditFormData {
-  title: string;
-  price: number;
-  content: string;
-  is_sold: boolean;
-}
+import type { ProductFormData } from "@/features/product/schemas";
 
 export function useProductDetailLogic(productId: string) {
   const navigate = useNavigate();
@@ -68,7 +62,7 @@ export function useProductDetailLogic(productId: string) {
     }
   }, [product, deleteProduct, navigate]);
 
-  const handleEdit = useCallback(async (data: ProductEditFormData) => {
+  const handleEdit = useCallback(async (data: ProductFormData) => {
     if (!product) return;
 
     const updateData: UpdateProductRequest = {
@@ -77,7 +71,7 @@ export function useProductDetailLogic(productId: string) {
       price: data.price,
       category_id: product.category_id,
       region_id: product.region_id,
-      is_sold: data.is_sold,
+      is_sold: data.is_sold ?? false,
     };
 
     try {
