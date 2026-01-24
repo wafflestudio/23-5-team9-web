@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware'; // 1. 미들웨어 불러오기
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { userKeys } from '@/features/user/hooks/useUser';
@@ -12,34 +13,36 @@ interface AuthState {
   updateTokens: (token: string, refreshToken: string) => void;
 }
 
-// 초기화: localStorage에서 토큰을 읽어 Zustand store 초기화
-const initialToken = localStorage.getItem('token');
-const initialRefreshToken = localStorage.getItem('refresh_token');
+export const useAuthStore = create<AuthState>()(
+  persist( // 2. persist 미들웨어로 감싸기
+    (set) => ({
+      // 초기값 설정 (자동으로 localStorage 데이터로 덮어씌워짐)
+      token: null,
+      refreshToken: null,
+      isLoggedIn: false,
 
-export const useAuthStore = create<AuthState>((set) => ({
-  token: initialToken,
-  refreshToken: initialRefreshToken,
-  isLoggedIn: !!initialToken,
+      // 3. 내부에서 localStorage.setItem 제거 (자동 저장됨)
+      login: (token, refreshToken) => {
+        set({ token, refreshToken, isLoggedIn: true });
+      },
 
-  login: (token, refreshToken) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('refresh_token', refreshToken);
-    set({ token, refreshToken, isLoggedIn: true });
-  },
+      // 4. 내부에서 localStorage.removeItem 제거 (자동 삭제/업데이트됨)
+      logout: () => {
+        set({ token: null, refreshToken: null, isLoggedIn: false });
+      },
 
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refresh_token');
-    set({ token: null, refreshToken: null, isLoggedIn: false });
-  },
+      updateTokens: (token, refreshToken) => {
+        set({ token, refreshToken });
+      },
+    }),
+    {
+      name: 'auth-storage', // 5. localStorage에 저장될 Key 이름
+      storage: createJSONStorage(() => localStorage), // (선택) 기본값이 localStorage라 생략 가능
+    }
+  )
+);
 
-  // 토큰 갱신용 (client.ts의 interceptor에서 사용)
-  updateTokens: (token, refreshToken) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('refresh_token', refreshToken);
-    set({ token, refreshToken });
-  },
-}));
+// --- 아래부터는 기존 코드와 동일합니다 ---
 
 // 인증 상태 selector (최적화된 구독)
 export const useIsLoggedIn = () => useAuthStore((state) => state.isLoggedIn);
@@ -52,13 +55,10 @@ export function useAuthQuerySync() {
   const prevIsLoggedIn = useRef(isLoggedIn);
 
   useEffect(() => {
-    // 로그인 상태가 변경되었을 때만 처리
     if (prevIsLoggedIn.current !== isLoggedIn) {
       if (isLoggedIn) {
-        // 로그인: 사용자 데이터 새로고침
         queryClient.invalidateQueries({ queryKey: userKeys.me() });
       } else {
-        // 로그아웃: 모든 쿼리 캐시 제거
         queryClient.removeQueries();
       }
       prevIsLoggedIn.current = isLoggedIn;
