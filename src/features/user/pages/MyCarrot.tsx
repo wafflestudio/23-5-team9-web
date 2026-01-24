@@ -65,7 +65,7 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
         </div>
 
         {/* User info section - 코인관리 스타일 적용 */}
-        <div className="border border-border-medium rounded-lg bg-bg-page p-8 mb-6 flex flex-col items-center">
+        <div className="rounded-lg bg-bg-page p-8 mb-6 flex flex-col items-center">
           <Avatar
             src={user.profile_image || undefined}
             alt={user.nickname || '사용자'}
