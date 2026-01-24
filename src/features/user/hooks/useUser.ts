@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi, OnboardingParams, PatchUserParams } from '@/features/user/api/user';
-import { handleAuthError } from '@/shared/utils/authErrorHandler';
+import { useToken, useAuthStore } from '@/shared/store/authStore';
+import { isAuthError } from '@/shared/utils/authErrorHandler';
 
 export const userKeys = {
   all: ['user'] as const,
@@ -13,8 +14,9 @@ interface UseUserOptions {
 }
 
 export function useUser(options: UseUserOptions = {}) {
-  const token = localStorage.getItem('token');
-  const queryClient = useQueryClient();
+  // Zustand store를 Single Source of Truth로 사용
+  const token = useToken();
+  const logout = useAuthStore((state) => state.logout);
 
   const { data: user, isLoading, error, refetch } = useQuery({
     queryKey: userKeys.me(),
@@ -23,10 +25,9 @@ export function useUser(options: UseUserOptions = {}) {
         const { data } = await userApi.getMe();
         return data;
       } catch (err: any) {
-        // 401 에러 시 토큰과 캐시 정리
-        if (handleAuthError(err)) {
-          queryClient.setQueryData(userKeys.me(), null);
-          queryClient.removeQueries({ queryKey: userKeys.me() });
+        // 401 에러 시 로그아웃 처리 (AuthQuerySync가 캐시 정리)
+        if (isAuthError(err)) {
+          logout();
         }
         throw err;
       }

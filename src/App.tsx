@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { MainLayout } from '@/shared/layouts/MainLayout';
 import { SocialLoginHandler } from '@/features/auth/components/SocialLoginHandler';
+import { AuthQuerySync } from '@/shared/components/AuthQuerySync';
 
 // Page Imports
 import Login from '@/features/auth/pages/Login';
@@ -17,6 +18,7 @@ import ProductDetail from '@/features/product/pages/ProductDetail';
 function App() {
   return (
     <>
+      <AuthQuerySync />
       <SocialLoginHandler />
       <Routes>
         {/* 모든 페이지를 MainLayout 하나로 통합 */}

@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { MAIN_API_URL } from './config';
+import { useAuthStore } from '@/shared/store/authStore';
 
 const client: AxiosInstance = axios.create({
   baseURL: MAIN_API_URL,
@@ -26,8 +27,9 @@ const processQueue = (error: AxiosError | null, token: string | null = null) => 
 };
 
 client.interceptors.request.use((config: any) => { // TS 에러 방지를 위해 any 사용 혹은 타입 확장
-  const token = localStorage.getItem('token');
-  
+  // Zustand store에서 토큰 조회 (Single Source of Truth)
+  const token = useAuthStore.getState().token;
+
   // ✅ 수정된 부분: token이 있고, config에 skipAuth가 true가 아닐 때만 헤더 주입
   if (token && !config.skipAuth) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -60,10 +62,10 @@ client.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refreshToken = localStorage.getItem('refresh_token');
+      const { refreshToken, updateTokens, logout } = useAuthStore.getState();
 
       if (!refreshToken) {
-        localStorage.removeItem('token');
+        logout();
         isRefreshing = false;
         return Promise.reject(error);
       }
@@ -75,8 +77,8 @@ client.interceptors.response.use(
         });
 
         const { access_token, refresh_token } = response.data;
-        localStorage.setItem('token', access_token);
-        localStorage.setItem('refresh_token', refresh_token);
+        // Zustand store 업데이트 (localStorage도 함께 동기화)
+        updateTokens(access_token, refresh_token);
 
         processQueue(null, access_token);
 
@@ -84,8 +86,8 @@ client.interceptors.response.use(
         return client(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError as AxiosError, null);
-        localStorage.removeItem('token');
-        localStorage.removeItem('refresh_token');
+        // 토큰 갱신 실패 시 로그아웃 처리
+        logout();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
