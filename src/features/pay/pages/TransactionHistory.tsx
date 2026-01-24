@@ -8,7 +8,6 @@ import { OnboardingRequired } from '@/shared/ui';
 const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUserId?: string }) => {
   const isTransfer = tx.type === 'TRANSFER';
   const isSender = isTransfer && tx.details.user.id === currentUserId;
-  const isReceiver = isTransfer && tx.details.receive_user?.id === currentUserId;
 
   const getTransactionInfo = () => {
     if (tx.type === 'DEPOSIT') {

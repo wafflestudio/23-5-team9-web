@@ -47,7 +47,7 @@ export default function Login() {
 
   return (
     <PageContainer>
-      <div className="max-w-[420px] mx-auto w-full mt-10">
+      <div className="max-w-105 mx-auto w-full mt-10">
         <h2 className="mb-8 text-2xl font-bold text-text-primary">로그인</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">

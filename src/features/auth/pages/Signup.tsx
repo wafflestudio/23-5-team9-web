@@ -55,7 +55,7 @@ export default function Signup({ onSignup }: SignupFormProps) {
   };
 
   return (
-    <div className="mx-auto mt-10 max-w-[420px] px-4">
+    <div className="mx-auto mt-10 max-w-105 px-4">
       <h2 className="mb-8 text-2xl font-bold text-text-primary">회원가입</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">

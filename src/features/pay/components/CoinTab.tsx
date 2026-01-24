@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { User } from '@/features/user/api/user';
 import { Button, StatCard } from '@/shared/ui';
 
@@ -17,7 +16,6 @@ type Mode = 'deposit' | 'withdraw';
 
 const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
   const [mode, setMode] = useState<Mode>('deposit');
-  const navigate = useNavigate();
 
   const handleAction = (amount: number) => {
     if (mode === 'deposit') {
@@ -45,7 +43,7 @@ const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
         unit="C"
         layout="vertical"
         variant="outline"
-        className="mb-[30px]"
+        className="mb-7.5"
       />
 
       <div className="flex gap-2 justify-center mb-5">

@@ -61,7 +61,7 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
   if (!initialTab) {
     return (
       <PageContainer>
-        <div className="flex justify-between items-center mb-[30px]">
+        <div className="flex justify-between items-center mb-7.5">
           <h2 className="text-2xl font-extrabold m-0">마이캐럿</h2>
           <Button onClick={() => { logout(); navigate('/products'); }} variant="outline" size="sm">로그아웃</Button>
         </div>
