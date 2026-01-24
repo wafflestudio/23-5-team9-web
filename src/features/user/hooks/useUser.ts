@@ -59,7 +59,7 @@ export function useOnboarding() {
       return result;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
   });
 }
@@ -73,7 +73,7 @@ export function usePatchUser() {
       return result;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
   });
 }
