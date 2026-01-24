@@ -1,18 +1,22 @@
 import { useRef, useEffect } from 'react';
 import type { Message } from '@/features/chat/api/chatApi';
+import { useTranslation } from '@/shared/i18n';
+import { useLanguage } from '@/shared/store/languageStore';
 
 interface MessageListProps {
   messages: Message[];
   currentUserId?: number;
 }
 
-function formatMessageTime(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit', hour12: true });
-}
-
 function MessageList({ messages, currentUserId }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const t = useTranslation();
+  const { language } = useLanguage();
+
+  const formatMessageTime = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString(language === 'ko' ? 'ko-KR' : 'en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,7 +39,7 @@ function MessageList({ messages, currentUserId }: MessageListProps) {
   if (messages.length === 0) {
     return (
       <div className="flex-1 overflow-y-auto px-4 py-3 bg-bg-base flex items-center justify-center">
-        <span className="text-text-secondary text-sm">대화를 시작해보세요</span>
+        <span className="text-text-secondary text-sm">{t.chat.startConversation}</span>
       </div>
     );
   }

@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { useAuth } from '@/shared/store/authStore';
 import { Input, PasswordInput, Button } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
 import { signupSchema, type SignupForm } from '../schemas';
 
 interface SignupPageProps {
@@ -15,6 +16,7 @@ export default function Signup({ onSignup }: SignupPageProps) {
   const [serverError, setServerError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
+  const t = useTranslation();
 
   const {
     register,
@@ -41,31 +43,31 @@ export default function Signup({ onSignup }: SignupPageProps) {
       navigate('/auth/onboarding');
     } catch (err: any) {
       console.error(err);
-      const errorMsg = err.response?.data?.error_msg || err.response?.data?.detail || '회원가입 중 오류가 발생했습니다.';
+      const errorMsg = err.response?.data?.error_msg || err.response?.data?.detail || t.auth.signupError;
       setServerError(errorMsg);
     }
   };
 
   return (
     <div className="mx-auto mt-10 max-w-105 px-4">
-      <h2 className="mb-8 text-2xl font-bold text-text-primary">회원가입</h2>
+      <h2 className="mb-8 text-2xl font-bold text-text-primary">{t.auth.signup}</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <Input
           type="email"
-          placeholder="이메일"
+          placeholder={t.auth.email}
           {...register('email')}
           error={errors.email?.message}
         />
 
         <PasswordInput
-          placeholder="비밀번호 (8자 이상)"
+          placeholder={t.auth.passwordMin}
           {...register('password')}
           error={errors.password?.message}
         />
 
         <PasswordInput
-          placeholder="비밀번호 확인"
+          placeholder={t.auth.passwordConfirm}
           {...register('passwordConfirm')}
           error={errors.passwordConfirm?.message}
         />
@@ -79,13 +81,13 @@ export default function Signup({ onSignup }: SignupPageProps) {
           fullWidth
           className="mt-4"
         >
-          {isSubmitting ? '가입 중...' : '다음'}
+          {isSubmitting ? t.auth.signingUp : t.auth.next}
         </Button>
       </form>
 
       <div className="mt-6 text-[0.95rem] text-text-secondary">
-        이미 계정이 있으신가요?
-        <Link to="/auth/login" className="text-primary font-semibold no-underline ml-1.5 hover:underline">로그인</Link>
+        {t.auth.hasAccount}
+        <Link to="/auth/login" className="text-primary font-semibold no-underline ml-1.5 hover:underline">{t.auth.login}</Link>
       </div>
     </div>
   );

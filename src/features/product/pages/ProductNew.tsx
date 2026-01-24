@@ -4,11 +4,13 @@ import { useCreateProduct } from "@/features/product/hooks/useProducts";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DetailHeader, DetailSection, LoginRequired, OnboardingRequired } from '@/shared/ui';
 import ProductForm, { type ProductFormData } from "@/features/product/components/ProductForm";
+import { useTranslation } from "@/shared/i18n";
 
 function ProductNew() {
   const navigate = useNavigate();
   const { isLoggedIn, needsOnboarding } = useUser();
   const createProduct = useCreateProduct();
+  const t = useTranslation();
 
   if (!isLoggedIn) {
     return (
@@ -38,10 +40,10 @@ function ProductNew() {
       };
 
       const newProduct = await createProduct.mutateAsync(payload);
-      alert('상품이 등록되었습니다.');
+      alert(t.product.productRegistered);
       navigate(`/products/${newProduct.id}`);
     } catch {
-      alert('상품 등록에 실패했습니다.');
+      alert(t.product.registerFailed);
     }
   };
 

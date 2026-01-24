@@ -2,24 +2,28 @@ import { useTransactions } from '@/features/pay/hooks/useTransactions';
 import { PayTransaction } from '@/features/pay/api/payApi';
 import { Button, Avatar } from '@/shared/ui';
 import { useUser } from '@/features/user/hooks/useUser';
+import { useTranslation } from '@/shared/i18n';
+import { useLanguage } from '@/shared/store/languageStore';
 
 const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUserId?: string }) => {
+  const t = useTranslation();
+  const { language } = useLanguage();
   const isTransfer = tx.type === 'TRANSFER';
   const isSender = isTransfer && tx.details.user.id === currentUserId;
   const isReceiver = isTransfer && tx.details.receive_user?.id === currentUserId;
 
   const getTransactionInfo = () => {
     if (tx.type === 'DEPOSIT') {
-      return { label: '충전', icon: '↓', isPositive: true };
+      return { label: t.pay.charge, icon: '↓', isPositive: true };
     }
     if (tx.type === 'WITHDRAW') {
-      return { label: '출금', icon: '↑', isPositive: false };
+      return { label: t.pay.withdraw, icon: '↑', isPositive: false };
     }
     // TRANSFER
     if (isSender) {
-      return { label: '송금', icon: '→', isPositive: false };
+      return { label: t.pay.transfer, icon: '→', isPositive: false };
     }
-    return { label: '받음', icon: '←', isPositive: true };
+    return { label: t.pay.received, icon: '←', isPositive: true };
   };
 
   const { label, icon, isPositive } = getTransactionInfo();
@@ -40,15 +44,15 @@ const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUse
       >
         <Avatar
           src={otherParty?.profile_image}
-          alt={otherParty?.nickname || '사용자'}
+          alt={otherParty?.nickname || t.common.unknown}
           size="sm"
         />
         <div className="flex-1 text-left">
           <p className="text-sm font-medium text-text-primary">
-            {label} · {otherParty?.nickname || '알 수 없음'}
+            {label} · {otherParty?.nickname || t.common.unknown}
           </p>
           <p className="text-xs text-text-tertiary">
-            {new Date(tx.details.time).toLocaleString('ko-KR')}
+            {new Date(tx.details.time).toLocaleString(language === 'ko' ? 'ko-KR' : 'en-US')}
           </p>
         </div>
         <span
@@ -80,7 +84,7 @@ const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUse
       <div className="flex-1 text-left">
         <p className="text-sm font-medium text-text-primary">{label}</p>
         <p className="text-xs text-text-tertiary">
-          {new Date(tx.details.time).toLocaleString('ko-KR')}
+          {new Date(tx.details.time).toLocaleString(language === 'ko' ? 'ko-KR' : 'en-US')}
         </p>
       </div>
       <span
@@ -99,21 +103,22 @@ import { OnboardingRequired } from '@/shared/ui';
 export default function TransactionTab() {
   const { user, needsOnboarding } = useUser();
   const { transactions, isLoading, loadMore, hasMore } = useTransactions();
+  const t = useTranslation();
 
   if (needsOnboarding) {
       return (
-        <PageContainer title="코인 관리">
+        <PageContainer title={t.pay.coinManagement}>
           <OnboardingRequired />
         </PageContainer>
       );
     }
 
   if (isLoading && transactions.length === 0) {
-    return <p className="text-text-tertiary text-sm text-center py-8">로딩 중...</p>;
+    return <p className="text-text-tertiary text-sm text-center py-8">{t.common.loading}</p>;
   }
 
   if (transactions.length === 0) {
-    return <p className="text-text-tertiary text-sm text-center py-8">거래 내역이 없습니다.</p>;
+    return <p className="text-text-tertiary text-sm text-center py-8">{t.pay.noTransactions}</p>;
   }
 
   return (
@@ -130,7 +135,7 @@ export default function TransactionTab() {
           disabled={isLoading}
           className="mt-4"
         >
-          {isLoading ? '로딩 중...' : '더보기'}
+          {isLoading ? t.common.loading : t.common.loadMore}
         </Button>
       )}
     </div>

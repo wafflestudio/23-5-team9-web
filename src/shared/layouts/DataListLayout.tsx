@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Loading, ErrorMessage } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
 
 interface DataListLayoutProps {
   isLoading: boolean;
@@ -15,11 +16,12 @@ export function DataListLayout({
   isLoading,
   error,
   isEmpty,
-  emptyMessage = '데이터가 없습니다.',
+  emptyMessage,
   filters,
   children,
   className = ''
 }: DataListLayoutProps) {
+  const t = useTranslation();
   const [isFilterVisible, setIsFilterVisible] = useState(true);
   const lastScrollY = useRef(0);
 
@@ -43,7 +45,7 @@ export function DataListLayout({
 
   // error 객체에서 메시지 추출
   const errorMsg = error
-    ? (typeof error === 'string' ? error : error?.message || '오류가 발생했습니다.')
+    ? (typeof error === 'string' ? error : error?.message || t.common.error)
     : null;
 
   return (
@@ -72,7 +74,7 @@ export function DataListLayout({
           {isEmpty && (
             <div className="flex flex-col items-center justify-center py-20 text-text-muted">
               <div className="text-4xl mb-2">📭</div>
-              <p>{emptyMessage}</p>
+              <p>{emptyMessage || t.common.noData}</p>
             </div>
           )}
         </>

@@ -4,9 +4,11 @@ import { Loading, ErrorMessage, EmptyState, LoginRequired, OnboardingRequired } 
 import { useChatRooms, ChatRoom } from '@/features/chat/hooks/useChat';
 import { useUser } from '@/features/user/hooks/useUser';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
+import { useTranslation } from '@/shared/i18n';
 
 function ChatList() {
   const { isLoggedIn, isLoading: userLoading, needsOnboarding } = useUser();
+  const t = useTranslation();
 
   const canFetch = isLoggedIn && !needsOnboarding;
   const { rooms, isLoading: loading, error } = useChatRooms({
@@ -18,30 +20,30 @@ function ChatList() {
 
   if (!isLoggedIn) {
     return (
-      <PageContainer title="채팅">
-        <LoginRequired message="로그인하고 채팅을 시작하세요" />
+      <PageContainer title={t.chat.chat}>
+        <LoginRequired message={t.chat.loginToChat} />
       </PageContainer>
     );
   }
 
   if (needsOnboarding) {
     return (
-      <PageContainer title="채팅">
+      <PageContainer title={t.chat.chat}>
         <OnboardingRequired />
       </PageContainer>
     );
   }
 
   if (loading) return <Loading />;
-  if (error) return <ErrorMessage message="채팅방 목록을 불러올 수 없습니다." />;
+  if (error) return <ErrorMessage message={t.chat.loadFailed} />;
   if (rooms.length === 0) return (
-    <PageContainer title="채팅">
-      <EmptyState message="채팅 내역이 없습니다." />
+    <PageContainer title={t.chat.chat}>
+      <EmptyState message={t.chat.noHistory} />
     </PageContainer>
   );
 
   return (
-    <PageContainer title="채팅">
+    <PageContainer title={t.chat.chat}>
       <div className="flex flex-col">
         {rooms.map((room : ChatRoom) => (
           <ChatRoomItem

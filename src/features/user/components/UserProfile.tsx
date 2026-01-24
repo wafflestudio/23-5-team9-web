@@ -4,6 +4,7 @@ import { useUserProducts, useCreateProduct } from "@/features/product/hooks/useP
 import { EmptyState, Button, DetailSection } from '@/shared/ui';
 import ProductCard from "@/features/product/components/ProductCard";
 import ProductForm from "@/features/product/components/ProductForm";
+import { useTranslation } from '@/shared/i18n';
 
 import { useUser } from '@/features/user/hooks/useUser';
 import { PageContainer } from '@/shared/layouts/PageContainer';
@@ -13,6 +14,7 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const { products } = useUserProducts('me');
   const createProduct = useCreateProduct();
+  const t = useTranslation();
 
   const [showForm, setShowForm] = useState(false);
 
@@ -21,7 +23,7 @@ const UserProfile = () => {
       ...data,
       category_id: '1',
     });
-    alert('상품이 등록되었습니다.');
+    alert(t.product.productRegistered);
     setShowForm(false);
     navigate(`/products/${newProduct.id}`);
   };
@@ -45,7 +47,7 @@ const UserProfile = () => {
       {!showForm ? (
         <div className="flex justify-end">
           <Button size="sm" onClick={() => setShowForm(true)}>
-            + 상품 등록
+            {t.product.registerProduct}
           </Button>
         </div>
       ) : (
@@ -59,9 +61,9 @@ const UserProfile = () => {
       )}
 
       <div>
-        <h3 className="text-lg font-bold mb-4">나의 판매 물품</h3>
+        <h3 className="text-lg font-bold mb-4">{t.product.mySalesItems}</h3>
         {products.length === 0 ? (
-          <EmptyState message="판매 중인 상품이 없습니다." />
+          <EmptyState message={t.product.noSalesItems} />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.map(p => (

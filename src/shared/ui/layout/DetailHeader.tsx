@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../display/Button';
+import { useTranslation } from '@/shared/i18n';
 
 export function DetailHeader() {
   const navigate = useNavigate();
+  const t = useTranslation();
 
   return (
     <div className="mb-4">
@@ -11,7 +13,7 @@ export function DetailHeader() {
         onClick={() => navigate(-1)}
         className="pl-0 hover:bg-transparent hover:text-primary"
       >
-        ← 뒤로가기
+        {t.layout.goBack}
       </Button>
     </div>
   );

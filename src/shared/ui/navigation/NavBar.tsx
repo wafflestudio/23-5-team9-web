@@ -2,22 +2,24 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '@/shared/store/themeStore';
 import { useLanguage } from '@/shared/store/languageStore';
+import { useTranslation } from '@/shared/i18n';
 import { useChatRooms } from '@/features/chat/hooks/useChat';
 import { Button } from '../display/Button';
 import { Badge } from '../feedback';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
 
-const MENUS = [
-  { id: 'products', label: '중고거래', path: '/products' },
-  { id: 'chat', label: '채팅하기', path: '/chat' },
-];
-
 export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { language, toggleLanguage } = useLanguage();
+  const { toggleLanguage } = useLanguage();
+  const t = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const MENUS = [
+    { id: 'products', label: t.nav.products, path: '/products' },
+    { id: 'chat', label: t.nav.chat, path: '/chat' },
+  ];
 
   // 로그인 상태일 때 읽지 않은 메시지 수 폴링 (React Query handles caching & deduplication)
   const { totalUnreadCount } = useChatRooms({
@@ -53,14 +55,14 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
     );
   };
 
-  const authItem = { label: isLoggedIn ? '마이캐럿' : '로그인', path: isLoggedIn ? '/my' : '/auth/login' };
+  const authItem = { label: isLoggedIn ? t.nav.myCarrot : t.nav.login, path: isLoggedIn ? '/my' : '/auth/login' };
 
   return (
     <>
       <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-bg-page px-5 shadow-sm">
         <div className="flex items-center gap-10">
           <h1 onClick={() => handleNav('/products')} className="cursor-pointer text-2xl font-bold text-primary">
-            당근마켓
+            {t.nav.carrotMarket}
           </h1>
 
           {/* 데스크탑 메뉴 */}
@@ -76,9 +78,9 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
             onClick={toggleLanguage}
             variant="ghost"
             className="p-2 text-sm font-medium"
-            aria-label="언어 전환"
+            aria-label={t.nav.langToggle}
           >
-            {language === 'ko' ? 'EN' : '한글'}
+            {t.nav.langLabel}
           </Button>
 
           {/* 다크모드 토글 */}
@@ -86,7 +88,7 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
             onClick={toggleTheme}
             variant="ghost"
             className="p-2"
-            aria-label="테마 전환"
+            aria-label={t.nav.themeToggle}
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </Button>
@@ -105,21 +107,21 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
           onClick={e => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-4">
-            <span className="text-lg font-bold text-primary">당근마켓</span>
+            <span className="text-lg font-bold text-primary">{t.nav.carrotMarket}</span>
             <div className="flex items-center gap-2">
               <Button
                 onClick={toggleLanguage}
                 variant="ghost"
                 className="p-2 text-sm font-medium"
-                aria-label="언어 전환"
+                aria-label={t.nav.langToggle}
               >
-                {language === 'ko' ? 'EN' : '한글'}
+                {t.nav.langLabel}
               </Button>
               <Button
                 onClick={toggleTheme}
                 variant="ghost"
                 className="p-2"
-                aria-label="테마 전환"
+                aria-label={t.nav.themeToggle}
               >
                 {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
               </Button>

@@ -1,24 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Badge } from '@/shared/ui';
 import { useUserProfile } from '@/features/user/hooks/useUser';
-import { ChatRoom } from '@/features/chat/hooks/useChat'; 
-
-function formatTime(dateString: string | null): string {
-  if (!dateString) return '';
-
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffMins < 1) return '방금 전';
-  if (diffMins < 60) return `${diffMins}분 전`;
-  if (diffHours < 24) return `${diffHours}시간 전`;
-  if (diffDays < 7) return `${diffDays}일 전`;
-  return date.toLocaleDateString();
-}
+import { ChatRoom } from '@/features/chat/hooks/useChat';
+import { useTranslation } from '@/shared/i18n';
 
 interface ChatRoomItemProps {
   room: ChatRoom;
@@ -27,6 +11,24 @@ interface ChatRoomItemProps {
 function ChatRoomItem({ room }: ChatRoomItemProps) {
   const navigate = useNavigate();
   const { profile } = useUserProfile(room.opponent_id);
+  const t = useTranslation();
+
+  const formatTime = (dateString: string | null): string => {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMins < 1) return t.chat.justNow;
+    if (diffMins < 60) return `${diffMins}${t.chat.minutesAgo}`;
+    if (diffHours < 24) return `${diffHours}${t.chat.hoursAgo}`;
+    if (diffDays < 7) return `${diffDays}${t.chat.daysAgo}`;
+    return date.toLocaleDateString();
+  };
 
   const displayTime = formatTime(room.last_message_at);
   const displayMessage = room.last_message || '';
@@ -38,11 +40,11 @@ function ChatRoomItem({ room }: ChatRoomItemProps) {
     >
       <Avatar
         src={profile?.profile_image || undefined}
-        alt={profile?.nickname || '상대방'}
+        alt={profile?.nickname || t.chat.otherParty}
         size="sm"
       />
       <div className="flex-1 min-w-0">
-        <div className="font-bold mb-1.5 truncate">{profile?.nickname || '알 수 없음'}</div>
+        <div className="font-bold mb-1.5 truncate">{profile?.nickname || t.common.unknown}</div>
         <div className="text-text-secondary text-sm truncate">{displayMessage}</div>
       </div>
       <div className="text-right flex flex-col items-end min-w-15">

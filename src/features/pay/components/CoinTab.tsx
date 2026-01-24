@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { User } from '@/features/user/api/user';
 import { Button, StatCard } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
 
 import { useUser } from '@/features/user/hooks/useUser';
 import { PageContainer } from '@/shared/layouts/PageContainer';
@@ -16,6 +17,7 @@ type Mode = 'deposit' | 'withdraw';
 
 const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
   const [mode, setMode] = useState<Mode>('deposit');
+  const t = useTranslation();
 
   const handleAction = (amount: number) => {
     if (mode === 'deposit') {
@@ -29,7 +31,7 @@ const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
 
   if (needsOnboarding) {
     return (
-      <PageContainer title="코인 관리">
+      <PageContainer title={t.pay.coinManagement}>
         <OnboardingRequired />
       </PageContainer>
     );
@@ -38,7 +40,7 @@ const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
   return (
     <div className="text-center py-5">
       <StatCard
-        label="보유 코인"
+        label={t.pay.ownedCoins}
         value={user.coin.toLocaleString()}
         unit="C"
         layout="vertical"
@@ -52,19 +54,19 @@ const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
           variant={mode === 'deposit' ? 'primary' : 'outline'}
           size="sm"
         >
-          충전
+          {t.pay.charge}
         </Button>
         <Button
           onClick={() => setMode('withdraw')}
           variant={mode === 'withdraw' ? 'primary' : 'outline'}
           size="sm"
         >
-          출금
+          {t.pay.withdraw}
         </Button>
       </div>
 
       <h4 className="mb-5 text-text-secondary font-bold">
-        {mode === 'deposit' ? '코인 충전하기' : '코인 출금하기'}
+        {mode === 'deposit' ? t.pay.chargeCoins : t.pay.withdrawCoins}
       </h4>
       <div className="grid grid-cols-3 gap-3">
         {[1000, 5000, 10000, 30000, 50000, 100000].map((amount) => (

@@ -1,18 +1,21 @@
 import { PasswordInput, Button } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
 
 const PasswordTab = () => {
+  const t = useTranslation();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('비밀번호가 변경되었습니다.');
+    alert(t.user.passwordChanged);
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 pt-2">
-      <PasswordInput label="현재 비밀번호" />
-      <PasswordInput label="새 비밀번호" />
-      <PasswordInput label="새 비밀번호 확인" />
+      <PasswordInput label={t.user.currentPassword} />
+      <PasswordInput label={t.user.newPassword} />
+      <PasswordInput label={t.user.confirmNewPassword} />
       <Button type="submit" size="lg" fullWidth className="mt-4">
-        비밀번호 변경
+        {t.user.changePassword}
       </Button>
     </form>
   );

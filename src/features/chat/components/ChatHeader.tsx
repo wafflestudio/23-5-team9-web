@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Avatar } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
 
 interface ChatHeaderProps {
   opponentId?: string;
@@ -17,6 +18,7 @@ function ChatHeader({
   onToggleTransferMenu,
 }: ChatHeaderProps) {
   const navigate = useNavigate();
+  const t = useTranslation();
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 bg-bg-page border-b border-border-medium">
@@ -32,11 +34,11 @@ function ChatHeader({
       >
         <Avatar
           src={opponentProfileImage || undefined}
-          alt={opponentNickname || '상대방'}
+          alt={opponentNickname || t.chat.otherParty}
           size="sm"
         />
         <span className="font-semibold text-text-heading">
-          {opponentNickname || '알 수 없음'}
+          {opponentNickname || t.common.unknown}
         </span>
       </div>
       <button

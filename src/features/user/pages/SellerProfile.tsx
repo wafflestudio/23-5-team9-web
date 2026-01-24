@@ -5,6 +5,7 @@ import { useCreateRoom } from '@/features/chat/hooks/useChat';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Avatar } from '@/shared/ui';
 import ProductCard from '@/features/product/components/ProductCard';
+import { useTranslation } from '@/shared/i18n';
 
 function SellerProfile() {
   const { userId } = useParams();
@@ -13,6 +14,7 @@ function SellerProfile() {
   const { profile, isLoading: profileLoading, error: profileError } = useUserProfile(userId);
   const { products, loading: productsLoading } = useUserProducts(userId || '');
   const createRoom = useCreateRoom();
+  const t = useTranslation();
 
   const isOwnProfile = String(user?.id) === userId;
 
@@ -23,13 +25,13 @@ function SellerProfile() {
 
     createRoom.mutate(userId, {
       onSuccess: (roomId) => navigate(`/chat/${roomId}`),
-      onError: () => alert('채팅방을 열 수 없습니다.'),
+      onError: () => alert(t.chat.cannotOpenRoom),
     });
   };
 
   if (profileLoading) return <Loading />;
-  if (profileError) return <ErrorMessage message="프로필을 불러올 수 없습니다." />;
-  if (!profile) return <EmptyState message="존재하지 않는 사용자입니다." />;
+  if (profileError) return <ErrorMessage message={t.user.profileLoadFailed} />;
+  if (!profile) return <EmptyState message={t.user.userNotFound} />;
 
   return (
     <PageContainer>
@@ -50,7 +52,7 @@ function SellerProfile() {
           </div>
           {!isOwnProfile && (
             <Button onClick={handleChatClick} disabled={createRoom.isPending}>
-              {createRoom.isPending ? '연결 중...' : '채팅하기'}
+              {createRoom.isPending ? t.product.connecting : t.product.startChat}
             </Button>
           )}
         </div>
@@ -58,11 +60,11 @@ function SellerProfile() {
 
       {/* 판매 상품 목록 */}
       <div>
-        <h2 className="text-lg font-bold mb-4">{profile.nickname}님의 판매 상품</h2>
+        <h2 className="text-lg font-bold mb-4">{profile.nickname}{t.user.sellerSalesItems}</h2>
         {productsLoading ? (
           <Loading />
         ) : products.length === 0 ? (
-          <EmptyState message="등록된 상품이 없습니다." />
+          <EmptyState message={t.product.noProducts} />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.map((product) => (

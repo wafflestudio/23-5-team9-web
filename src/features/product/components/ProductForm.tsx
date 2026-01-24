@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
 import { productFormSchema, type ProductFormData } from '../schemas';
 
 export type { ProductFormData };
@@ -18,10 +19,11 @@ const ProductForm = ({
   initialData,
   onSubmit,
   onCancel,
-  submitLabel = '등록',
+  submitLabel,
   showIsSold = false,
   isLoading = false,
 }: ProductFormProps) => {
+  const t = useTranslation();
   const {
     register,
     handleSubmit,
@@ -42,7 +44,7 @@ const ProductForm = ({
         <input
           type="text"
           {...register('title')}
-          placeholder="상품 제목을 입력하세요"
+          placeholder={t.product.enterTitle}
           className="w-full text-2xl font-bold text-text-heading bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1"
         />
         {errors.title && (
@@ -55,11 +57,11 @@ const ProductForm = ({
           <input
             type="number"
             {...register('price', { valueAsNumber: true })}
-            placeholder="가격"
+            placeholder={t.product.price}
             min="0"
             className="text-3xl font-bold text-primary bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 w-40"
           />
-          <span className="text-3xl font-bold text-primary">원</span>
+          <span className="text-3xl font-bold text-primary">{t.common.won}</span>
         </div>
         {errors.price && (
           <p className="mt-1 text-sm text-status-error">{errors.price.message}</p>
@@ -71,7 +73,7 @@ const ProductForm = ({
           {...register('content')}
           rows={6}
           className="w-full bg-transparent text-text-body leading-relaxed outline-none border-b border-dashed border-border-medium focus:border-primary resize-none"
-          placeholder="상품 설명을 입력하세요"
+          placeholder={t.product.enterDescription}
         />
         {errors.content && (
           <p className="mt-1 text-sm text-status-error">{errors.content.message}</p>
@@ -86,15 +88,15 @@ const ProductForm = ({
               {...register('is_sold')}
               className="w-4 h-4 accent-primary"
             />
-            <span className="text-sm text-text-secondary">판매완료</span>
+            <span className="text-sm text-text-secondary">{t.product.soldOut}</span>
           </label>
         )}
         <div className="flex gap-2">
           <Button size="sm" variant="secondary" type="button" onClick={onCancel}>
-            취소
+            {t.common.cancel}
           </Button>
           <Button size="sm" type="submit" disabled={isLoading}>
-            {isLoading ? '처리 중...' : submitLabel}
+            {isLoading ? t.common.processing : (submitLabel || t.common.save)}
           </Button>
         </div>
       </div>

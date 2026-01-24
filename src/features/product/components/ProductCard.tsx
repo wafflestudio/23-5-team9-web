@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { Product } from '@/features/product/api/productApi';
 import { Card, CardContent, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
 import { useUserProfile } from '@/features/user/hooks/useUser';
-
-const formatPrice = (price: number) => `${price.toLocaleString()}원`;
+import { useTranslation } from '@/shared/i18n';
 
 interface ProductCardProps {
   product: Product;
@@ -17,6 +16,9 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(product.like_count);
   const { profile } = useUserProfile(product.owner_id);
+  const t = useTranslation();
+
+  const formatPrice = (price: number) => `${price.toLocaleString()}${t.common.won}`;
 
   // 이벤트 핸들러 (상단 분리)
   const stop = (e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); };
@@ -36,14 +38,14 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
         <CardContent>
           {/* 판매자 프로필 */}
           <div className="flex items-center gap-2 mb-3">
-            <Avatar src={profile?.profile_image ?? undefined} alt={profile?.nickname || '판매자'} size="sm" />
-            <span className="text-sm text-text-secondary truncate">{profile?.nickname || '알 수 없음'}</span>
+            <Avatar src={profile?.profile_image ?? undefined} alt={profile?.nickname || t.product.seller} size="sm" />
+            <span className="text-sm text-text-secondary truncate">{profile?.nickname || t.common.unknown}</span>
           </div>
 
           {/* 판매완료 뱃지 */}
           {product.is_sold && (
             <div className="mb-2">
-              <Badge variant="secondary" className="text-xs">판매완료</Badge>
+              <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>
             </div>
           )}
 
@@ -67,8 +69,8 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
           {/* 액션 버튼 */}
           {showActions && (
             <div className="flex gap-2 mt-3 pt-3 border-t border-border-base">
-              <Button onClick={handleEdit} variant="secondary" size="sm" className="flex-1">수정</Button>
-              <Button onClick={handleDelete} variant="ghost" size="sm" className="flex-1 text-status-error hover:bg-status-error-hover">삭제</Button>
+              <Button onClick={handleEdit} variant="secondary" size="sm" className="flex-1">{t.common.edit}</Button>
+              <Button onClick={handleDelete} variant="ghost" size="sm" className="flex-1 text-status-error hover:bg-status-error-hover">{t.common.delete}</Button>
             </div>
           )}
         </CardContent>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from '@/shared/i18n';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -7,6 +8,7 @@ interface ChatInputProps {
 
 function ChatInput({ onSend, isPending }: ChatInputProps) {
   const [message, setMessage] = useState('');
+  const t = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ function ChatInput({ onSend, isPending }: ChatInputProps) {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="메시지를 입력하세요"
+        placeholder={t.chat.enterMessage}
         className="flex-1 px-4 py-2.5 bg-bg-page rounded-lg text-sm text-text-heading placeholder:text-text-tertiary focus:outline-none border border-border-medium focus:border-primary"
       />
       <button
@@ -32,7 +34,7 @@ function ChatInput({ onSend, isPending }: ChatInputProps) {
         disabled={!message.trim() || isPending}
         className="px-5 py-2.5 bg-primary text-white text-sm font-medium rounded-lg disabled:opacity-50 transition-opacity"
       >
-        전송
+        {t.chat.send}
       </button>
     </form>
   );

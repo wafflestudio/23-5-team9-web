@@ -1,5 +1,6 @@
 import { Button, Input } from '@/shared/ui';
 import { useTransfer } from '@/features/pay/hooks/useTransfer';
+import { useTranslation } from '@/shared/i18n';
 
 interface TransferMenuProps {
   currentCoin: number;
@@ -12,8 +13,9 @@ const PRESET_AMOUNTS = [1000, 5000, 10000, 50000];
 const TransferMenu = ({
   currentCoin,
   recipientId,
-  recipientName = '상대방',
+  recipientName,
 }: TransferMenuProps) => {
+  const t = useTranslation();
   const {
     transferAmount,
     transferring,
@@ -22,9 +24,11 @@ const TransferMenu = ({
     addAmount,
   } = useTransfer({ currentCoin });
 
+  const displayName = recipientName || t.chat.otherParty;
+
   const handleTransfer = async () => {
     if (!recipientId) return;
-    await transfer(recipientId, recipientName);
+    await transfer(recipientId, displayName);
   };
 
   return (
@@ -32,7 +36,7 @@ const TransferMenu = ({
       <div className="flex items-center gap-2 mb-2">
         <Input
           type="number"
-          placeholder="송금할 금액"
+          placeholder={t.pay.amountToTransfer}
           value={transferAmount}
           onChange={(e) => setTransferAmount(e.target.value)}
           className="flex-1 py-2! px-3! text-sm"
@@ -43,7 +47,7 @@ const TransferMenu = ({
           size="sm"
           className="whitespace-nowrap"
         >
-          {transferring ? '송금 중...' : '송금'}
+          {transferring ? t.pay.transferring : t.pay.transfer}
         </Button>
       </div>
       <div className="flex gap-2 flex-wrap">
@@ -58,7 +62,7 @@ const TransferMenu = ({
         ))}
       </div>
       <p className="text-xs text-text-secondary mt-2">
-        {recipientName}에게 코인을 송금합니다
+        {displayName}{t.pay.willTransferCoins}
       </p>
     </div>
   );

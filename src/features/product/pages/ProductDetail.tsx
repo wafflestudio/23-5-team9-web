@@ -5,20 +5,25 @@ import ProductCard from "@/features/product/components/ProductCard";
 import { ProductDetailView } from "@/features/product/components/ProductDetailView";
 import ProductForm from "@/features/product/components/ProductForm";
 import { useProductDetailLogic } from "@/features/product/hooks/useProductDetailLogic";
+import { useTranslation } from "@/shared/i18n";
 
 // ----------------------------------------------------------------------
 // UI Components
 // ----------------------------------------------------------------------
 
-const SellerProfileCard = ({ profile, onClick }: { profile: any; onClick?: () => void }) => (
+interface TranslationProps {
+  t: ReturnType<typeof useTranslation>;
+}
+
+const SellerProfileCard = ({ profile, onClick, t }: { profile: any; onClick?: () => void } & TranslationProps) => (
   <div
     className={`flex items-center gap-3 ${onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
     onClick={onClick}
   >
     <Avatar src={profile?.profile_image} alt={profile?.nickname} size="sm" />
     <div>
-      <div className="font-semibold text-text-heading">{profile?.nickname || '알 수 없음'}</div>
-      <div className="text-sm text-text-secondary">판매자</div>
+      <div className="font-semibold text-text-heading">{profile?.nickname || t.common.unknown}</div>
+      <div className="text-sm text-text-secondary">{t.product.seller}</div>
     </div>
   </div>
 );
@@ -28,32 +33,33 @@ const SellerSection = ({
   onProfileClick,
   onChatClick,
   chatLoading,
-  showChatButton
+  showChatButton,
+  t
 }: {
   profile: any,
   onProfileClick: () => void,
   onChatClick: () => void,
   chatLoading: boolean,
   showChatButton: boolean
-}) => (
+} & TranslationProps) => (
   <div className="flex items-center justify-between">
-    <SellerProfileCard profile={profile} onClick={onProfileClick} />
+    <SellerProfileCard profile={profile} onClick={onProfileClick} t={t} />
     {showChatButton && (
       <Button size="sm" onClick={onChatClick} disabled={chatLoading}>
-        {chatLoading ? '연결 중...' : '채팅하기'}
+        {chatLoading ? t.product.connecting : t.product.startChat}
       </Button>
     )}
   </div>
 );
 
-const SellerProductList = ({ products, currentOwnerId, nickname }: { products: any[], currentOwnerId: string, nickname?: string }) => {
+const SellerProductList = ({ products, currentOwnerId, nickname, t }: { products: any[], currentOwnerId: string, nickname?: string } & TranslationProps) => {
   const sellerProducts = products.filter(p => p.owner_id === currentOwnerId).slice(0, 4);
 
   if (sellerProducts.length === 0) return null;
 
   return (
     <div className="mt-8">
-      <h3 className="text-lg font-bold mb-4">{nickname || '판매자'}의 판매 물품</h3>
+      <h3 className="text-lg font-bold mb-4">{nickname || t.product.seller}{t.product.salesItems}</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {sellerProducts.map(p => <ProductCard key={p.id} product={p} />)}
       </div>
@@ -67,6 +73,7 @@ const SellerProductList = ({ products, currentOwnerId, nickname }: { products: a
 
 function ProductDetail() {
   const { id } = useParams();
+  const t = useTranslation();
   const {
     // Data
     product,
@@ -93,8 +100,8 @@ function ProductDetail() {
   } = useProductDetailLogic(id!);
 
   if (productLoading) return <Loading />;
-  if (productError) return <ErrorMessage message="상품 정보를 불러올 수 없습니다." />;
-  if (!product) return <EmptyState message="상품 정보가 없습니다." />;
+  if (productError) return <ErrorMessage message={t.product.loadFailed} />;
+  if (!product) return <EmptyState message={t.product.noInfo} />;
 
   return (
     <PageContainer>
@@ -107,6 +114,7 @@ function ProductDetail() {
           onChatClick={handleChat}
           chatLoading={isChatLoading}
           showChatButton={!isOwner}
+          t={t}
         />
       </DetailSection>
 
@@ -116,7 +124,7 @@ function ProductDetail() {
             initialData={product}
             onSubmit={handleEdit}
             onCancel={cancelEditing}
-            submitLabel="저장"
+            submitLabel={t.common.save}
             showIsSold={true}
             isLoading={isUpdating}
           />
@@ -138,6 +146,7 @@ function ProductDetail() {
           products={sellerProducts}
           currentOwnerId={product.owner_id}
           nickname={sellerProfile?.nickname || ''}
+          t={t}
         />
       )}
     </PageContainer>

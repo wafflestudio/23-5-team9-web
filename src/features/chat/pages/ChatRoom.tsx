@@ -8,8 +8,10 @@ import ChatHeader from '@/features/chat/components/ChatHeader';
 import MessageList from '@/features/chat/components/MessageList';
 import ChatInput from '@/features/chat/components/ChatInput';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
+import { useTranslation } from '@/shared/i18n';
 
 function ChatRoom() {
+  const t = useTranslation();
   const { chatId } = useParams();
   const navigate = useNavigate();
   const [showTransferMenu, setShowTransferMenu] = useState(false);
@@ -40,12 +42,12 @@ function ChatRoom() {
     if (!chatId || sendMessageMutation.isPending) return;
 
     sendMessageMutation.mutate(content, {
-      onError: () => alert('메시지를 전송할 수 없습니다.'),
+      onError: () => alert(t.chat.sendFailed),
     });
   };
 
   if (userLoading || loading) return <Loading />;
-  if (error) return <ErrorMessage message="메시지를 불러올 수 없습니다." />;
+  if (error) return <ErrorMessage message={t.chat.messageFailed} />;
 
   return (
     <div className="w-full md:max-w-250 md:mx-auto md:px-4 md:py-6 md:min-h-[calc(100vh-60px)]">
@@ -66,7 +68,7 @@ function ChatRoom() {
           <TransferMenu
             currentCoin={user?.coin || 0}
             recipientId={roomInfo?.opponent_id}
-            recipientName={opponentProfile?.nickname || '상대방'}
+            recipientName={opponentProfile?.nickname || t.chat.otherParty}
           />
         )}
 
