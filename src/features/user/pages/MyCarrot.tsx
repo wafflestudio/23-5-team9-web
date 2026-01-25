@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
 import UserProfile from '@/features/user/components/UserProfile';
-import CoinTab from '@/features/pay/components/CoinTab';
+import { CoinTab } from '@/features/pay/components/coin';
 import PasswordTab from '@/features/user/components/PasswordTab';
-import TransactionTab from '@/features/pay/components/TransactionTab';
+import { TransactionTab } from '@/features/pay/components/transaction';
 import { useMyPay } from '@/features/pay/hooks/useMyPay';
 import { useAuth } from '@/features/auth/hooks/store';
 import { Loading, Button, Avatar, DetailHeader } from '@/shared/ui';

@@ -1,16 +1,19 @@
-import { useTransactions } from '@/features/pay/hooks/useTransactions';
 import { PayTransaction } from '@/features/pay/api/payApi';
-import { Button, Avatar } from '@/shared/ui';
-import { useUser } from '@/features/user/hooks/useUser';
+import { Avatar } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 
-const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUserId?: string }) => {
+interface TransactionItemProps {
+  tx: PayTransaction;
+  currentUserId?: string;
+}
+
+export function TransactionItem({ tx, currentUserId }: TransactionItemProps) {
   const t = useTranslation();
   const { language } = useLanguage();
+
   const isTransfer = tx.type === 'TRANSFER';
   const isSender = isTransfer && tx.details.user.id === currentUserId;
-  const isReceiver = isTransfer && tx.details.receive_user?.id === currentUserId;
 
   const getTransactionInfo = () => {
     if (tx.type === 'DEPOSIT') {
@@ -27,10 +30,15 @@ const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUse
   };
 
   const { label, icon, isPositive } = getTransactionInfo();
+  const formattedDate = new Date(tx.details.time).toLocaleString(
+    language === 'ko' ? 'ko-KR' : 'en-US'
+  );
 
   // For transfer, show the other party's info
   const otherParty = isTransfer
-    ? (isSender ? tx.details.receive_user : tx.details.user)
+    ? isSender
+      ? tx.details.receive_user
+      : tx.details.user
     : null;
 
   if (isTransfer) {
@@ -51,9 +59,7 @@ const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUse
           <p className="text-sm font-medium text-text-primary">
             {label} · {otherParty?.nickname || t.common.unknown}
           </p>
-          <p className="text-xs text-text-tertiary">
-            {new Date(tx.details.time).toLocaleString(language === 'ko' ? 'ko-KR' : 'en-US')}
-          </p>
+          <p className="text-xs text-text-tertiary">{formattedDate}</p>
         </div>
         <span
           className={`font-bold text-lg ${
@@ -71,7 +77,9 @@ const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUse
   return (
     <div
       className={`flex items-center gap-3 p-4 rounded-lg border-l-4 ${
-        isPositive ? 'bg-primary/5 border-l-primary' : 'bg-status-error/5 border-l-status-error'
+        isPositive
+          ? 'bg-primary/5 border-l-primary'
+          : 'bg-status-error/5 border-l-status-error'
       }`}
     >
       <div
@@ -83,61 +91,16 @@ const TransactionItem = ({ tx, currentUserId }: { tx: PayTransaction; currentUse
       </div>
       <div className="flex-1 text-left">
         <p className="text-sm font-medium text-text-primary">{label}</p>
-        <p className="text-xs text-text-tertiary">
-          {new Date(tx.details.time).toLocaleString(language === 'ko' ? 'ko-KR' : 'en-US')}
-        </p>
+        <p className="text-xs text-text-tertiary">{formattedDate}</p>
       </div>
       <span
-        className={`font-bold text-lg ${isPositive ? 'text-primary' : 'text-status-error'}`}
+        className={`font-bold text-lg ${
+          isPositive ? 'text-primary' : 'text-status-error'
+        }`}
       >
         {isPositive ? '+' : '-'}
         {tx.details.amount.toLocaleString()}C
       </span>
-    </div>
-  );
-};
-
-import { PageContainer } from '@/shared/layouts/PageContainer';
-import { OnboardingRequired } from '@/shared/ui';
-
-export default function TransactionTab() {
-  const { user, needsOnboarding } = useUser();
-  const { transactions, isLoading, loadMore, hasMore } = useTransactions();
-  const t = useTranslation();
-
-  if (needsOnboarding) {
-      return (
-        <PageContainer title={t.pay.coinManagement}>
-          <OnboardingRequired />
-        </PageContainer>
-      );
-    }
-
-  if (isLoading && transactions.length === 0) {
-    return <p className="text-text-tertiary text-sm text-center py-8">{t.common.loading}</p>;
-  }
-
-  if (transactions.length === 0) {
-    return <p className="text-text-tertiary text-sm text-center py-8">{t.pay.noTransactions}</p>;
-  }
-
-  return (
-    <div className="space-y-3">
-      {transactions.map((tx) => (
-        <TransactionItem key={tx.id} tx={tx} currentUserId={user?.id?.toString()} />
-      ))}
-      {hasMore && (
-        <Button
-          onClick={loadMore}
-          variant="outline"
-          size="sm"
-          fullWidth
-          disabled={isLoading}
-          className="mt-4"
-        >
-          {isLoading ? t.common.loading : t.common.loadMore}
-        </Button>
-      )}
     </div>
   );
 }

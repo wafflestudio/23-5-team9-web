@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { User } from '@/features/user/api/user';
 import { Button, StatCard } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
-
 import { useUser } from '@/features/user/hooks/useUser';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { OnboardingRequired } from '@/shared/ui';

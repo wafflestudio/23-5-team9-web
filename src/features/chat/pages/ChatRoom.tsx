@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useMessages, useSendMessage, useMarkAsRead, useChatRoom } from '@/features/chat/hooks/useChat';
 import { useUser, useUserProfile } from '@/features/user/hooks/useUser';
 import { Loading, ErrorMessage, DetailHeader } from '@/shared/ui';
-import TransferMenu from '@/features/pay/components/TransferMenu';
+import { TransferMenu } from '@/features/pay/components/transfer';
 import ChatHeader from '@/features/chat/components/ChatHeader';
 import MessageList from '@/features/chat/components/MessageList';
 import ChatInput from '@/features/chat/components/ChatInput';
