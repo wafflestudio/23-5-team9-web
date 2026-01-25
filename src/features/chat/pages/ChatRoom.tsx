@@ -16,7 +16,7 @@ function ChatRoom() {
   const navigate = useNavigate();
   const [showTransferMenu, setShowTransferMenu] = useState(false);
   const { user, isLoggedIn, isLoading: userLoading } = useUser({
-    refetchInterval: getPollingInterval(POLLING_CONFIG.USER_BALANCE, showTransferMenu),
+    refetchInterval: getPollingInterval(POLLING_CONFIG.USER_BALANCE),
   });
 
   const { room: roomInfo } = useChatRoom(chatId);

@@ -10,7 +10,7 @@ export const POLLING_CONFIG = {
   UNREAD_COUNT: 5_000,    // 읽지 않은 메시지 수 (30초)
 
   // 결제/송금 관련
-  USER_BALANCE: 5_000,     // 송금 메뉴 열었을 때 잔액 (5초)
+  USER_BALANCE: 5_000,     // 채팅방 잔액 (5초)
 
   // staleTime 설정
   STALE_TIME: {
