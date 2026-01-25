@@ -1,4 +1,4 @@
-import { Button, Input } from '@/shared/ui';
+import { Button, TextInput } from '@mantine/core';
 import { useTransfer } from '@/features/pay/hooks/useTransfer';
 import { useTranslation } from '@/shared/i18n';
 
@@ -34,17 +34,18 @@ const TransferMenu = ({
   return (
     <div className="px-4 py-3 bg-bg-box border-b border-border-base">
       <div className="flex items-center gap-2 mb-2">
-        <Input
+        <TextInput
           type="number"
           placeholder={t.pay.amountToTransfer}
           value={transferAmount}
           onChange={(e) => setTransferAmount(e.target.value)}
-          className="flex-1 py-2! px-3! text-sm"
+          className="flex-1"
         />
         <Button
           onClick={handleTransfer}
           disabled={transferring || !transferAmount}
           size="sm"
+          color="orange"
           className="whitespace-nowrap"
         >
           {transferring ? t.pay.transferring : t.pay.transfer}

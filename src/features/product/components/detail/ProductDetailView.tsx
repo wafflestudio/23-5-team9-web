@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Badge } from '@/shared/ui';
+import { Button, Badge } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 import { translateMultiple } from '@/shared/lib/translate';
@@ -54,11 +54,12 @@ export function ProductDetailView() {
     <>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          {product.is_sold && <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>}
+          {product.is_sold && <Badge variant="light" color="gray" className="text-xs">{t.product.soldOut}</Badge>}
         </div>
         {needsTranslation && (
           <Button
-            variant="ghost"
+            variant="subtle"
+            color="gray"
             size="sm"
             onClick={handleTranslate}
             disabled={isTranslating}
@@ -79,7 +80,8 @@ export function ProductDetailView() {
 
       <div className="flex items-center justify-between pt-6 mt-6 border-t border-border-base">
         <Button
-          variant={isLiked ? "primary" : "outline"}
+          variant={isLiked ? "filled" : "outline"}
+          color={isLiked ? "orange" : "gray"}
           size="sm"
           onClick={handleLike}
         >
@@ -89,10 +91,10 @@ export function ProductDetailView() {
 
         {isOwner && (
           <div className="flex gap-2">
-            <Button size="sm" onClick={startEditing}>
+            <Button size="sm" color="orange" onClick={startEditing}>
               {t.common.edit}
             </Button>
-            <Button size="sm" variant="ghost" onClick={handleDelete} disabled={isDeleting}>
+            <Button size="sm" variant="subtle" color="gray" onClick={handleDelete} disabled={isDeleting}>
               {t.common.delete}
             </Button>
           </div>

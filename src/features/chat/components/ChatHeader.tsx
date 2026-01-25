@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Avatar } from '@/shared/ui';
+import { Avatar } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 
 interface ChatHeaderProps {

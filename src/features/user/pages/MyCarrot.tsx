@@ -5,7 +5,8 @@ import CoinTab from '@/features/pay/pages/CoinTab';
 import PasswordTab from '@/features/user/components/PasswordTab';
 import TransactionTab from '@/features/pay/components/transaction/TransactionTab';
 import { useAuth } from '@/features/auth/hooks/store';
-import { Loading, Button, Avatar, DetailHeader } from '@/shared/ui';
+import { Button, Avatar } from '@mantine/core';
+import { Loading, DetailHeader } from '@/shared/components';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { useTranslation } from '@/shared/i18n';
 
@@ -63,7 +64,7 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
       <PageContainer>
         <div className="flex justify-between items-center mb-7.5">
           <h2 className="text-2xl font-extrabold m-0">{t.user.myCarrot}</h2>
-          <Button onClick={() => { logout(); navigate('/products'); }} variant="outline" size="sm">{t.auth.logout}</Button>
+          <Button onClick={() => { logout(); navigate('/products'); }} variant="outline" color="gray" size="sm">{t.auth.logout}</Button>
         </div>
 
         {/* User info section - 코인관리 스타일 적용 */}

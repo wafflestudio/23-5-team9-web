@@ -1,6 +1,6 @@
 import ChatRoomItem from '@/features/chat/components/ChatRoomItem';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { Loading, ErrorMessage, EmptyState, LoginRequired, OnboardingRequired } from '@/shared/ui';
+import { Loading, ErrorMessage, EmptyState, LoginRequired, OnboardingRequired } from '@/shared/components';
 import { useChatRooms, ChatRoom } from '@/features/chat/hooks/useChat';
 import { useUser } from '@/features/user/hooks/useUser';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Button, StatCard } from '@/shared/ui';
+import { Button } from '@mantine/core';
+import { StatCard } from '@/shared/components';
 import { useTranslation } from '@/shared/i18n';
 
 type Mode = 'deposit' | 'withdraw';
@@ -38,14 +39,16 @@ export function CoinPanel({ currentCoin, onDeposit, onWithdraw }: CoinPanelProps
       <div className="flex gap-2 justify-center mb-5">
         <Button
           onClick={() => setMode('deposit')}
-          variant={mode === 'deposit' ? 'primary' : 'outline'}
+          variant={mode === 'deposit' ? 'filled' : 'outline'}
+          color={mode === 'deposit' ? 'orange' : 'gray'}
           size="sm"
         >
           {t.pay.charge}
         </Button>
         <Button
           onClick={() => setMode('withdraw')}
-          variant={mode === 'withdraw' ? 'primary' : 'outline'}
+          variant={mode === 'withdraw' ? 'filled' : 'outline'}
+          color={mode === 'withdraw' ? 'orange' : 'gray'}
           size="sm"
         >
           {t.pay.withdraw}
@@ -61,6 +64,7 @@ export function CoinPanel({ currentCoin, onDeposit, onWithdraw }: CoinPanelProps
             key={amount}
             onClick={() => handleAction(amount)}
             variant="outline"
+            color="gray"
             className={
               mode === 'deposit'
                 ? 'hover:border-primary hover:text-primary hover:bg-primary-light'

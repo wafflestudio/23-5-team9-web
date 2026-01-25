@@ -1,5 +1,5 @@
 import { PayTransaction } from '@/features/pay/api/payApi';
-import { Button } from '@/shared/ui';
+import { Button } from '@mantine/core';
 import { TransactionItem } from './TransactionItem';
 import { useTranslation } from '@/shared/i18n';
 
@@ -47,6 +47,7 @@ export function TransactionList({
         <Button
           onClick={onLoadMore}
           variant="outline"
+          color="gray"
           size="sm"
           fullWidth
           disabled={isLoading}

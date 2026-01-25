@@ -2,7 +2,7 @@ import { useUser } from '@/features/user/hooks/useUser';
 import { useMyPay } from '@/features/pay/hooks/useMyPay';
 import { useTranslation } from '@/shared/i18n';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { OnboardingRequired } from '@/shared/ui';
+import { OnboardingRequired } from '@/shared/components';
 import { CoinPanel } from '@/features/pay/components/coin';
 
 export default function CoinTab() {

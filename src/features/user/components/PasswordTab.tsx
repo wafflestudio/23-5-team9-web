@@ -1,4 +1,4 @@
-import { PasswordInput, Button } from '@/shared/ui';
+import { PasswordInput, Button } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 
 const PasswordTab = () => {
@@ -14,7 +14,7 @@ const PasswordTab = () => {
       <PasswordInput label={t.user.currentPassword} />
       <PasswordInput label={t.user.newPassword} />
       <PasswordInput label={t.user.confirmNewPassword} />
-      <Button type="submit" size="lg" fullWidth className="mt-4">
+      <Button type="submit" size="lg" color="orange" fullWidth className="mt-4">
         {t.user.changePassword}
       </Button>
     </form>

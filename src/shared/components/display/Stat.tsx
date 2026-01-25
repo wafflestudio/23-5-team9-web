@@ -36,39 +36,38 @@ interface StatCardProps {
   unit?: string;
   className?: string;
   layout?: 'vertical' | 'horizontal';
-  variant?: 'outline' | 'primary' | 'secondary'; // Button의 variant 시스템 반영
+  variant?: 'outline' | 'primary' | 'secondary';
 }
 
-export function StatCard({ 
-  label, 
-  value, 
-  unit, 
-  className = '', 
+export function StatCard({
+  label,
+  value,
+  unit,
+  className = '',
   layout = 'vertical',
-  variant = 'outline' 
+  variant = 'outline'
 }: StatCardProps) {
   const isVertical = layout === 'vertical';
 
-  // Button 컴포넌트의 스타일을 그대로 가져옴
   const variantStyles = {
     primary: "bg-primary text-text-inverse border-transparent",
     secondary: "bg-bg-box-alt text-text-body border-transparent",
-    outline: "border-border-medium text-text-body bg-bg-page", // 회색 대신 페이지 배경색 사용
+    outline: "border-border-medium text-text-body bg-bg-page",
   };
 
   return (
     <div className={`
-      border 
-      rounded-lg 
-      flex 
+      border
+      rounded-lg
+      flex
       ${variantStyles[variant]}
-      ${isVertical 
-        ? 'flex-col items-center justify-center p-8' 
-        : 'flex-row items-center justify-start gap-3 p-4'} 
+      ${isVertical
+        ? 'flex-col items-center justify-center p-8'
+        : 'flex-row items-center justify-start gap-3 p-4'}
       ${className}
     `}>
       <span className={`
-        font-medium 
+        font-medium
         ${variant === 'primary' ? 'text-text-inverse/80' : 'text-text-secondary'}
         ${isVertical ? 'mb-2 text-lg' : 'text-base'}
       `}>
@@ -80,7 +79,7 @@ export function StatCard({
         </span>
         {unit && (
           <span className={`
-            font-normal 
+            font-normal
             ${variant === 'primary' ? 'text-text-inverse/70' : 'text-text-muted'}
             ${isVertical ? 'text-2xl' : 'text-sm'}
           `}>

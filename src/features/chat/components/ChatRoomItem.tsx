@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Badge } from '@/shared/ui';
+import { Avatar, Badge } from '@mantine/core';
 import { useUserProfile } from '@/features/user/hooks/useUser';
 import { ChatRoom } from '@/features/chat/hooks/useChat';
 import { useTranslation } from '@/shared/i18n';
@@ -50,7 +50,7 @@ function ChatRoomItem({ room }: ChatRoomItemProps) {
       <div className="text-right flex flex-col items-end min-w-15">
         <div className="text-text-secondary text-xs mb-1.5">{displayTime}</div>
         {room.unread_count > 0 && (
-          <Badge variant="notification">{room.unread_count > 99 ? '99+' : room.unread_count}</Badge>
+          <Badge color="red" size="sm" circle>{room.unread_count > 99 ? '99+' : room.unread_count}</Badge>
         )}
       </div>
     </div>

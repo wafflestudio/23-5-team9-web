@@ -9,8 +9,7 @@ import {
 } from '@/features/location/api/region';
 import { useGeoLocation } from '@/features/location/hooks/useGeoLocation';
 import { useUser } from '@/features/user/hooks/useUser';
-import { Button, Select } from '@/shared/ui';
-import { Modal } from '@/shared/ui/feedback';
+import { Button, NativeSelect, Modal } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 
 interface RegionSelectModalProps {
@@ -175,12 +174,12 @@ export default function RegionSelectModal({
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t.location.regionSettings}>
+    <Modal opened={isOpen} onClose={onClose} title={t.location.regionSettings} centered>
       <div className="flex flex-col gap-4">
         {/* 내 위치로 찾기 버튼 */}
         <Button
           type="button"
-          variant="secondary"
+          variant="light"
           fullWidth
           onClick={handleDetectLocation}
           disabled={detecting}
@@ -195,21 +194,21 @@ export default function RegionSelectModal({
         </div>
 
         {/* 3단 드롭다운 */}
-        <Select
-          options={sidoOptions}
+        <NativeSelect
+          data={sidoOptions}
           value={selectedSido}
           onChange={handleSidoChange}
         />
 
-        <Select
-          options={sigugunOptions}
+        <NativeSelect
+          data={sigugunOptions}
           value={selectedSigugun}
           onChange={handleSigugunChange}
           disabled={!selectedSido}
         />
 
-        <Select
-          options={dongOptions}
+        <NativeSelect
+          data={dongOptions}
           value={selectedDongId}
           onChange={handleDongChange}
           disabled={!selectedSigugun}
@@ -219,7 +218,7 @@ export default function RegionSelectModal({
         <div className="flex gap-3 mt-4">
           <Button
             type="button"
-            variant="secondary"
+            variant="light"
             fullWidth
             onClick={onClose}
           >
@@ -227,7 +226,7 @@ export default function RegionSelectModal({
           </Button>
           <Button
             type="button"
-            variant="primary"
+            color="orange"
             fullWidth
             onClick={handleConfirm}
           >

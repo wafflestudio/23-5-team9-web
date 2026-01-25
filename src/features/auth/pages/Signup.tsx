@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { useAuth } from '@/features/auth/hooks/store';
-import { Input, PasswordInput, Button } from '@/shared/ui';
+import { TextInput, PasswordInput, Button } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 import { signupSchema, type SignupForm } from '../api/schemas';
 import { getErrorMessage } from '@/shared/api/types';
@@ -53,7 +53,7 @@ export default function Signup({ onSignup }: SignupPageProps) {
       <h2 className="mb-8 text-2xl font-bold text-text-primary">{t.auth.signup}</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-        <Input
+        <TextInput
           type="email"
           placeholder={t.auth.email}
           {...register('email')}
@@ -77,7 +77,7 @@ export default function Signup({ onSignup }: SignupPageProps) {
         <Button
           type="submit"
           disabled={isSubmitting}
-          variant="primary"
+          color="orange"
           fullWidth
           className="mt-4"
         >

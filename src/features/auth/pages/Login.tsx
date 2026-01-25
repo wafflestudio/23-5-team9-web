@@ -3,7 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { Input, PasswordInput, Button, GoogleIcon } from '@/shared/ui';
+import { TextInput, PasswordInput, Button } from '@mantine/core';
+import { GoogleIcon } from '@/shared/components';
 import { useTranslation } from '@/shared/i18n';
 import { useLogin } from '../hooks/useLogin';
 import { loginSchema, type LoginForm } from '../api/schemas';
@@ -26,7 +27,7 @@ export default function Login() {
         <h2 className="mb-8 text-2xl font-bold text-text-primary">{t.auth.login}</h2>
 
         <form onSubmit={handleSubmit(login)} className="flex flex-col gap-3">
-          <Input
+          <TextInput
             type="email"
             placeholder={t.auth.email}
             {...register('email')}
@@ -39,7 +40,7 @@ export default function Login() {
             error={errors.password?.message}
           />
 
-          <Button type="submit" disabled={isSubmitting} variant="primary" fullWidth className="mt-4 text-lg">
+          <Button type="submit" disabled={isSubmitting} color="orange" fullWidth className="mt-4 text-lg">
             {isSubmitting ? t.auth.loggingIn : t.auth.login}
           </Button>
 
@@ -48,7 +49,7 @@ export default function Login() {
 
         <Button
           onClick={() => window.location.href = authApi.getGoogleLoginUrl()}
-          variant="outline" fullWidth
+          variant="outline" color="gray" fullWidth
           className="mt-6 flex items-center justify-center gap-2 bg-bg-page"
         >
           <GoogleIcon /> {t.auth.continueWithGoogle}

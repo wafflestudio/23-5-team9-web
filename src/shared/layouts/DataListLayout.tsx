@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Loading, ErrorMessage } from '@/shared/ui';
+import { Loading, ErrorMessage } from '@/shared/components';
 import { useTranslation } from '@/shared/i18n';
 
 interface DataListLayoutProps {

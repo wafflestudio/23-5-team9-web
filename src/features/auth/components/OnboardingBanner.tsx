@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '@/features/user/hooks/useUser';
-import { Button } from '@/shared/ui';
+import { Button } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 
 export function OnboardingBanner() {
@@ -20,7 +20,7 @@ export function OnboardingBanner() {
       <span>{t.auth.onboardingRequired}</span>
       <Button
         onClick={() => navigate('/auth/onboarding')}
-        variant="secondary"
+        variant="light"
         size="sm"
         className="text-xs"
       >

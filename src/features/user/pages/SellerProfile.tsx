@@ -3,7 +3,8 @@ import { useUser, useUserProfile } from '@/features/user/hooks/useUser';
 import { useUserProducts } from '@/features/product/hooks/useProducts';
 import { useCreateRoom } from '@/features/chat/hooks/useChat';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Avatar } from '@/shared/ui';
+import { Button, Avatar } from '@mantine/core';
+import { Loading, ErrorMessage, EmptyState, DetailHeader, DetailSection } from '@/shared/components';
 import ProductCard from '@/features/product/components/list/ProductCard';
 import { useTranslation } from '@/shared/i18n';
 
@@ -51,7 +52,7 @@ function SellerProfile() {
             </div>
           </div>
           {!isOwnProfile && (
-            <Button onClick={handleChatClick} disabled={createRoom.isPending}>
+            <Button color="orange" onClick={handleChatClick} disabled={createRoom.isPending}>
               {createRoom.isPending ? t.product.connecting : t.product.startChat}
             </Button>
           )}

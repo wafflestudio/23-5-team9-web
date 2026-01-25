@@ -1,6 +1,5 @@
 import React from 'react';
-import { Input } from './Input';
-import { Button } from '../display/Button';
+import { TextInput, Button } from '@mantine/core';
 
 interface CommentFormProps {
   value: string;
@@ -23,16 +22,18 @@ export function CommentForm({
 }: CommentFormProps) {
   return (
     <form onSubmit={onSubmit} className={`flex gap-2.5 ${className}`}>
-      <Input
-        type="text"
+      <TextInput
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="flex-1 bg-bg-page"
+        className="flex-1"
+        classNames={{
+          input: 'bg-bg-page'
+        }}
       />
       <Button
         type="submit"
-        variant="primary"
+        color="orange"
         className="h-auto px-5 whitespace-nowrap"
         disabled={isSubmitting || !value.trim()}
       >

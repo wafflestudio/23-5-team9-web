@@ -1,6 +1,6 @@
 import { createContext, useContext, type ReactNode } from 'react';
 import { useProductDetailLogic } from '../hooks/useProductDetailLogic';
-import { Loading, ErrorMessage, EmptyState } from '@/shared/ui';
+import { Loading, ErrorMessage, EmptyState } from '@/shared/components';
 import { useTranslation } from '@/shared/i18n';
 
 type ProductDetailContextType = ReturnType<typeof useProductDetailLogic>;

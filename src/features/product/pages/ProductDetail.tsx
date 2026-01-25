@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { PageContainer } from "@/shared/layouts/PageContainer";
-import { DetailHeader, DetailSection } from '@/shared/ui';
+import { DetailHeader, DetailSection } from '@/shared/components';
 import { ProductDetailProvider, useProductDetail } from "@/features/product/hooks/ProductDetailContext";
 import { SellerSection } from "@/features/product/components/detail/SellerSection";
 import { SellerProductList } from "@/features/product/components/detail/SellerProductList";

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/shared/ui';
+import { Button } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 import { productFormSchema, type ProductFormData } from '@/features/product/hooks/schemas';
 
@@ -92,10 +92,10 @@ const ProductForm = ({
           </label>
         )}
         <div className="flex gap-2">
-          <Button size="sm" variant="ghost" type="button" onClick={onCancel}>
+          <Button size="sm" variant="subtle" color="gray" type="button" onClick={onCancel}>
             {t.common.cancel}
           </Button>
-          <Button size="sm" type="submit" disabled={isLoading}>
+          <Button size="sm" color="orange" type="submit" disabled={isLoading}>
             {isLoading ? t.common.processing : (submitLabel || t.common.save)}
           </Button>
         </div>

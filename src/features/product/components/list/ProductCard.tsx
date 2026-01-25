@@ -1,7 +1,8 @@
 import { useState, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '@/features/product/types';
-import { Card, CardContent, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
+import { Avatar, Badge, Button } from '@mantine/core';
+import { Card, CardContent, CardTitle, StatGroup } from '@/shared/components';
 import { useUserProfile } from '@/features/user/hooks/useUser';
 import { useTranslation } from '@/shared/i18n';
 
@@ -45,7 +46,7 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
           {/* 판매완료 뱃지 */}
           {product.is_sold && (
             <div className="mb-2">
-              <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>
+              <Badge variant="light" color="gray" className="text-xs">{t.product.soldOut}</Badge>
             </div>
           )}
 
@@ -57,7 +58,8 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
           <StatGroup className="mt-auto pt-2.5">
             <Button
               onClick={handleLike}
-              variant="ghost"
+              variant="subtle"
+              color="gray"
               size="sm"
               className={`p-1 flex items-center gap-1 text-[13px] ${isLiked ? 'text-primary' : 'text-text-muted'}`}
             >
@@ -69,8 +71,8 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
           {/* 액션 버튼 */}
           {showActions && (
             <div className="flex gap-2 mt-3 pt-3 border-t border-border-medium">
-              <Button onClick={handleEdit} variant="secondary" size="sm" className="flex-1">{t.common.edit}</Button>
-              <Button onClick={handleDelete} variant="ghost" size="sm" className="flex-1 text-status-error hover:bg-status-error-hover">{t.common.delete}</Button>
+              <Button onClick={handleEdit} variant="light" size="sm" className="flex-1">{t.common.edit}</Button>
+              <Button onClick={handleDelete} variant="subtle" color="gray" size="sm" className="flex-1 text-status-error hover:bg-status-error-hover">{t.common.delete}</Button>
             </div>
           )}
         </CardContent>

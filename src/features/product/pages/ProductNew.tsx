@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "@/features/user/hooks/useUser";
 import { useCreateProduct } from "@/features/product/hooks/useProducts";
 import { PageContainer } from "@/shared/layouts/PageContainer";
-import { DetailHeader, DetailSection, LoginRequired, OnboardingRequired } from '@/shared/ui';
+import { DetailHeader, DetailSection, LoginRequired, OnboardingRequired } from '@/shared/components';
 import ProductForm, { type ProductFormData } from "@/features/product/components/form/ProductForm";
 import { useTranslation } from "@/shared/i18n";
 

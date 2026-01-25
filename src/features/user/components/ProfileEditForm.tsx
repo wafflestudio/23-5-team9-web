@@ -9,7 +9,7 @@ import {
 } from '@/features/location/api/region';
 import { useGeoLocation } from '@/features/location/hooks/useGeoLocation';
 import { useUser } from '@/features/user/hooks/useUser';
-import { Button, Input, Select, Avatar } from '@/shared/ui';
+import { Button, TextInput, NativeSelect, Avatar } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 
 interface ProfileEditFormProps {
@@ -225,10 +225,10 @@ export default function ProfileEditForm({
         <div className="relative inline-block">
           <Avatar src={profileImage} alt="Profile" size="xl" />
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-1 w-max">
-            <Button type="button" size="sm" variant="secondary" onClick={generateRandomImage} className="text-xs py-1 px-3">
+            <Button type="button" size="sm" variant="light" onClick={generateRandomImage} className="text-xs py-1 px-3">
                 {t.common.random}
             </Button>
-            <Button type="button" size="sm" variant="secondary" onClick={handleLinkInput} className="text-xs py-1 px-3">
+            <Button type="button" size="sm" variant="light" onClick={handleLinkInput} className="text-xs py-1 px-3">
                 {t.common.link}
             </Button>
           </div>
@@ -239,16 +239,16 @@ export default function ProfileEditForm({
       {initialEmail && (
         <div>
           <label className="block mb-2 font-bold text-sm text-text-secondary">{t.user.email}</label>
-          <Input value={initialEmail} readOnly className="cursor-not-allowed opacity-70" />
+          <TextInput value={initialEmail} readOnly className="cursor-not-allowed opacity-70" />
         </div>
       )}
 
       {/* 3. 닉네임 */}
       <div>
         <label className="block mb-2 font-bold text-sm text-text-secondary">{t.user.nickname}</label>
-        <Input
+        <TextInput
             value={nickname}
-            onChange={e => setNickname(e.target.value)}
+            onChange={(e) => setNickname(e.target.value)}
             required
             placeholder={t.user.enterNickname}
         />
@@ -263,7 +263,7 @@ export default function ProfileEditForm({
               size="sm"
               onClick={handleDetectLocation}
               disabled={detecting}
-              variant="secondary"
+              variant="light"
               className="text-xs py-1 px-2"
           >
               {detecting ? t.location.findingLocation : t.user.findMyLocationIcon}
@@ -272,16 +272,16 @@ export default function ProfileEditForm({
 
         <div className="flex flex-col gap-3">
           {/* 시/도 */}
-          <Select
-            options={sidoOptions}
+          <NativeSelect
+            data={sidoOptions}
             value={selectedSido}
             onChange={handleSidoChange}
             className="w-full"
           />
 
           {/* 시/구/군 */}
-          <Select
-            options={sigugunOptions}
+          <NativeSelect
+            data={sigugunOptions}
             value={selectedSigugun}
             onChange={handleSigugunChange}
             disabled={!selectedSido}
@@ -289,8 +289,8 @@ export default function ProfileEditForm({
           />
 
           {/* 읍/면/동 */}
-          <Select
-            options={dongOptions}
+          <NativeSelect
+            data={dongOptions}
             value={selectedDongId}
             onChange={handleDongChange}
             disabled={!selectedSigugun}
@@ -302,6 +302,7 @@ export default function ProfileEditForm({
       <Button
         type="submit"
         size="lg"
+        color="orange"
         fullWidth
         disabled={loading}
         className="mt-4"

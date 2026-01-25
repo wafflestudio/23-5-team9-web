@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserProducts, useCreateProduct } from "@/features/product/hooks/useProducts";
-import { EmptyState, Button, DetailSection } from '@/shared/ui';
+import { Button } from '@mantine/core';
+import { EmptyState, DetailSection } from '@/shared/components';
 import ProductCard from "@/features/product/components/list/ProductCard";
 import ProductForm from "@/features/product/components/form/ProductForm";
 import { useTranslation } from '@/shared/i18n';
 
 import { useUser } from '@/features/user/hooks/useUser';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { OnboardingRequired } from '@/shared/ui';
+import { OnboardingRequired } from '@/shared/components';
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const UserProfile = () => {
     <div className="flex flex-col gap-6">
       {!showForm ? (
         <div className="flex justify-end">
-          <Button size="sm" onClick={() => setShowForm(true)}>
+          <Button size="sm" color="orange" onClick={() => setShowForm(true)}>
             {t.product.registerProduct}
           </Button>
         </div>

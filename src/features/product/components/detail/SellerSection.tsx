@@ -1,4 +1,4 @@
-import { Button, Avatar } from '@/shared/ui';
+import { Button, Avatar } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
 
@@ -22,7 +22,7 @@ export function SellerSection() {
       </div>
 
       {!isOwner && (
-        <Button size="sm" onClick={handleChat} disabled={isChatLoading}>
+        <Button size="sm" color="orange" onClick={handleChat} disabled={isChatLoading}>
           {isChatLoading ? t.product.connecting : t.product.startChat}
         </Button>
       )}

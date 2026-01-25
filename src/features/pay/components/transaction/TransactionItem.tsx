@@ -1,5 +1,5 @@
 import { PayTransaction } from '@/features/pay/api/payApi';
-import { Avatar } from '@/shared/ui';
+import { Avatar } from '@mantine/core';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 

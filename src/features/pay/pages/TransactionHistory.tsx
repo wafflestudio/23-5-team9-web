@@ -2,7 +2,7 @@ import { useTransactions } from '@/features/pay/hooks/useTransactions';
 import { useUser } from '@/features/user/hooks/useUser';
 import { useTranslation } from '@/shared/i18n';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { DetailHeader, OnboardingRequired } from '@/shared/ui';
+import { DetailHeader, OnboardingRequired } from '@/shared/components';
 import { TransactionList } from '@/features/pay/components/transaction';
 
 function TransactionHistory() {

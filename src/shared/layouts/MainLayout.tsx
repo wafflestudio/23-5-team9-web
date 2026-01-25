@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { NavBar } from '@/shared/ui';
+import { NavBar } from '@/shared/components';
 import { OnboardingBanner } from '../../features/auth/components/OnboardingBanner';
 import { useUser } from '@/features/user/hooks/useUser';
 
