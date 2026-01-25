@@ -5,7 +5,7 @@ import { useLanguage } from '@/shared/store/languageStore';
 
 interface MessageListProps {
   messages: Message[];
-  currentUserId?: number;
+  currentUserId?: string;
 }
 
 function MessageList({ messages, currentUserId }: MessageListProps) {
@@ -47,7 +47,7 @@ function MessageList({ messages, currentUserId }: MessageListProps) {
   return (
     <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1 bg-bg-base">
       {messages.map((msg, index) => {
-        const isMe = msg.sender_id === String(currentUserId);
+        const isMe = msg.sender_id === currentUserId;
         const showTime = shouldShowTime(index);
 
         return (
