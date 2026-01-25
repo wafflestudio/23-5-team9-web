@@ -4,7 +4,7 @@ import { useTranslation } from '@/shared/i18n';
 
 interface DataListLayoutProps {
   isLoading: boolean;
-  error?: any;
+  error?: Error | null;
   isEmpty: boolean;
   emptyMessage?: string;
   filters?: React.ReactNode;
@@ -43,10 +43,7 @@ export function DataListLayout({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // error 객체에서 메시지 추출
-  const errorMsg = error
-    ? (typeof error === 'string' ? error : error?.message || t.common.error)
-    : null;
+  const errorMsg = error?.message ?? null;
 
   return (
     <div className={`flex flex-col gap-4 ${className}`}>

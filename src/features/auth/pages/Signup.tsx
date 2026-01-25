@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth/hooks/store';
 import { Input, PasswordInput, Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { signupSchema, type SignupForm } from '../api/schemas';
+import { getErrorMessage } from '@/shared/api/types';
 
 interface SignupPageProps {
   onSignup?: () => void;
@@ -41,10 +42,9 @@ export default function Signup({ onSignup }: SignupPageProps) {
 
       onSignup?.();
       navigate('/auth/onboarding');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      const errorMsg = err.response?.data?.error_msg || err.response?.data?.detail || t.auth.signupError;
-      setServerError(errorMsg);
+      setServerError(getErrorMessage(err, t.auth.signupError));
     }
   };
 

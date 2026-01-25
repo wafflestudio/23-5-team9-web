@@ -32,7 +32,7 @@ export function useProducts(options: { regionId?: string; userId?: string; categ
   return {
     products: queryInfo.data ?? [],
     loading: queryInfo.isLoading,
-    error: queryInfo.error ? (queryInfo.error as Error).message : null,
+    error: queryInfo.error as Error | null,
   };
 }
 
@@ -47,7 +47,7 @@ export function useProduct(productId: string) {
   return {
     product: queryInfo.data,
     loading: queryInfo.isLoading,
-    error: queryInfo.error ? (queryInfo.error as Error).message : null,
+    error: queryInfo.error as Error | null,
   };
 }
 

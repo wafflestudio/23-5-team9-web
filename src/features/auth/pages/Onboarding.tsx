@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
 import { useOnboarding } from '@/features/user/hooks/useUser';
 import { useTranslation } from '@/shared/i18n';
+import { getErrorMessage } from '@/shared/api/types';
 
 export default function Onboarding() {
   const [error, setError] = useState('');
@@ -23,8 +24,8 @@ export default function Onboarding() {
       try {
         await onboardingMutation.mutateAsync(data);
         navigate(redirect);
-      } catch (err: any) {
-        const detail = err.response?.data?.detail || t.auth.onboardingFailed;
+      } catch (err: unknown) {
+        const detail = getErrorMessage(err, t.auth.onboardingFailed);
         throw new Error(detail);
       }
   };
@@ -43,8 +44,8 @@ export default function Onboarding() {
             onSubmit={async (data) => {
                 try {
                     await handleOnboardingSubmit(data);
-                } catch (e: any) {
-                    setError(e.message);
+                } catch (e: unknown) {
+                    setError(e instanceof Error ? e.message : t.auth.onboardingFailed);
                 }
             }}
         />
