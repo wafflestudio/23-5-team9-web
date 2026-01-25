@@ -46,22 +46,18 @@ export interface GetTransactionsParams {
 
 export const payApi = {
   getTransactions: async (params?: GetTransactionsParams): Promise<PayTransaction[]> => {
-    const response = await client.get<PayTransaction[]>('/api/pay/', { params });
-    return response.data;
+    return client.get('api/pay/', { searchParams: params }).json<PayTransaction[]>();
   },
 
   deposit: async (data: DepositRequest): Promise<PayTransaction> => {
-    const response = await client.post<PayTransaction>('/api/pay/deposit', data);
-    return response.data;
+    return client.post('api/pay/deposit', { json: data }).json<PayTransaction>();
   },
 
   withdraw: async (data: WithdrawRequest): Promise<PayTransaction> => {
-    const response = await client.post<PayTransaction>('/api/pay/withdraw', data);
-    return response.data;
+    return client.post('api/pay/withdraw', { json: data }).json<PayTransaction>();
   },
 
   transfer: async (data: TransferRequest): Promise<PayTransaction> => {
-    const response = await client.post<PayTransaction>('/api/pay/transfer', data);
-    return response.data;
+    return client.post('api/pay/transfer', { json: data }).json<PayTransaction>();
   },
 };
