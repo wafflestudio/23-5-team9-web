@@ -108,7 +108,7 @@ export function ProductDetailView({
 
         {isOwner && (
           <div className="flex gap-2">
-            <Button size="sm" variant="secondary" onClick={onEdit}>
+            <Button size="sm" onClick={onEdit}>
               {t.common.edit}
             </Button>
             <Button size="sm" variant="ghost" onClick={onDelete} disabled={isDeleting}>

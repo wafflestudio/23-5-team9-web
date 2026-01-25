@@ -5,7 +5,7 @@ import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
 import { useCreateRoom } from "@/features/chat/hooks/useChat";
 import { useTranslation } from "@/shared/i18n";
 import type { UpdateProductRequest } from "@/features/product/api/productApi";
-import type { ProductFormData } from "@/features/product/schemas";
+import type { ProductFormData } from "@/features/product/hooks/schemas";
 
 export function useProductDetailLogic(productId: string) {
   const navigate = useNavigate();

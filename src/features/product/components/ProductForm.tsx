@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
-import { productFormSchema, type ProductFormData } from '../schemas';
+import { productFormSchema, type ProductFormData } from '../hooks/schemas';
 
 export type { ProductFormData };
 
@@ -92,7 +92,7 @@ const ProductForm = ({
           </label>
         )}
         <div className="flex gap-2">
-          <Button size="sm" variant="secondary" type="button" onClick={onCancel}>
+          <Button size="sm" variant="ghost" type="button" onClick={onCancel}>
             {t.common.cancel}
           </Button>
           <Button size="sm" type="submit" disabled={isLoading}>
