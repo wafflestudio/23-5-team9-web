@@ -6,71 +6,64 @@ import { fetchRegionById } from '@/features/location/api/region';
 
 export function useRegionSelection() {
   const { user, isLoggedIn } = useUser();
+  // store는 이제 '상태 저장소'가 아니라 URL에 따른 '데이터 캐시/표시용'으로 사용됩니다.
   const { regionId, regionName, setRegion } = useRegionStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [urlRegionName, setUrlRegionName] = useState<string | null>(null);
 
+  // 1. [Source of Truth] URL에서 현재 지역 ID를 가져옵니다.
   const urlRegionId = searchParams.get('region');
 
-  // URL에 region 파라미터가 있으면 해당 지역 이름 가져오기
+  // 2. [Action] 지역 선택 시 Store가 아닌 URL을 변경합니다.
+  const handleRegionSelect = (id: string) => {
+    // 이름은 URL 변경 후 Effect에서 비동기로 가져오거나, 
+    // UX를 위해 미리 알다면 인자로 받아 setRegion을 호출해 낙관적 업데이트를 할 수도 있지만,
+    // 원칙적으로 URL 변경이 우선입니다.
+    setSearchParams({ region: id });
+    closeModal();
+  };
+
+  // 3. [Sync] URL 변경을 감지하여 데이터를 동기화합니다.
   useEffect(() => {
-    if (urlRegionId) {
-      // URL의 regionId가 store와 같으면 store의 이름 사용
-      if (urlRegionId === regionId) {
-        setUrlRegionName(regionName);
-      } else {
-        // URL의 region ID로 지역 정보 가져오기
-        fetchRegionById(urlRegionId)
-          .then((region) => {
-            const name = `${region.sigugun} ${region.dong}`;
-            setUrlRegionName(name);
-            setRegion(region.id, name);
-          })
-          .catch(() => {
-            // 잘못된 region ID면 기본값으로 리다이렉트
-            setSearchParams({ region: DEFAULT_REGION_ID }, { replace: true });
-          });
-      }
-    } else {
-      // URL에 region이 없으면 현재 regionId를 URL에 추가
-      setUrlRegionName(null);
-      setSearchParams({ region: regionId }, { replace: true });
-    }
-  }, [urlRegionId, regionId, regionName]);
-
-  // 로그인 시 사용자 지역으로 자동 동기화
-  useEffect(() => {
-    if (isLoggedIn && user?.region && user?.id) {
-      const lastUserId = localStorage.getItem('lastUserId');
-      const savedRegionId = localStorage.getItem('selectedRegionId');
-
-      // 새 사용자이거나, 저장된 지역이 없거나 기본값인 경우 사용자 지역으로 설정
-      const isNewUser = lastUserId !== String(user.id);
-      const needsRegionSync = !savedRegionId || savedRegionId === DEFAULT_REGION_ID;
-
-      if (isNewUser || needsRegionSync) {
-        localStorage.setItem('lastUserId', String(user.id));
-        setRegion(user.region.id, `${user.region.sigugun} ${user.region.dong}`);
+    // 3-1. URL에 지역 정보가 아예 없는 경우 (진입 시점)
+    if (!urlRegionId) {
+      if (isLoggedIn && user?.region?.id) {
+        // 로그인 유저라면 유저 지역으로 리다이렉트
         setSearchParams({ region: user.region.id }, { replace: true });
+      } else {
+        // 비로그인이라면 기본 지역으로 리다이렉트
+        setSearchParams({ region: DEFAULT_REGION_ID }, { replace: true });
       }
+      return;
     }
-  }, [isLoggedIn, user?.region, user?.id]);
+
+    // 3-2. URL과 현재 Store 상태가 일치하면 패스 (불필요한 fetch 방지)
+    if (urlRegionId === regionId && regionName) return;
+
+    // 3-3. URL의 ID에 해당하는 지역 정보(이름)를 가져와서 Store에 '반영'만 함
+    const syncRegionData = async () => {
+      try {
+        const region = await fetchRegionById(urlRegionId);
+        const name = `${region.sigugun} ${region.dong}`;
+        setRegion(region.id, name);
+      } catch (error) {
+        // 잘못된 ID인 경우 기본값으로 복구
+        console.error('Invalid region ID in URL:', error);
+        setSearchParams({ region: DEFAULT_REGION_ID }, { replace: true });
+      }
+    };
+
+    syncRegionData();
+  }, [urlRegionId, isLoggedIn, user, regionId, regionName, setRegion, setSearchParams]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleRegionSelect = (id: string, name: string) => {
-    setRegion(id, name);
-    setSearchParams({ region: id }, { replace: true });
-  };
-
-  // URL의 region 파라미터를 우선 사용
-  const currentRegionId = urlRegionId || regionId;
-
   return {
-    currentRegionId,
-    currentRegionName: urlRegionName || regionName || DEFAULT_REGION_NAME,
+    // 컴포넌트는 Store가 아닌 URL(urlRegionId)을 기준으로 렌더링한다고 생각하면 됩니다.
+    // 다만 UI에 표시할 이름(Name)이 필요하므로 Store의 값을 보조적으로 사용합니다.
+    currentRegionId: urlRegionId || DEFAULT_REGION_ID,
+    currentRegionName: regionName || DEFAULT_REGION_NAME, 
     isModalOpen,
     openModal,
     closeModal,
