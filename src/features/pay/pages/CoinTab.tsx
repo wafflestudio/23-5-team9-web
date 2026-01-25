@@ -1,32 +1,26 @@
 import { useState } from 'react';
-import { User } from '@/features/user/api/user';
 import { Button, StatCard } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useUser } from '@/features/user/hooks/useUser';
+import { useMyPay } from '@/features/pay/hooks/useMyPay';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { OnboardingRequired } from '@/shared/ui';
 
-interface CoinTabProps {
-  user: User;
-  onDeposit: (amount: number) => void;
-  onWithdraw: (amount: number) => void;
-}
-
 type Mode = 'deposit' | 'withdraw';
 
-const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
+export default function CoinTab() {
   const [mode, setMode] = useState<Mode>('deposit');
   const t = useTranslation();
+  const { user, needsOnboarding } = useUser();
+  const { depositCoin, withdrawCoin } = useMyPay();
 
   const handleAction = (amount: number) => {
     if (mode === 'deposit') {
-      onDeposit(amount);
+      depositCoin(amount);
     } else {
-      onWithdraw(amount);
+      withdrawCoin(amount);
     }
   };
-
-  const { needsOnboarding } = useUser();
 
   if (needsOnboarding) {
     return (
@@ -40,7 +34,7 @@ const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
     <div className="text-center py-5">
       <StatCard
         label={t.pay.ownedCoins}
-        value={user.coin.toLocaleString()}
+        value={user?.coin.toLocaleString() || '0'}
         unit="C"
         layout="vertical"
         variant="outline"
@@ -85,6 +79,4 @@ const CoinTab = ({ user, onDeposit, onWithdraw }: CoinTabProps) => {
       </div>
     </div>
   );
-};
-
-export default CoinTab;
+}

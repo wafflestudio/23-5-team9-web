@@ -1,10 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
 import UserProfile from '@/features/user/components/UserProfile';
-import { CoinTab } from '@/features/pay/components/coin';
+import CoinTab from '@/features/pay/pages/CoinTab';
 import PasswordTab from '@/features/user/components/PasswordTab';
-import { TransactionTab } from '@/features/pay/components/transaction';
-import { useMyPay } from '@/features/pay/hooks/useMyPay';
+import TransactionTab from '@/features/pay/components/transaction/TransactionTab';
 import { useAuth } from '@/features/auth/hooks/store';
 import { Loading, Button, Avatar, DetailHeader } from '@/shared/ui';
 import { PageContainer } from '@/shared/layouts/PageContainer';
@@ -24,7 +23,6 @@ interface MyCarrotProps {
 
 function MyCarrot({ initialTab }: MyCarrotProps) {
   const { user } = useUser({ refetchInterval: POLLING_CONFIG.USER_BALANCE });
-  const { depositCoin, withdrawCoin } = useMyPay();
   const { logout } = useAuth();
   const navigate = useNavigate();
   const onboardingMutation = useOnboarding();
@@ -120,7 +118,7 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
             onSubmit={updateProfile}
           />
         )}
-        {initialTab === 'coin' && <CoinTab user={user} onDeposit={depositCoin} onWithdraw={withdrawCoin} />}
+        {initialTab === 'coin' && <CoinTab />}
         {initialTab === 'transactions' && <TransactionTab />}
         {initialTab === 'password' && <PasswordTab />}
       </div>
