@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { NavBar } from '@/shared/ui';
-import { OnboardingBanner } from '@/features/auth/components/OnboardingBanner';
+import { OnboardingBanner } from '../../features/auth/components/OnboardingBanner';
 import { useUser } from '@/features/user/hooks/useUser';
 
 export function MainLayout() {
