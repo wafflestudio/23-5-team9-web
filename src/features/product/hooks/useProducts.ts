@@ -1,64 +1,89 @@
-import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { createResource } from '@/shared/lib/createResource';
-import client from '@/shared/api/client';
-import type { Product, CreateProductRequest, UpdateProductRequest } from '../types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { productApi, ProductListParams } from '../api/product';
+import type { CreateProductRequest, UpdateProductRequest } from '../types';
 
-const productResource = createResource<Product, CreateProductRequest, UpdateProductRequest>(
-  '/api/product/',
-  'products',
-  { skipAuth: true }
-);
+// Query Keys를 명시적으로 한곳에서 관리
+export const productKeys = {
+  all: ['products'] as const,
+  lists: () => [...productKeys.all, 'list'] as const,
+  list: (filters: ProductListParams) => [...productKeys.lists(), filters] as const,
+  details: () => [...productKeys.all, 'detail'] as const,
+  detail: (id: string) => [...productKeys.details(), id] as const,
+};
 
-export const productKeys = productResource.keys;
-
-function filterProducts(products: Product[] | undefined, category?: string, search?: string) {
-  if (!products) return [];
-  return products.filter(p => {
-    if (category && category !== 'all' && p.category_id !== category) return false;
-    if (search?.trim()) {
-      const q = search.toLowerCase().trim();
-      if (!p.title.toLowerCase().includes(q) && !p.content.toLowerCase().includes(q)) return false;
-    }
-    return true;
-  });
-}
-
-const toResult = (data: Product[] | undefined, isLoading: boolean, error: Error | null, category?: string, search?: string) => ({
-  products: filterProducts(data, category, search),
-  loading: isLoading,
-  error: error?.message ?? null,
-});
-
-export function useProductsQuery(options: { regionId?: string; userId?: string; category?: string; search?: string } = {}) {
+// 통합된 상품 목록 조회 Hook
+export function useProducts(options: { regionId?: string; userId?: string; category?: string; search?: string } = {}) {
   const { regionId, userId, category, search } = options;
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: userId
-      ? [...productKeys.lists(), 'seller', userId]
-      : [...productKeys.lists(), 'region', regionId ?? 'all'],
-    queryFn: () => {
-      const params = userId ? { seller: userId } : regionId ? { region: regionId } : {};
-      const skipAuth = userId !== 'me';
-      return client.get<Product[]>('/api/product/', { params, skipAuth } as any).then(r => r.data);
-    },
-    enabled: userId ? !!userId : true,
+  const params: ProductListParams = {
+    region: regionId,
+    seller: userId,
+    category: category === 'all' ? undefined : category,
+    search: search?.trim() || undefined,
+  };
+
+  const skipAuth = userId !== 'me';
+
+  const queryInfo = useQuery({
+    queryKey: productKeys.list(params),
+    queryFn: () => productApi.getList(params, skipAuth),
   });
 
-  return useMemo(() => toResult(data, isLoading, error, category, search), [data, isLoading, error, category, search]);
+  return {
+    products: queryInfo.data ?? [],
+    loading: queryInfo.isLoading,
+    error: queryInfo.error ? (queryInfo.error as Error).message : null,
+  };
 }
 
-export const useProducts = (category?: string, search?: string, regionId?: string) =>
-  useProductsQuery({ regionId, category, search });
-
-export const useUserProducts = (userId: string, category?: string, search?: string) =>
-  useProductsQuery({ userId, category, search });
-
+// 단일 상품 조회
 export function useProduct(productId: string) {
-  const { data, isLoading, error } = productResource.useDetail(productId);
-  return { product: data, loading: isLoading, error: error?.message ?? null };
+  const queryInfo = useQuery({
+    queryKey: productKeys.detail(productId),
+    queryFn: () => productApi.getById(productId),
+    enabled: !!productId,
+  });
+
+  return {
+    product: queryInfo.data,
+    loading: queryInfo.isLoading,
+    error: queryInfo.error ? (queryInfo.error as Error).message : null,
+  };
 }
 
-export const useCreateProduct = productResource.useCreate;
-export const useUpdateProduct = productResource.useUpdate;
-export const useDeleteProduct = productResource.useDelete;
+// Mutation Hooks
+export function useCreateProduct() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CreateProductRequest) => productApi.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: productKeys.lists() });
+    },
+  });
+}
+
+export function useUpdateProduct() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateProductRequest }) =>
+      productApi.update(id, data),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: productKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: productKeys.detail(result.id) });
+    },
+  });
+}
+
+export function useDeleteProduct() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => productApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: productKeys.lists() });
+    },
+  });
+}
+
+// 기존 호환성을 위한 alias (필요 없으면 삭제 가능)
+export const useUserProducts = (userId: string, category?: string, search?: string) =>
+  useProducts({ userId, category, search });

@@ -21,7 +21,7 @@ export default function ProductList() {
   } = useRegionSelection();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const { products, loading, error } = useProducts(undefined, searchQuery, currentRegionId);
+  const { products, loading, error } = useProducts({ search: searchQuery, regionId: currentRegionId });
 
   return (
     <PageContainer title={t.product.usedGoods}>
