@@ -3,7 +3,7 @@ import { Button, Badge } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 import { translateMultiple } from '@/shared/lib/translate';
-import type { Product } from '@/features/product/api/productApi';
+import type { Product } from '@/features/product/types';
 
 interface ProductDetailViewProps {
   product: Product;

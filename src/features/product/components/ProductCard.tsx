@@ -1,6 +1,6 @@
 import { useState, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { Product } from '@/features/product/api/productApi';
+import { Product } from '@/features/product/types';
 import { Card, CardContent, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
 import { useUserProfile } from '@/features/user/hooks/useUser';
 import { useTranslation } from '@/shared/i18n';

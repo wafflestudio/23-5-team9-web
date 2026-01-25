@@ -4,7 +4,7 @@ import { useProduct, useUserProducts, useDeleteProduct, useUpdateProduct } from 
 import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
 import { useCreateRoom } from "@/features/chat/hooks/useChat";
 import { useTranslation } from "@/shared/i18n";
-import type { UpdateProductRequest } from "@/features/product/api/productApi";
+import type { UpdateProductRequest } from "@/features/product/types";
 import type { ProductFormData } from "@/features/product/hooks/schemas";
 
 export function useProductDetailLogic(productId: string) {
