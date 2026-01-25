@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authApi } from '../api/auth';
-import { useAuth } from '../model/store';
+import { useAuth } from './store';
 import { userApi } from '@/features/user/api/user';
 import { useTranslation } from '@/shared/i18n';
-import type { LoginForm } from '../model/schemas';
+import type { LoginForm } from '../api/schemas';
 
 export function useLogin() {
   const navigate = useNavigate();

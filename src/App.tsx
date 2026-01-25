@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { MainLayout } from '@/shared/layouts/MainLayout';
 import { SocialLoginHandler } from '@/features/auth/components/SocialLoginHandler';
-import { AuthQuerySync } from '@/features/auth/lib';
+import { AuthQuerySync } from '@/features/auth/components/AuthQuerySync';
 
 // Page Imports
 import Login from '@/features/auth/pages/Login';

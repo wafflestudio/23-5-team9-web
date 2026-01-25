@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi, OnboardingParams, PatchUserParams } from '@/features/user/api/user';
-import { useToken, useAuthStore } from '@/features/auth/model';
-import { isAuthError } from '@/features/auth/lib';
+import { useToken, useAuthStore } from '@/features/auth/hooks/store';
+import { isAuthError } from '@/features/auth/api/authErrorHandler';
 
 export const userKeys = {
   all: ['user'] as const,

@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
-import { useAuth } from '@/features/auth/model';
+import { useAuth } from '@/features/auth/hooks/store';
 import { Input, PasswordInput, Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
-import { signupSchema, type SignupForm } from '../model/schemas';
+import { signupSchema, type SignupForm } from '../api/schemas';
 
 interface SignupPageProps {
   onSignup?: () => void;

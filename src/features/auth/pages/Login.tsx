@@ -6,7 +6,7 @@ import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Input, PasswordInput, Button, GoogleIcon } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLogin } from '../hooks/useLogin';
-import { loginSchema, type LoginForm } from '../model/schemas';
+import { loginSchema, type LoginForm } from '../api/schemas';
 
 export default function Login() {
   const { login, serverError } = useLogin();

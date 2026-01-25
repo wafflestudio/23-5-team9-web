@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useIsLoggedIn } from '../model/store';
+import { useIsLoggedIn } from './store';
 import { userKeys } from '@/features/user/hooks/useUser';
 
 // Effect 기반 React Query 캐시 동기화 훅
