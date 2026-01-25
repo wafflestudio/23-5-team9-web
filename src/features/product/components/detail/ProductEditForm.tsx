@@ -1,6 +1,6 @@
-import ProductForm from './ProductForm';
+import ProductForm from '@/features/product/components/form/ProductForm';
 import { useTranslation } from '@/shared/i18n';
-import { useProductDetail } from '../hooks/ProductDetailContext';
+import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
 
 export function ProductEditForm() {
   const t = useTranslation();

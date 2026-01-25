@@ -1,6 +1,6 @@
 import { useState } from "react";
-import ProductCard from "@/features/product/components/ProductCard";
-import SearchBar from "@/features/product/components/SearchBar";
+import ProductCard from "@/features/product/components/list/ProductCard";
+import SearchBar from "@/features/product/components/list/SearchBar";
 import { useProducts } from "@/features/product/hooks/useProducts";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";

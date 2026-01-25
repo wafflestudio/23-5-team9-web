@@ -1,6 +1,6 @@
 import { Button, Avatar } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
-import { useProductDetail } from '../hooks/ProductDetailContext';
+import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
 
 export function SellerSection() {
   const t = useTranslation();

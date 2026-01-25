@@ -1,6 +1,6 @@
 import { useTranslation } from '@/shared/i18n';
-import { useProductDetail } from '../hooks/ProductDetailContext';
-import ProductCard from './ProductCard';
+import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
+import ProductCard from '@/features/product/components/list/ProductCard';
 
 export function SellerProductList() {
   const t = useTranslation();

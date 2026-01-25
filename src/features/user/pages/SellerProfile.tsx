@@ -4,7 +4,7 @@ import { useUserProducts } from '@/features/product/hooks/useProducts';
 import { useCreateRoom } from '@/features/chat/hooks/useChat';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Avatar } from '@/shared/ui';
-import ProductCard from '@/features/product/components/ProductCard';
+import ProductCard from '@/features/product/components/list/ProductCard';
 import { useTranslation } from '@/shared/i18n';
 
 function SellerProfile() {

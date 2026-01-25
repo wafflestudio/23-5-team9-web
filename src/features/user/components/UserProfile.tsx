@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserProducts, useCreateProduct } from "@/features/product/hooks/useProducts";
 import { EmptyState, Button, DetailSection } from '@/shared/ui';
-import ProductCard from "@/features/product/components/ProductCard";
-import ProductForm from "@/features/product/components/ProductForm";
+import ProductCard from "@/features/product/components/list/ProductCard";
+import ProductForm from "@/features/product/components/form/ProductForm";
 import { useTranslation } from '@/shared/i18n';
 
 import { useUser } from '@/features/user/hooks/useUser';

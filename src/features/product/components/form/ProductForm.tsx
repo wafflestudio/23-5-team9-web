@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
-import { productFormSchema, type ProductFormData } from '../hooks/schemas';
+import { productFormSchema, type ProductFormData } from '@/features/product/hooks/schemas';
 
 export type { ProductFormData };
 

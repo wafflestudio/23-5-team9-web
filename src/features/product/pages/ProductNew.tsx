@@ -3,7 +3,7 @@ import { useUser } from "@/features/user/hooks/useUser";
 import { useCreateProduct } from "@/features/product/hooks/useProducts";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DetailHeader, DetailSection, LoginRequired, OnboardingRequired } from '@/shared/ui';
-import ProductForm, { type ProductFormData } from "@/features/product/components/ProductForm";
+import ProductForm, { type ProductFormData } from "@/features/product/components/form/ProductForm";
 import { useTranslation } from "@/shared/i18n";
 
 function ProductNew() {
