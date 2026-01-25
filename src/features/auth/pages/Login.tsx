@@ -3,7 +3,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { TextInput, PasswordInput, Button } from '@mantine/core';
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Stack,
+  Title,
+  Text,
+  Anchor,
+  Container,
+  Alert,
+  Group,
+} from '@mantine/core';
 import { GoogleIcon } from '@/shared/components';
 import { useTranslation } from '@/shared/i18n';
 import { useLogin } from '../hooks/useLogin';
@@ -23,43 +34,67 @@ export default function Login() {
 
   return (
     <PageContainer>
-      <div className="max-w-105 mx-auto w-full mt-10">
-        <h2 className="mb-8 text-2xl font-bold text-text-primary">{t.auth.login}</h2>
+      <Container size="xs" mt="xl" px={0}>
+        <Title order={2} mb="lg" c="slate.9">
+          {t.auth.login}
+        </Title>
 
-        <form onSubmit={handleSubmit(login)} className="flex flex-col gap-3">
-          <TextInput
-            type="email"
-            placeholder={t.auth.email}
-            {...register('email')}
-            error={errors.email?.message}
-          />
+        <form onSubmit={handleSubmit(login)}>
+          <Stack gap="sm">
+            <TextInput
+              type="email"
+              placeholder={t.auth.email}
+              {...register('email')}
+              error={errors.email?.message}
+            />
 
-          <PasswordInput
-            placeholder={t.auth.password}
-            {...register('password')}
-            error={errors.password?.message}
-          />
+            <PasswordInput
+              placeholder={t.auth.password}
+              {...register('password')}
+              error={errors.password?.message}
+            />
 
-          <Button type="submit" disabled={isSubmitting} color="orange" fullWidth className="mt-4 text-lg">
-            {isSubmitting ? t.auth.loggingIn : t.auth.login}
-          </Button>
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              color="brand"
+              fullWidth
+              mt="sm"
+              size="md"
+            >
+              {isSubmitting ? t.auth.loggingIn : t.auth.login}
+            </Button>
 
-          {serverError && <div className="mt-3 text-center text-sm font-medium text-status-error">{serverError}</div>}
+            {serverError && (
+              <Alert color="red" variant="light">
+                <Text ta="center" size="sm" fw={500} c="red">
+                  {serverError}
+                </Text>
+              </Alert>
+            )}
+          </Stack>
         </form>
 
         <Button
-          onClick={() => window.location.href = authApi.getGoogleLoginUrl()}
-          variant="outline" color="gray" fullWidth
-          className="mt-6 flex items-center justify-center gap-2 bg-bg-page"
+          onClick={() => (window.location.href = authApi.getGoogleLoginUrl())}
+          variant="outline"
+          color="gray"
+          fullWidth
+          mt="lg"
+          leftSection={<GoogleIcon />}
         >
-          <GoogleIcon /> {t.auth.continueWithGoogle}
+          {t.auth.continueWithGoogle}
         </Button>
 
-        <div className="mt-6 text-center text-sm text-text-secondary">
-          {t.auth.noAccount}
-          <Link to="/auth/signup" className="ml-1.5 font-semibold text-primary hover:underline">{t.auth.signup}</Link>
-        </div>
-      </div>
+        <Group justify="center" mt="lg" gap="xs">
+          <Text size="sm" c="slate.5">
+            {t.auth.noAccount}
+          </Text>
+          <Anchor component={Link} to="/auth/signup" fw={600} c="brand.5">
+            {t.auth.signup}
+          </Anchor>
+        </Group>
+      </Container>
     </PageContainer>
   );
 }
