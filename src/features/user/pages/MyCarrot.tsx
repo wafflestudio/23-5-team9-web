@@ -5,7 +5,7 @@ import CoinTab from '@/features/pay/components/CoinTab';
 import PasswordTab from '@/features/user/components/PasswordTab';
 import TransactionTab from '@/features/pay/components/TransactionTab';
 import { useMyPay } from '@/features/pay/hooks/useMyPay';
-import { useAuth } from '@/shared/store/authStore';
+import { useAuth } from '@/features/auth/model';
 import { Loading, Button, Avatar, DetailHeader } from '@/shared/ui';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { useTranslation } from '@/shared/i18n';

@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
-import { useAuth } from '@/shared/store/authStore';
+import { useAuth } from '@/features/auth/model';
 import { userApi } from '@/features/user/api/user';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Input, PasswordInput, Button, GoogleIcon } from '@/shared/ui';

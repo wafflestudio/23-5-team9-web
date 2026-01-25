@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
-import { useAuth } from '@/shared/store/authStore';
+import { useAuth } from '@/features/auth/model';
 import { Input, PasswordInput, Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { signupSchema, type SignupForm } from '../schemas';

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { MAIN_API_URL } from './config';
-import { useAuthStore } from '@/shared/store/authStore';
+import { useAuthStore } from '@/features/auth/model';
 
 const client: AxiosInstance = axios.create({
   baseURL: MAIN_API_URL,
