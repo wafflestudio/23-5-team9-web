@@ -19,11 +19,11 @@ export interface LoginResponse {
 
 export const authApi = {
   signup: async (data: SignupRequest) => {
-    return client.post('api/user/', { json: data }).json();
+    return client.post('/api/user/', { json: data }).json();
   },
 
   login: async (data: LoginRequest) => {
-    return client.post('api/auth/tokens', { json: data }).json<LoginResponse>();
+    return client.post('/api/auth/tokens', { json: data }).json<LoginResponse>();
   },
 
   getGoogleLoginUrl: (): string => `${SOCIAL_LOGIN_API_URL}/api/auth/oauth2/login/google`,

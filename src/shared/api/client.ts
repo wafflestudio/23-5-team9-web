@@ -45,7 +45,7 @@ async function handleTokenRefresh(): Promise<string> {
 }
 
 const client: KyInstance = ky.create({
-  prefixUrl: MAIN_API_URL,
+  prefixUrl: MAIN_API_URL || undefined,
   headers: {
     'Content-Type': 'application/json',
   },

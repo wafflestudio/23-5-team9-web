@@ -36,18 +36,18 @@ export interface PublicUserProfile {
 
 export const userApi = {
   getMe: async (): Promise<User> => {
-    return client.get('api/user/me').json<User>();
+    return client.get('/api/user/me').json<User>();
   },
 
   onboardMe: async (data: OnboardingParams): Promise<User> => {
-    return client.post('api/user/me/onboard', { json: data }).json<User>();
+    return client.post('/api/user/me/onboard', { json: data }).json<User>();
   },
 
   patchMe: async (data: PatchUserParams): Promise<User> => {
-    return client.patch('api/user/me', { json: data }).json<User>();
+    return client.patch('/api/user/me', { json: data }).json<User>();
   },
 
   getUser: async (userId: string): Promise<PublicUserProfile> => {
-    return client.get(`api/user/${userId}`).json<PublicUserProfile>();
+    return client.get(`/api/user/${userId}`).json<PublicUserProfile>();
   },
 };

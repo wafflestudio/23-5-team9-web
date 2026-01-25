@@ -24,7 +24,13 @@ export default function Onboarding() {
         await onboardingMutation.mutateAsync(data);
         navigate(redirect);
       } catch (err: any) {
-        const detail = err.response?.data?.detail || t.auth.onboardingFailed;
+        let detail = t.auth.onboardingFailed;
+        if (err.response) {
+          try {
+            const errData = await err.response.json();
+            detail = errData?.detail || t.auth.onboardingFailed;
+          } catch { /* ignore */ }
+        }
         throw new Error(detail);
       }
   };

@@ -43,7 +43,13 @@ export default function Signup({ onSignup }: SignupPageProps) {
       navigate('/auth/onboarding');
     } catch (err: any) {
       console.error(err);
-      const errorMsg = err.response?.data?.error_msg || err.response?.data?.detail || t.auth.signupError;
+      let errorMsg = t.auth.signupError;
+      if (err.response) {
+        try {
+          const errData = await err.response.json();
+          errorMsg = errData?.error_msg || errData?.detail || t.auth.signupError;
+        } catch { /* ignore */ }
+      }
       setServerError(errorMsg);
     }
   };

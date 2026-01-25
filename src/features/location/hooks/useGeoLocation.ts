@@ -27,7 +27,13 @@ export function useGeoLocation() {
             resolve(data);
           } catch (error: any) {
             // API 에러 처리
-            const msg = error.response?.data?.detail || t.location.serverLocationError;
+            let msg = t.location.serverLocationError;
+            if (error.response) {
+              try {
+                const errData = await error.response.json();
+                msg = errData?.detail || t.location.serverLocationError;
+              } catch { /* ignore */ }
+            }
             reject(new Error(msg));
           } finally {
             setDetecting(false);

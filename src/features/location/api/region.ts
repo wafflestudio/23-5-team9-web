@@ -22,7 +22,7 @@ export async function searchRegions(
   offset: number = 0
 ): Promise<Region[]> {
   return client
-    .get('api/region/search', {
+    .get('/api/region/search', {
       searchParams: { query, limit, offset },
     })
     .json<Region[]>();
@@ -31,7 +31,7 @@ export async function searchRegions(
 // 내 주변 지역 찾기 (좌표 기반)
 export async function fetchNearbyRegion(lat: number, long: number): Promise<Region> {
   return client
-    .get('api/region/nearby', {
+    .get('/api/region/nearby', {
       searchParams: { lat, long },
     })
     .json<Region>();
@@ -39,12 +39,12 @@ export async function fetchNearbyRegion(lat: number, long: number): Promise<Regi
 
 // 시/도 목록 조회
 export async function fetchSidoList(): Promise<string[]> {
-  return client.get('api/region/sido').json<string[]>();
+  return client.get('/api/region/sido').json<string[]>();
 }
 
 // 시/구/군 목록 조회
 export async function fetchSigugunList(sidoName: string): Promise<string[]> {
-  return client.get(`api/region/sido/${sidoName}/sigugun`).json<string[]>();
+  return client.get(`/api/region/sido/${sidoName}/sigugun`).json<string[]>();
 }
 
 // 동 목록 조회
@@ -53,11 +53,11 @@ export async function fetchDongList(
   sigugunName: string
 ): Promise<DongEntry[]> {
   return client
-    .get(`api/region/sido/${sidoName}/sigugun/${sigugunName}/dong`)
+    .get(`/api/region/sido/${sidoName}/sigugun/${sigugunName}/dong`)
     .json<DongEntry[]>();
 }
 
 // 특정 지역 ID로 상세 조회
 export async function fetchRegionById(regionId: string): Promise<Region> {
-  return client.get(`api/region/${regionId}`).json<Region>();
+  return client.get(`/api/region/${regionId}`).json<Region>();
 }

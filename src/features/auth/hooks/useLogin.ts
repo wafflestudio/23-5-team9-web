@@ -29,11 +29,16 @@ export function useLogin() {
         : redirect
       );
     } catch (err: any) {
-      const errData = err.response?.data;
-      setServerError(
-        errData?.detail ?? errData?.message ?? errData?.error ??
-        (err.message ? t.auth.networkError : t.auth.invalidCredentials)
-      );
+      let message = t.auth.networkError;
+      if (err.response) {
+        try {
+          const errData = await err.response.json();
+          message = errData?.detail ?? errData?.message ?? errData?.error ?? t.auth.invalidCredentials;
+        } catch {
+          message = t.auth.invalidCredentials;
+        }
+      }
+      setServerError(message);
     }
   };
 
