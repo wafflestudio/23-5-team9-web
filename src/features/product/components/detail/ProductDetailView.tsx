@@ -105,7 +105,7 @@ export function ProductDetailView() {
                 <button
                   key={img.id}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`rounded-md overflow-hidden border ${idx === currentIndex ? 'ring-2 ring-primary' : ''}`}
+                  className={`rounded-md overflow-hidden ${idx === currentIndex ? 'ring-2 ring-primary' : ''}`}
                 >
                   <Thumbnail src={img.image_url} alt={product.title} size={56} />
                 </button>
