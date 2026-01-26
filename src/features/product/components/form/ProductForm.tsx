@@ -4,6 +4,7 @@ import { Button, CardImage } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { productFormSchema, type ProductFormData } from '@/features/product/hooks/schemas';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Sortable from 'sortablejs';
 import { imageApi } from '@/features/product/api/imageApi';
 
 export type { ProductFormData };
@@ -55,6 +56,7 @@ const ProductForm = ({
   const [uploadedImages, setUploadedImages] = useState<UploadEntry[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const imagesContainerRef = useRef<HTMLDivElement | null>(null);
 
   // If initialData.image_ids present, fetch their urls
   useEffect(() => {
@@ -121,6 +123,27 @@ const ProductForm = ({
     if (previewUrl) {
       try { URL.revokeObjectURL(previewUrl); } catch {};
     }
+  }, []);
+
+  useEffect(() => {
+    const el = imagesContainerRef.current;
+    if (!el) return;
+    const sortable = Sortable.create(el, {
+      animation: 150,
+      ghostClass: 'opacity-50',
+      chosenClass: 'invisible',
+      onEnd: (evt : any) => {
+        const oldIndex = evt.oldIndex ?? 0;
+        const newIndex = evt.newIndex ?? 0;
+        setUploadedImages((prev) => {
+          const copy = [...prev];
+          const [moved] = copy.splice(oldIndex, 1);
+          copy.splice(newIndex, 0, moved);
+          return copy;
+        });
+      },
+    });
+    return () => { try { sortable.destroy(); } catch {} };
   }, []);
 
   const handleImageError = useCallback((clientId: string) => {
@@ -213,12 +236,12 @@ const ProductForm = ({
           </div>
         </div>
 
-        <div className="flex gap-3 mt-3 flex-wrap items-start">
+        <div ref={imagesContainerRef} className="flex gap-3 mt-3 flex-wrap items-start">
           {uploadedImages.length === 0 && (
             <div className="text-sm text-text-secondary ml-1">{t.product.imagesNone}</div>
           )}
           {uploadedImages.map((img, idx) => (
-            <div key={img.id ?? img.previewUrl ?? idx} className="relative">
+            <div key={img.clientId} className="relative" data-clientid={img.clientId}>
               <CardImage
                 src={img.previewUrl ?? img.image_url ?? undefined}
                 alt={`preview-${idx}`}
