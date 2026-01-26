@@ -142,8 +142,8 @@ const ProductForm = ({
     if (!el) return;
     const sortable = Sortable.create(el, {
       animation: 150,
-      ghostClass: 'opacity-50',
-      chosenClass: 'invisible',
+      // Keep dragged item fully visible and avoid making the original invisible.
+      // Removing custom ghostClass/chosenClass prevents the image from becoming transparent/invisible while dragging.
       onEnd: (evt : any) => {
         const oldIndex = evt.oldIndex ?? 0;
         const newIndex = evt.newIndex ?? 0;
