@@ -6,7 +6,7 @@ export type { SelectOption } from './forms';
 export { Badge, Loading, ErrorMessage, EmptyState, LoginRequired, OnboardingRequired } from './feedback';
 
 // Layout
-export { Card, CardImage, CardContent, CardTitle, CardMeta, DetailSection, DetailImage, DetailHeader } from './layout';
+export { Card, CardImage, CardContent, CardTitle, CardMeta, DetailSection, DetailImage, DetailHeader, Thumbnail } from './layout';
 
 // Navigation
 export { NavBar, TabBar } from './navigation';

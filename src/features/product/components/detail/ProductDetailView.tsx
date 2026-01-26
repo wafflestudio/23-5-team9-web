@@ -1,4 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { imageApi } from '@/features/product/api/imageApi';
+import type { ImageUploadResponse } from '@/features/product/api/imageApi';
+import { DetailImage, Thumbnail } from '@/shared/ui';
 import { Button, Badge } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
@@ -9,6 +13,21 @@ export function ProductDetailView() {
   const t = useTranslation();
   const { language } = useLanguage();
   const { product, isLiked, isOwner, isDeleting, handleLike, startEditing, handleDelete } = useProductDetail();
+
+  const { data: images } = useQuery<ImageUploadResponse[]>({
+    queryKey: ['product', 'images', product?.id],
+    queryFn: async () => {
+      if (!product?.image_ids || product.image_ids.length === 0) return [];
+      const results = await Promise.all(product.image_ids.map(id => imageApi.getById(id)));
+      return results;
+    },
+    enabled: !!product,
+  });
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [images]);
 
   const [isTranslated, setIsTranslated] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
@@ -52,6 +71,49 @@ export function ProductDetailView() {
 
   return (
     <>
+      {images && images.length > 0 && (
+        <div className="mb-4">
+          <div className="relative">
+            <DetailImage src={images[currentIndex].image_url} alt={product.title} />
+
+            <div className="absolute left-2 top-1/2 -translate-y-1/2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
+                disabled={currentIndex === 0}
+              >
+                ‹
+              </Button>
+            </div>
+
+            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentIndex((i) => Math.min(images.length - 1, i + 1))}
+                disabled={currentIndex === images.length - 1}
+              >
+                ›
+              </Button>
+            </div>
+          </div>
+
+          {images.length > 1 && (
+            <div className="mt-3 flex items-center justify-center gap-3">
+              {images.map((img, idx) => (
+                <button
+                  key={img.id}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`rounded-md overflow-hidden border ${idx === currentIndex ? 'ring-2 ring-primary' : ''}`}
+                >
+                  <Thumbnail src={img.image_url} alt={product.title} size={56} />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           {product.is_sold && <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>}

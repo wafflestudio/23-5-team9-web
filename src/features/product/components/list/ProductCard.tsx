@@ -1,7 +1,10 @@
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import type { ImageUploadResponse } from '@/features/product/api/imageApi';
 import { Product } from '@/features/product/types';
-import { Card, CardContent, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
+import { Card, CardContent, CardImage, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
+import { imageApi } from '@/features/product/api/imageApi';
 import { useUserProfile } from '@/features/user/hooks/useUser';
 import { useTranslation } from '@/shared/i18n';
 
@@ -22,6 +25,14 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
 
   // 이벤트 핸들러 (상단 분리)
   const stop = (e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); };
+
+  const firstImageId = useMemo(() => (product.image_ids && product.image_ids.length > 0 ? product.image_ids[0] : undefined), [product.image_ids]);
+
+  const { data: firstImage } = useQuery<ImageUploadResponse | null>({
+    queryKey: ['product', 'image', firstImageId],
+    queryFn: async () => (firstImageId ? await imageApi.getById(firstImageId) : null),
+    enabled: !!firstImageId,
+  });
 
   const handleLike = (e: MouseEvent) => {
     stop(e);
@@ -47,6 +58,11 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
             <div className="mb-2">
               <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>
             </div>
+          )}
+
+          {/** product image (only render when image_ids exist) */}
+          {product.image_ids && product.image_ids.length > 0 && (
+            <CardImage src={firstImage?.image_url ?? undefined} alt={product.title} aspectRatio="square" />
           )}
 
           <CardTitle className="tracking-tighter break-keep text-text-heading">{product.title}</CardTitle>
