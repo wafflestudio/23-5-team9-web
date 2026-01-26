@@ -118,6 +118,18 @@ const ProductForm = ({
     for (let i = 0; i < files.length; i++) uploadFile(files[i]);
   }, [uploadFile]);
 
+  // Only treat drag-over as a file-drop interaction when the drag contains files.
+  const handleFormDragOver = useCallback((e: React.DragEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const types = Array.from(e.dataTransfer?.types ?? [] as any) as string[];
+      const hasFiles = types.includes('Files');
+      setDragOver(hasFiles);
+    } catch {
+      setDragOver(false);
+    }
+  }, []);
+
   const removeImage = useCallback((id?: string, previewUrl?: string) => {
     setUploadedImages((prev) => prev.filter((p) => (id ? p.id !== id : p.previewUrl !== previewUrl)));
     if (previewUrl) {
@@ -176,14 +188,12 @@ const ProductForm = ({
   return (
     <form
       onSubmit={wrappedSubmit}
-      onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+      onDragOver={handleFormDragOver}
       onDragLeave={() => setDragOver(false)}
       onDrop={handleDrop}
       className="relative"
     >
-      {dragOver && (
-        <div className="absolute inset-0 pointer-events-none rounded-lg border-2 border-dashed border-primary bg-primary/5" />
-      )}
+      {/* Localized drag state: remove full-form overlay and only change button/message color */}
         <input ref={inputRef} type="file" accept="image/*" multiple onChange={handleFileChange} className="hidden" />
       <div className="mb-2">
         <input
@@ -228,7 +238,15 @@ const ProductForm = ({
       <div className="mt-4">
         <div className="mb-2">
           <div className={`flex flex-col items-center justify-center gap-2 py-4 ${dragOver ? 'text-primary' : 'text-text-secondary'}`}>
-            <Button type="button" size="sm" variant="outline" onClick={() => inputRef.current?.click()} className="px-3">{t.product.imagesSelect}</Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => inputRef.current?.click()}
+              className={`px-3 ${dragOver ? 'text-primary border-primary' : ''}`}
+            >
+              {t.product.imagesSelect}
+            </Button>
             <div className="text-sm mt-2">{t.product.imagesDropzone}</div>
           </div>
           <div className="flex justify-end mt-2">
