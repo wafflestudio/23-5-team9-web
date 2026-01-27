@@ -86,7 +86,7 @@ export function ProductDetailView() {
                 disabled={currentIndex === 0}
                 aria-label="previous image"
               >
-                ‹
+                ←
               </Button>
 
               <div className="flex items-center gap-3">
@@ -109,7 +109,7 @@ export function ProductDetailView() {
                 disabled={currentIndex === images.length - 1}
                 aria-label="next image"
               >
-                ›
+                →
               </Button>
             </div>
           )}
