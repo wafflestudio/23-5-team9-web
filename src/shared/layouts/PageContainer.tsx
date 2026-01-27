@@ -21,7 +21,7 @@ export function PageContainer({ title, rightAction, children, fullWidth = false 
           {rightAction && <div>{rightAction}</div>}
         </header>
       )}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col min-h-0">
         {children}
       </main>
     </div>
