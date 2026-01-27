@@ -19,6 +19,8 @@ export const en: TranslationKeys = {
     hide: 'Hide',
     random: 'Random',
     link: 'Link',
+    upload: 'Upload',
+    uploading: 'Uploading...',
     user: 'User',
   },
 
@@ -191,6 +193,7 @@ export const en: TranslationKeys = {
     email: 'Email',
     enterImageUrl: 'Enter image URL:',
     saveProfile: 'Save',
+    imageUploadFailed: 'Profile image upload failed.',
     savedLocationSetPrefix: "Set to saved location ('",
     savedLocationSetSuffix: "').",
     currentLocationSetPrefix: "Set to current location ('",

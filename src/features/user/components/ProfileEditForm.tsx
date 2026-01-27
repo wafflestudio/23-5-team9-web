@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   fetchSidoList,
   fetchSigugunList,
@@ -10,6 +10,7 @@ import {
 import { useGeoLocation } from '@/features/location/hooks/useGeoLocation';
 import { useUser } from '@/features/user/hooks/useUser';
 import { Button, Input, Select, Avatar } from '@/shared/ui';
+import { imageApi as userImageApi } from '@/features/user/api/imageApi';
 import { useTranslation } from '@/shared/i18n';
 
 interface ProfileEditFormProps {
@@ -34,6 +35,8 @@ export default function ProfileEditForm({
   const t = useTranslation();
   const [nickname, setNickname] = useState(initialNickname);
   const [profileImage, setProfileImage] = useState(initialProfileImage);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
 
   // --- 지역 선택 관련 State ---
@@ -179,6 +182,32 @@ export default function ProfileEditForm({
     if (url) setProfileImage(url);
   };
 
+  const triggerFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const res = await userImageApi.upload(file);
+      if (res && res.image_url) {
+        setProfileImage(res.image_url);
+      } else {
+        alert(t.user.imageUploadFailed || 'Image upload failed');
+      }
+    } catch (err) {
+      console.error(err);
+      alert(t.user.imageUploadFailed || 'Image upload failed');
+    } finally {
+      setUploading(false);
+      // clear the input so same file can be selected again
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   // 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -228,8 +257,12 @@ export default function ProfileEditForm({
             <Button type="button" size="sm" variant="secondary" onClick={generateRandomImage} className="text-xs py-1 px-3">
                 {t.common.random}
             </Button>
+            <Button type="button" size="sm" variant="secondary" onClick={triggerFileSelect} className="text-xs py-1 px-3">
+              {uploading ? t.common.uploading || 'Uploading...' : t.common.upload}
+            </Button>
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
             <Button type="button" size="sm" variant="secondary" onClick={handleLinkInput} className="text-xs py-1 px-3">
-                {t.common.link}
+              {t.common.link}
             </Button>
           </div>
         </div>

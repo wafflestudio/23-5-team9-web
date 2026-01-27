@@ -17,6 +17,8 @@ export const ko = {
     hide: '숨기기',
     random: '랜덤',
     link: '링크',
+    upload: '업로드',
+    uploading: '업로드 중...',
     user: '사용자',
   },
 
@@ -189,6 +191,7 @@ export const ko = {
     email: '이메일',
     enterImageUrl: '이미지 URL을 입력하세요:',
     saveProfile: '저장하기',
+    imageUploadFailed: '프로필 이미지 업로드에 실패했습니다.',
     savedLocationSetPrefix: "저장된 위치('",
     savedLocationSetSuffix: "')로 설정되었습니다.",
     currentLocationSetPrefix: "현재 위치('",
