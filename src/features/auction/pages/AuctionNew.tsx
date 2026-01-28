@@ -1,27 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Sortable from 'sortablejs';
 import { useUser } from '@/features/user/hooks/useUser';
 import { useCreateAuction } from '@/features/auction/hooks/useAuctions';
 import { auctionFormSchema, type AuctionFormData } from '@/features/auction/hooks/schemas';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { DetailHeader, DetailSection, LoginRequired, OnboardingRequired, Button, CardImage } from '@/shared/ui';
-import { imageApi } from '@/features/product/api/imageApi';
+import { DetailHeader, DetailSection, LoginRequired, OnboardingRequired, Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { getErrorMessage } from '@/shared/api/types';
-
-type UploadEntry = {
-  id?: string;
-  image_url?: string;
-  file?: File;
-  uploading: boolean;
-  progress: number;
-  previewUrl?: string;
-  failedToLoad?: boolean;
-  clientId: string;
-};
+import { useImageUpload, ImageUploadSection } from '@/features/image';
 
 export default function AuctionNew() {
   const navigate = useNavigate();
@@ -46,90 +33,23 @@ export default function AuctionNew() {
     },
   });
 
-  const [uploadedImages, setUploadedImages] = useState<UploadEntry[]>([]);
-  const [dragOver, setDragOver] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const imagesContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const uploadFile = useCallback(async (file: File) => {
-    const clientId = crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
-    const entry: UploadEntry = { clientId, file, uploading: true, progress: 0, previewUrl: URL.createObjectURL(file) };
-    setUploadedImages((prev) => [...prev, entry]);
-
-    try {
-      const res = await imageApi.upload(file, (ev) => {
-        if (ev.total && ev.loaded) {
-          const pct = Math.round((ev.loaded / ev.total) * 100);
-          setUploadedImages((prev) => prev.map((p) => (p.clientId === clientId ? { ...p, progress: pct } : p)));
-        }
-      });
-
-      setUploadedImages((prev) => prev.map((p) => (p.clientId === clientId ? { ...p, id: res.id, image_url: res.image_url, uploading: false, progress: 100 } : p)));
-    } catch {
-      setUploadedImages((prev) => prev.map((p) => (p.clientId === clientId ? { ...p, uploading: false } : p)));
-      alert(t.product.imageUploadFailed);
-    }
-  }, [t]);
-
-  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    for (let i = 0; i < files.length; i++) {
-      uploadFile(files[i]);
-    }
-    if (e.currentTarget) e.currentTarget.value = '';
-  }, [uploadFile]);
-
-  const handleDrop = useCallback((e: React.DragEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setDragOver(false);
-    const files = e.dataTransfer.files;
-    for (let i = 0; i < files.length; i++) uploadFile(files[i]);
-  }, [uploadFile]);
-
-  const handleFormDragOver = useCallback((e: React.DragEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const types = Array.from(e.dataTransfer?.types ?? []) as string[];
-    setDragOver(types.includes('Files'));
-  }, []);
-
-  const removeImage = useCallback((id?: string, previewUrl?: string) => {
-    setUploadedImages((prev) => prev.filter((p) => (id ? p.id !== id : p.previewUrl !== previewUrl)));
-    if (previewUrl) {
-      try { URL.revokeObjectURL(previewUrl); } catch {}
-    }
-  }, []);
-
-  useEffect(() => {
-    const el = imagesContainerRef.current;
-    if (!el) return;
-    const sortable = Sortable.create(el, {
-      animation: 150,
-      onEnd: (evt: any) => {
-        const oldIndex = evt.oldIndex ?? 0;
-        const newIndex = evt.newIndex ?? 0;
-        setUploadedImages((prev) => {
-          const copy = [...prev];
-          const [moved] = copy.splice(oldIndex, 1);
-          copy.splice(newIndex, 0, moved);
-          return copy;
-        });
-      },
-    });
-    return () => { try { sortable.destroy(); } catch {} };
-  }, []);
-
-  const handleImageError = useCallback((clientId: string) => {
-    setUploadedImages((prev) => prev.map((p) => {
-      if (p.clientId !== clientId) return p;
-      if (p.previewUrl && p.image_url) {
-        return { ...p, image_url: undefined };
-      }
-      return { ...p, failedToLoad: true };
-    }));
-  }, []);
-
-  const isAnyUploading = uploadedImages.some((u) => u.uploading);
+  const {
+    images,
+    dragOver,
+    inputRef,
+    containerRef,
+    isAnyUploading,
+    imageIds,
+    openFilePicker,
+    handleFileChange,
+    handleDrop,
+    handleDragOver,
+    handleDragLeave,
+    removeImage,
+    handleImageError,
+  } = useImageUpload({
+    onUploadFailed: () => alert(t.product.imageUploadFailed),
+  });
 
   if (!isLoggedIn) {
     return (
@@ -155,24 +75,20 @@ export default function AuctionNew() {
       return;
     }
 
-    const endAt = new Date(`${data.end_date}T${data.end_time}`).toISOString();
-
     try {
-      const payload = {
+      const newAuction = await createAuction.mutateAsync({
         product_data: {
           title: data.title,
           content: data.content,
           price: data.starting_price,
-          image_ids: uploadedImages.map((i) => i.id).filter(Boolean) as string[],
+          image_ids: imageIds,
           category_id: data.category_id,
         },
         auction_data: {
           starting_price: data.starting_price,
-          end_at: endAt,
+          end_at: new Date(`${data.end_date}T${data.end_time}`).toISOString(),
         },
-      };
-
-      const newAuction = await createAuction.mutateAsync(payload);
+      });
       alert(t.auction.registered);
       navigate(`/auction/${newAuction.id}`);
     } catch (err) {
@@ -180,9 +96,7 @@ export default function AuctionNew() {
     }
   });
 
-  // 최소 종료 시간 (현재 시간 + 1시간)
-  const now = new Date();
-  const minDate = now.toISOString().split('T')[0];
+  const minDate = new Date().toISOString().split('T')[0];
 
   return (
     <PageContainer title={t.auction.create}>
@@ -190,14 +104,11 @@ export default function AuctionNew() {
       <DetailSection>
         <form
           onSubmit={onSubmit}
-          onDragOver={handleFormDragOver}
-          onDragLeave={() => setDragOver(false)}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className="relative"
         >
-          <input ref={inputRef} type="file" accept="image/*" multiple onChange={handleFileChange} className="hidden" />
-
-          {/* Title */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-text-secondary mb-1">{t.auction.productTitle}</label>
             <input
@@ -209,7 +120,6 @@ export default function AuctionNew() {
             {errors.title && <p className="mt-1 text-sm text-status-error">{errors.title.message}</p>}
           </div>
 
-          {/* Starting price */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-text-secondary mb-1">{t.auction.startingPrice}</label>
             <div className="flex items-baseline gap-1">
@@ -225,7 +135,6 @@ export default function AuctionNew() {
             {errors.starting_price && <p className="mt-1 text-sm text-status-error">{errors.starting_price.message}</p>}
           </div>
 
-          {/* End date/time */}
           <div className="mb-4 grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-text-secondary mb-1">{t.auction.endDate}</label>
@@ -248,7 +157,6 @@ export default function AuctionNew() {
             </div>
           </div>
 
-          {/* Product description */}
           <div className="mt-6 border-t border-border-base pt-6">
             <label className="block text-sm font-medium text-text-secondary mb-1">{t.auction.productDescription}</label>
             <textarea
@@ -260,64 +168,26 @@ export default function AuctionNew() {
             {errors.content && <p className="mt-1 text-sm text-status-error">{errors.content.message}</p>}
           </div>
 
-          {/* 이미지 업로드 */}
-          <div className="mt-4">
-            <div className="mb-2">
-              <div className={`flex flex-col items-center justify-center gap-2 py-4 ${dragOver ? 'text-primary' : 'text-text-secondary'}`}>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={() => inputRef.current?.click()}
-                  className={`px-3 ${dragOver ? 'text-primary border-primary' : ''}`}
-                >
-                  {t.product.imagesSelect}
-                </Button>
-                <div className="text-sm mt-2">{t.product.imagesDropzone}</div>
-              </div>
-              <div className="flex justify-end mt-2">
-                <div className="text-sm text-text-secondary">{t.product.imagesSelected.replace('{count}', String(uploadedImages.length))}</div>
-              </div>
-            </div>
+          <ImageUploadSection
+            images={images}
+            dragOver={dragOver}
+            inputRef={inputRef}
+            containerRef={containerRef}
+            onFileChange={handleFileChange}
+            onOpenPicker={openFilePicker}
+            onRemove={removeImage}
+            onImageError={handleImageError}
+            labels={{
+              select: t.product.imagesSelect,
+              dropzone: t.product.imagesDropzone,
+              selected: t.product.imagesSelected,
+              none: t.product.imagesNone,
+              delete: t.common.delete,
+            }}
+          />
 
-            <div ref={imagesContainerRef} className="flex gap-3 mt-3 flex-wrap items-start">
-              {uploadedImages.length === 0 && (
-                <div className="text-sm text-text-secondary ml-1">{t.product.imagesNone}</div>
-              )}
-              {uploadedImages.map((img, idx) => (
-                <div key={img.clientId} className="relative" data-clientid={img.clientId}>
-                  <CardImage
-                    src={img.previewUrl ?? img.image_url ?? undefined}
-                    alt={`preview-${idx}`}
-                    className="w-28 h-28"
-                    onError={() => handleImageError(img.clientId)}
-                  />
-
-                  {img.uploading && (
-                    <div className="absolute top-0 left-0 w-28 h-28 bg-black bg-opacity-40 flex items-center justify-center rounded-xl">
-                      <div className="text-white text-sm">{img.progress}%</div>
-                    </div>
-                  )}
-
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="secondary"
-                    onClick={(e) => { e.stopPropagation(); removeImage(img.id, img.previewUrl); }}
-                    className="absolute -top-2 -right-2"
-                    aria-label="remove image"
-                  >
-                    {t.common.delete}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 카테고리 (hidden) */}
           <input type="hidden" {...register('category_id')} value="1" />
 
-          {/* 제출 버튼 */}
           <div className="flex items-center justify-end pt-6 mt-6 border-t border-border-base">
             <div className="flex gap-2">
               <Button size="sm" variant="ghost" type="button" onClick={() => navigate(-1)}>

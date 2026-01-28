@@ -6,20 +6,7 @@ import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
 import { useTranslation } from "@/shared/i18n";
 import { useDetailHandlers } from "@/features/product/hooks/shared";
 import { getErrorMessage } from "@/shared/api/types";
-
-function formatRemainingTime(endAt: string, t: { timeEnded: string; days: string; hours: string; minutes: string; seconds: string }): string {
-  const diff = new Date(endAt).getTime() - Date.now();
-  if (diff <= 0) return t.timeEnded;
-
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-
-  if (d > 0) return `${d}${t.days} ${h}${t.hours} ${m}${t.minutes}`;
-  if (h > 0) return `${h}${t.hours} ${m}${t.minutes} ${s}${t.seconds}`;
-  return `${m}${t.minutes} ${s}${t.seconds}`;
-}
+import { formatRemainingTime } from "@/shared/lib/formatting";
 
 export function useAuctionDetailLogic(auctionId: string) {
   const navigate = useNavigate();
