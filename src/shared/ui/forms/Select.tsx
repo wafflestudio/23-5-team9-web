@@ -13,15 +13,18 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ options, label, error, className = '', ...props }, ref) => {
+  ({ options, label, error, className = '', disabled, ...props }, ref) => {
     return (
       <div className="w-full">
         {label && <label className="block mb-2 font-bold text-sm text-text-secondary">{label}</label>}
         <select
           ref={ref}
-          className={`w-full rounded-xl bg-bg-page border border-border-medium p-4 text-base outline-none transition-all appearance-none focus:border-primary focus:ring-1 focus:ring-primary/20 ${
-            error ? 'border-status-error/50 ring-1 ring-status-error/20' : ''
-          } ${className}`}
+          disabled={disabled}
+          className={`w-full rounded-xl border p-4 text-base outline-none transition-all appearance-none ${
+            disabled
+              ? 'bg-bg-secondary border-border-light text-text-tertiary cursor-not-allowed opacity-60'
+              : 'bg-bg-page border-border-medium focus:border-primary focus:ring-1 focus:ring-primary/20'
+          } ${error ? 'border-status-error/50 ring-1 ring-status-error/20' : ''} ${className}`}
           {...props}
         >
           {options.map((option) => (
