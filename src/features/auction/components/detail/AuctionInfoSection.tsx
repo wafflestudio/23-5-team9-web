@@ -1,4 +1,4 @@
-import { Badge } from '@/shared/ui';
+import { Badge, Input, Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 import { useAuctionDetail } from '@/features/auction/hooks/AuctionDetailContext';
@@ -17,7 +17,7 @@ function formatDateTime(dateStr: string, locale: string): string {
 export function AuctionInfoSection() {
   const t = useTranslation();
   const { language } = useLanguage();
-  const { auction, isEnded, remainingTime } = useAuctionDetail();
+  const { auction, isEnded, remainingTime, bidPrice, setBidPrice, minBidPrice, handleBid, isBidding } = useAuctionDetail();
 
   if (!auction) return null;
 
@@ -53,6 +53,34 @@ export function AuctionInfoSection() {
           <span className="text-text-body">{t.auction.bidsCount.replace('{count}', String(auction.bid_count))}</span>
         </div>
       </div>
+
+      {/* Bid Section */}
+      {!isEnded && (
+        <div className="pt-4 border-t border-border-base">
+          <h3 className="font-semibold mb-3">{t.auction.placeBid}</h3>
+          <p className="text-sm text-text-muted mb-3">
+            {t.auction.minimumBid}: {minBidPrice.toLocaleString()}{t.common.won} {t.auction.orMore}
+          </p>
+          <div className="flex gap-2">
+            <Input
+              type="number"
+              value={bidPrice}
+              onChange={(e) => setBidPrice(e.target.value)}
+              placeholder={t.auction.enterBidAmount.replace('{price}', minBidPrice.toLocaleString())}
+              min={minBidPrice}
+              className="flex-1"
+            />
+            <Button
+              variant="primary"
+              onClick={handleBid}
+              disabled={isBidding}
+              className="whitespace-nowrap min-w-[70px]"
+            >
+              {isBidding ? t.auction.bidding : t.auction.bid}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -6,7 +6,6 @@ import { AuctionSellerSection } from '@/features/auction/components/detail/Aucti
 import { AuctionProductView } from '@/features/auction/components/detail/AuctionProductView';
 import { AuctionProductEditForm } from '@/features/auction/components/detail/AuctionProductEditForm';
 import { AuctionInfoSection } from '@/features/auction/components/detail/AuctionInfoSection';
-import { AuctionBidSection } from '@/features/auction/components/detail/AuctionBidSection';
 
 function AuctionDetailContent() {
   const { isEditing } = useAuctionDetail();
@@ -25,14 +24,9 @@ function AuctionDetailContent() {
         {isEditing ? <AuctionProductEditForm /> : <AuctionProductView />}
       </DetailSection>
 
-      {/* Auction Info Section - auction specific (status, time, prices) */}
-      <DetailSection className="mb-4">
-        <AuctionInfoSection />
-      </DetailSection>
-
-      {/* Bid Section - auction specific */}
+      {/* Auction Info & Bid Section */}
       <DetailSection>
-        <AuctionBidSection />
+        <AuctionInfoSection />
       </DetailSection>
     </PageContainer>
   );
