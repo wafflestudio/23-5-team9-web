@@ -18,6 +18,7 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   const MENUS = [
     { id: 'products', label: t.nav.products, path: '/products' },
+    { id: 'auction', label: t.nav.auction, path: '/auction' },
     { id: 'chat', label: t.nav.chat, path: '/chat' },
   ];
 

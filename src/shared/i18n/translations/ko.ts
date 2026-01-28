@@ -25,6 +25,7 @@ export const ko = {
   // Navigation
   nav: {
     products: '중고거래',
+    auction: '경매',
     chat: '채팅하기',
     myCarrot: '마이캐럿',
     login: '로그인',

@@ -27,6 +27,7 @@ export const en: TranslationKeys = {
   // Navigation
   nav: {
     products: 'Products',
+    auction: 'Auction',
     chat: 'Chat',
     myCarrot: 'My Carrot',
     login: 'Login',
