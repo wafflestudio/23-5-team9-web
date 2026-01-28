@@ -31,7 +31,7 @@ function ProductDetail() {
   const { id } = useParams();
 
   return (
-    <ProductDetailProvider productId={id!}>
+    <ProductDetailProvider id={id!}>
       <ProductDetailContent />
     </ProductDetailProvider>
   );

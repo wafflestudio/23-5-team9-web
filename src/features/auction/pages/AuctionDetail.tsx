@@ -37,7 +37,7 @@ export default function AuctionDetail() {
   const { id } = useParams();
 
   return (
-    <AuctionDetailProvider auctionId={id!}>
+    <AuctionDetailProvider id={id!}>
       <AuctionDetailContent />
     </AuctionDetailProvider>
   );
