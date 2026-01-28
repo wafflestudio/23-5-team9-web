@@ -7,23 +7,22 @@ import { Button, Badge } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 import { translateMultiple } from '@/shared/lib/translate';
-import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
+import { useDetail } from '@/features/product/hooks/DetailContext';
 
 export function ProductDetailView() {
   const t = useTranslation();
   const { language } = useLanguage();
-  const { product, isLiked, isOwner, isDeleting, handleLike, startEditing, handleDelete } = useProductDetail();
+  const { product, isLiked, isOwner, isDeleting, handleLike, startEditing, handleDelete } = useDetail();
 
   const { data: images } = useQuery<ImageUploadResponse[]>({
     // include the product's image_ids in the key so this query refetches
     // whenever the product's images change
-    queryKey: ['product', 'images', product?.id, product?.image_ids ?? []],
+    queryKey: ['detail', 'images', product.id, product.image_ids ?? []],
     queryFn: async () => {
-      if (!product?.image_ids || product.image_ids.length === 0) return [];
+      if (!product.image_ids || product.image_ids.length === 0) return [];
       const results = await Promise.all(product.image_ids.map(id => imageApi.getById(id)));
       return results;
     },
-    enabled: !!product,
   });
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -35,8 +34,6 @@ export function ProductDetailView() {
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedTitle, setTranslatedTitle] = useState('');
   const [translatedContent, setTranslatedContent] = useState('');
-
-  if (!product) return null;
 
   const hasKorean = /[가-힣]/.test(product.title + (product.content ?? ''));
   const postLang = hasKorean ? 'ko' : 'en';

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuction, usePlaceBid } from "@/features/auction/hooks/useAuctions";
-import { useDeleteProduct, useUpdateProduct } from "@/features/product/hooks/useProducts";
+import { useDeleteProduct, useUpdateProduct, useUserProducts } from "@/features/product/hooks/useProducts";
 import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
 import { useCreateRoom } from "@/features/chat/hooks/useChat";
 import { useTranslation } from "@/shared/i18n";
@@ -43,6 +43,7 @@ export function useAuctionDetailLogic(auctionId: string) {
   const { auction, loading: auctionLoading, error: auctionError, refetch } = useAuction(auctionId);
   const product = auction?.product;
   const { profile: sellerProfile } = useUserProfile(product?.owner_id);
+  const { products: sellerProducts } = useUserProducts(product?.owner_id!);
 
   // Mutations
   const placeBidMutation = usePlaceBid();
@@ -186,6 +187,7 @@ export function useAuctionDetailLogic(auctionId: string) {
     auction,
     product,
     sellerProfile,
+    sellerProducts,
 
     // Loading/Error States
     auctionLoading,

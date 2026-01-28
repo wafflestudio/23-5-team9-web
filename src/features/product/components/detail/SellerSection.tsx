@@ -1,10 +1,10 @@
 import { Button, Avatar } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
-import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
+import { useDetail } from '@/features/product/hooks/DetailContext';
 
 export function SellerSection() {
   const t = useTranslation();
-  const { sellerProfile, handleNavigateToSeller, handleChat, isChatLoading, isOwner } = useProductDetail();
+  const { sellerProfile, handleNavigateToSeller, handleChat, isChatLoading, isOwner } = useDetail();
 
   return (
     <div className="flex items-center justify-between">

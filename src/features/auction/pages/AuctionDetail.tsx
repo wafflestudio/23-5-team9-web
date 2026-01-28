@@ -2,9 +2,10 @@ import { useParams } from 'react-router-dom';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { DetailHeader, DetailSection } from '@/shared/ui';
 import { AuctionDetailProvider, useAuctionDetail } from '@/features/auction/hooks/AuctionDetailContext';
-import { AuctionSellerSection } from '@/features/auction/components/detail/AuctionSellerSection';
-import { AuctionProductView } from '@/features/auction/components/detail/AuctionProductView';
-import { AuctionProductEditForm } from '@/features/auction/components/detail/AuctionProductEditForm';
+import { SellerSection } from '@/features/product/components/detail/SellerSection';
+import { ProductDetailView } from '@/features/product/components/detail/ProductDetailView';
+import { ProductEditForm } from '@/features/product/components/detail/ProductEditForm';
+import { SellerProductList } from '@/features/product/components/detail/SellerProductList';
 import { AuctionInfoSection } from '@/features/auction/components/detail/AuctionInfoSection';
 
 function AuctionDetailContent() {
@@ -14,20 +15,20 @@ function AuctionDetailContent() {
     <PageContainer>
       <DetailHeader />
 
-      {/* Seller Section - same as ProductDetail */}
       <DetailSection className="mb-4">
-        <AuctionSellerSection />
+        <SellerSection />
       </DetailSection>
 
-      {/* Product View Section - images, title, price, content (similar to ProductDetailView) */}
       <DetailSection className="mb-4">
-        {isEditing ? <AuctionProductEditForm /> : <AuctionProductView />}
+        {isEditing ? <ProductEditForm /> : <ProductDetailView />}
       </DetailSection>
 
-      {/* Auction Info & Bid Section */}
+      {/* Auction-specific: bidding info section */}
       <DetailSection>
         <AuctionInfoSection />
       </DetailSection>
+
+      <SellerProductList />
     </PageContainer>
   );
 }

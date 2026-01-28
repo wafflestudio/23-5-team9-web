@@ -1,15 +1,15 @@
 import { useTranslation } from '@/shared/i18n';
-import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
+import { useDetail } from '@/features/product/hooks/DetailContext';
 import ProductCard from '@/features/product/components/list/ProductCard';
 
 export function SellerProductList() {
   const t = useTranslation();
-  const { product, sellerProducts, sellerProfile } = useProductDetail();
+  const { product, sellerProducts, sellerProfile } = useDetail();
 
   if (!sellerProducts) return null;
 
   const filteredProducts = sellerProducts
-    .filter(p => p.owner_id === product?.owner_id && p.id !== product?.id)
+    .filter(p => p.owner_id === product.owner_id && p.id !== product.id)
     .slice(0, 4);
 
   if (filteredProducts.length === 0) return null;

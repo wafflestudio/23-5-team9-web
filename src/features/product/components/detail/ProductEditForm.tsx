@@ -1,12 +1,10 @@
 import ProductForm from '@/features/product/components/form/ProductForm';
 import { useTranslation } from '@/shared/i18n';
-import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
+import { useDetail } from '@/features/product/hooks/DetailContext';
 
 export function ProductEditForm() {
   const t = useTranslation();
-  const { product, handleEdit, cancelEditing, isUpdating } = useProductDetail();
-
-  if (!product) return null;
+  const { product, handleEdit, cancelEditing, isUpdating } = useDetail();
 
   return (
     <ProductForm
