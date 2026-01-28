@@ -11,7 +11,7 @@ export function DetailImage({ src, alt, className = '' }: DetailImageProps) {
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative mb-6 rounded-xl overflow-hidden border border-border-light/50 ${className}`}>
+    <div className={`relative rounded-xl overflow-hidden ${className}`}>
       {isLoading && src && (
         <div className="absolute inset-0 bg-bg-box flex items-center justify-center animate-pulse">
           <span className="text-6xl text-text-placeholder">📷</span>

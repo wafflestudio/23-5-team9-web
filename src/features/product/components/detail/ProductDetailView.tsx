@@ -74,45 +74,50 @@ export function ProductDetailView() {
   return (
     <>
       {images && images.length > 0 && (
-        <div className="mb-4">
-          <div className="relative">
+        <div className="mb-6">
+          <div className="relative group">
             <DetailImage src={images[currentIndex].image_url} alt={product.title} />
+
+            {images.length > 1 && (
+              <>
+                {currentIndex > 0 && (
+                  <button
+                    onClick={() => setCurrentIndex((i) => i - 1)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="previous image"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                )}
+                {currentIndex < images.length - 1 && (
+                  <button
+                    onClick={() => setCurrentIndex((i) => i + 1)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="next image"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
           </div>
 
           {images.length > 1 && (
-            <div className="mt-3 flex items-center justify-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-                disabled={currentIndex === 0}
-                aria-label="previous image"
-              >
-                ←
-              </Button>
-
-              <div className="flex items-center gap-3">
-                {images.map((img, idx) => (
-                  <button
-                    key={img.id}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`rounded-md overflow-hidden ${idx === currentIndex ? 'ring-2 ring-primary' : ''}`}
-                    aria-label={idx === currentIndex ? `image ${idx + 1} selected` : `select image ${idx + 1}`}
-                  >
-                    <Thumbnail src={img.image_url} alt={product.title} size={56} />
-                  </button>
-                ))}
-              </div>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentIndex((i) => Math.min(images.length - 1, i + 1))}
-                disabled={currentIndex === images.length - 1}
-                aria-label="next image"
-              >
-                →
-              </Button>
+            <div className="flex items-center justify-center gap-2 mt-3">
+              {images.map((img, idx) => (
+                <button
+                  key={img.id}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`rounded-lg overflow-hidden transition-all ${idx === currentIndex ? 'ring-2 ring-primary ring-offset-2 ring-offset-bg-base' : 'opacity-60 hover:opacity-100'}`}
+                  aria-label={idx === currentIndex ? `image ${idx + 1} selected` : `select image ${idx + 1}`}
+                >
+                  <Thumbnail src={img.image_url} alt={product.title} size={48} />
+                </button>
+              ))}
             </div>
           )}
         </div>

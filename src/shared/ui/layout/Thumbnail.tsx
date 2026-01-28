@@ -14,7 +14,7 @@ export function Thumbnail({ src, alt = '', size = 56, className = '' }: Thumbnai
   const sizeStyle = { width: `${size}px`, height: `${size}px` } as const;
 
   return (
-    <div className={`rounded-md overflow-hidden border border-border-light/40 bg-bg-box ${className}`} style={sizeStyle}>
+    <div className={`rounded-lg overflow-hidden bg-bg-box ${className}`} style={sizeStyle}>
       {isLoading && src && (
         <div className="w-full h-full flex items-center justify-center animate-pulse">
           <span className="text-2xl text-text-placeholder">📷</span>
