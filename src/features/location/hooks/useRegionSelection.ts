@@ -68,6 +68,13 @@ export function useRegionSelection() {
 
   // 시/도 단위 선택
   const handleSidoSelect = (sido: string) => {
+    // 전체 지역 선택 시 필터 해제
+    if (sido === 'ALL') {
+      setRegionDisplayName('');
+      setSearchParams({});
+      closeModal();
+      return;
+    }
     setSearchParams({ sido });
     closeModal();
   };

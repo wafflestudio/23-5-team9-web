@@ -19,7 +19,6 @@ interface RegionSelectModalProps {
   onSelect: (regionId: string, regionName: string) => void;
   onSelectSido?: (sido: string) => void;
   onSelectSigugun?: (sido: string, sigugun: string) => void;
-  onClearRegion?: () => void;
   initialRegionId?: string;
 }
 
@@ -29,7 +28,6 @@ export default function RegionSelectModal({
   onSelect,
   onSelectSido,
   onSelectSigugun,
-  onClearRegion,
   initialRegionId
 }: RegionSelectModalProps) {
   const t = useTranslation();
@@ -37,9 +35,11 @@ export default function RegionSelectModal({
   const [sigugunList, setSigugunList] = useState<string[]>([]);
   const [dongList, setDongList] = useState<DongEntry[]>([]);
 
-  const [selectedSido, setSelectedSido] = useState('');
-  const [selectedSigugun, setSelectedSigugun] = useState('');
-  const [selectedDongId, setSelectedDongId] = useState('');
+  const ALL_REGIONS = 'ALL';
+
+  const [selectedSido, setSelectedSido] = useState(ALL_REGIONS);
+  const [selectedSigugun, setSelectedSigugun] = useState(ALL_REGIONS);
+  const [selectedDongId, setSelectedDongId] = useState(ALL_REGIONS);
   const [selectedDongName, setSelectedDongName] = useState('');
 
   const { detectRegion, detecting } = useGeoLocation();
@@ -90,12 +90,12 @@ export default function RegionSelectModal({
   const handleSidoChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSido = e.target.value;
     setSelectedSido(newSido);
-    setSelectedSigugun('');
-    setSelectedDongId('');
+    setSelectedSigugun(ALL_REGIONS);
+    setSelectedDongId(ALL_REGIONS);
     setSelectedDongName('');
     setDongList([]);
 
-    if (newSido) {
+    if (newSido && newSido !== ALL_REGIONS) {
       try {
         const list = await fetchSigugunList(newSido);
         setSigugunList(list);
@@ -111,10 +111,10 @@ export default function RegionSelectModal({
   const handleSigugunChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSigugun = e.target.value;
     setSelectedSigugun(newSigugun);
-    setSelectedDongId('');
+    setSelectedDongId(ALL_REGIONS);
     setSelectedDongName('');
 
-    if (newSigugun && selectedSido) {
+    if (newSigugun && newSigugun !== ALL_REGIONS && selectedSido && selectedSido !== ALL_REGIONS) {
       try {
         const list = await fetchDongList(selectedSido, newSigugun);
         setDongList(list);
@@ -157,61 +157,55 @@ export default function RegionSelectModal({
   // 확인 버튼 - 시/도, 시/구/군, 동 중 어느 단계에서든 적용 가능
   const handleConfirm = () => {
     // 동까지 선택한 경우
-    if (selectedDongId) {
+    if (selectedDongId && selectedDongId !== ALL_REGIONS) {
       onSelect(selectedDongId, selectedDongName);
       onClose();
       return;
     }
-    
-    // 시/구/군까지 선택한 경우
-    if (selectedSido && selectedSigugun && onSelectSigugun) {
+
+    // 시/구/군까지 선택한 경우 (동이 전체 지역)
+    if (selectedSido !== ALL_REGIONS && selectedSigugun !== ALL_REGIONS && onSelectSigugun) {
       onSelectSigugun(selectedSido, selectedSigugun);
       onClose();
       return;
     }
-    
-    // 시/도만 선택한 경우
-    if (selectedSido && onSelectSido) {
+
+    // 시/도만 선택한 경우 (시/구/군이 전체 지역)
+    if (selectedSido !== ALL_REGIONS && onSelectSido) {
       onSelectSido(selectedSido);
       onClose();
       return;
     }
-    
-    // 아무것도 선택 안 한 경우
-    alert(t.location.selectAtLeastSido);
+
+    // 시/도도 전체 지역인 경우 - 전체 지역 선택
+    if (selectedSido === ALL_REGIONS && onSelectSido) {
+      onSelectSido(ALL_REGIONS);
+      onClose();
+      return;
+    }
+
+    onClose();
   };
 
   // 옵션 배열
   const sidoOptions = [
-    { value: '', label: t.location.selectSido },
+    { value: ALL_REGIONS, label: t.location.allRegions },
     ...sidoList.map(s => ({ value: s, label: s }))
   ];
 
   const sigugunOptions = [
-    { value: '', label: t.location.selectSigugun },
+    { value: ALL_REGIONS, label: t.location.allRegions },
     ...sigugunList.map(s => ({ value: s, label: s }))
   ];
 
   const dongOptions = [
-    { value: '', label: t.location.selectDong },
+    { value: ALL_REGIONS, label: t.location.allRegions },
     ...dongList.map(d => ({ value: d.id, label: d.dong }))
   ];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t.location.regionSettings}>
       <div className="flex flex-col gap-4">
-        {/* 전체 보기 버튼 */}
-        {onClearRegion && (
-          <Button
-            type="button"
-            variant="outline"
-            fullWidth
-            onClick={onClearRegion}
-          >
-            {t.location.allRegions}
-          </Button>
-        )}
-
         {/* 내 위치로 찾기 버튼 */}
         <Button
           type="button"
@@ -240,14 +234,14 @@ export default function RegionSelectModal({
           options={sigugunOptions}
           value={selectedSigugun}
           onChange={handleSigugunChange}
-          disabled={!selectedSido}
+          disabled={selectedSido === ALL_REGIONS}
         />
 
         <Select
           options={dongOptions}
           value={selectedDongId}
           onChange={handleDongChange}
-          disabled={!selectedSigugun}
+          disabled={selectedSido === ALL_REGIONS || selectedSigugun === ALL_REGIONS}
         />
 
         {/* 버튼 영역 */}

@@ -22,7 +22,6 @@ export default function ProductList() {
     handleRegionSelect,
     handleSidoSelect,
     handleSigugunSelect,
-    handleClearRegion,
   } = useRegionSelection();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,7 +57,6 @@ export default function ProductList() {
         onSelect={handleRegionSelect}
         onSelectSido={handleSidoSelect}
         onSelectSigugun={handleSigugunSelect}
-        onClearRegion={handleClearRegion}
         initialRegionId={currentRegionId}
       />
     </PageContainer>
