@@ -14,14 +14,25 @@ export default function ProductList() {
   const {
     currentRegionId,
     currentRegionName,
+    currentSido,
+    currentSigugun,
     isModalOpen,
     openModal,
     closeModal,
     handleRegionSelect,
+    handleSidoSelect,
+    handleSigugunSelect,
+    handleClearRegion,
   } = useRegionSelection();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const { products, loading, error } = useProducts({ search: searchQuery, regionId: currentRegionId });
+  // 지역 필터: 동 단위, 시/구/군 단위, 시/도 단위 모두 지원
+  const { products, loading, error } = useProducts({ 
+    search: searchQuery, 
+    regionId: currentRegionId,
+    sido: currentSido,
+    sigugun: currentSigugun,
+  });
 
   return (
     <PageContainer title={t.product.usedGoods}>
@@ -45,6 +56,9 @@ export default function ProductList() {
         isOpen={isModalOpen}
         onClose={closeModal}
         onSelect={handleRegionSelect}
+        onSelectSido={handleSidoSelect}
+        onSelectSigugun={handleSigugunSelect}
+        onClearRegion={handleClearRegion}
         initialRegionId={currentRegionId}
       />
     </PageContainer>

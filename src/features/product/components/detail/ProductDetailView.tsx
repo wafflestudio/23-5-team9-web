@@ -1,44 +1,27 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { imageApi } from '@/features/product/api/imageApi';
-import type { ImageUploadResponse } from '@/features/product/api/imageApi';
-import { DetailImage, Thumbnail } from '@/shared/ui';
+import { useState } from 'react';
 import { Button, Badge } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 import { translateMultiple } from '@/shared/lib/translate';
 import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
+import { ProductImage } from '@/features/product/components/common/ProductImage';
 
 export function ProductDetailView() {
   const t = useTranslation();
   const { language } = useLanguage();
   const { product, isLiked, isOwner, isDeleting, handleLike, startEditing, handleDelete } = useProductDetail();
 
-  const { data: images } = useQuery<ImageUploadResponse[]>({
-    // include the product's image_ids in the key so this query refetches
-    // whenever the product's images change
-    queryKey: ['product', 'images', product?.id, product?.image_ids ?? []],
-    queryFn: async () => {
-      if (!product?.image_ids || product.image_ids.length === 0) return [];
-      const results = await Promise.all(product.image_ids.map(id => imageApi.getById(id)));
-      return results;
-    },
-    enabled: !!product,
-  });
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [images]);
-
   const [isTranslated, setIsTranslated] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedTitle, setTranslatedTitle] = useState('');
   const [translatedContent, setTranslatedContent] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!product) return null;
 
-  const hasKorean = /[가-힣]/.test(product.title + (product.content ?? ''));
+  const hasImages = product.image_ids && product.image_ids.length > 0;
+
+  const hasKorean = /[가-힣]/.test(product.title + product.content);
   const postLang = hasKorean ? 'ko' : 'en';
   const needsTranslation = postLang !== language;
   const targetLang = language;
@@ -57,7 +40,7 @@ export function ProductDetailView() {
 
     setIsTranslating(true);
     try {
-      const results = await translateMultiple([product.title, product.content ?? ''], targetLang, sourceLang);
+      const results = await translateMultiple([product.title, product.content], targetLang, sourceLang);
       setTranslatedTitle(results[0].translatedText);
       setTranslatedContent(results[1].translatedText);
       setIsTranslated(true);
@@ -69,54 +52,50 @@ export function ProductDetailView() {
   };
 
   const displayTitle = isTranslated ? translatedTitle : product.title;
-  const displayContent = isTranslated ? translatedContent : (product.content ?? '');
+  const displayContent = isTranslated ? translatedContent : product.content;
 
   return (
     <>
-      {images && images.length > 0 && (
-        <div className="mb-4">
-          <div className="relative">
-            <DetailImage src={images[currentIndex].image_url} alt={product.title} />
+      {/* Image Gallery */}
+      {hasImages && (
+        <div className="mb-6 -mx-4 sm:mx-0">
+          <div className="relative aspect-square sm:aspect-video bg-bg-secondary rounded-lg overflow-hidden">
+            <ProductImage
+              imageId={product.image_ids[currentImageIndex]}
+              alt={`${product.title} - ${currentImageIndex + 1}`}
+              className="w-full h-full object-contain"
+            />
+            {product.image_ids.length > 1 && (
+              <>
+                <button
+                  onClick={() => setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : product.image_ids.length - 1))}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 rounded-full text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={() => setCurrentImageIndex((prev) => (prev < product.image_ids.length - 1 ? prev + 1 : 0))}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 rounded-full text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                >
+                  ›
+                </button>
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {product.image_ids.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentImageIndex(idx)}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        idx === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
-
-          {images.length > 1 && (
-            <div className="mt-3 flex items-center justify-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-                disabled={currentIndex === 0}
-                aria-label="previous image"
-              >
-                ←
-              </Button>
-
-              <div className="flex items-center gap-3">
-                {images.map((img, idx) => (
-                  <button
-                    key={img.id}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`rounded-md overflow-hidden ${idx === currentIndex ? 'ring-2 ring-primary' : ''}`}
-                    aria-label={idx === currentIndex ? `image ${idx + 1} selected` : `select image ${idx + 1}`}
-                  >
-                    <Thumbnail src={img.image_url} alt={product.title} size={56} />
-                  </button>
-                ))}
-              </div>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentIndex((i) => Math.min(images.length - 1, i + 1))}
-                disabled={currentIndex === images.length - 1}
-                aria-label="next image"
-              >
-                →
-              </Button>
-            </div>
-          )}
         </div>
       )}
+
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           {product.is_sold && <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>}

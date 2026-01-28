@@ -18,11 +18,11 @@ const UserProfile = () => {
 
   const [showForm, setShowForm] = useState(false);
 
-  const handleSubmit = async (data: { title: string; price: number; content: string; image_ids?: string[] }) => {
+  const handleSubmit = async (data: { title: string; price: number; content: string }, imageIds: string[]) => {
     const newProduct = await createProduct.mutateAsync({
       ...data,
-      image_ids: data.image_ids ?? [],
       category_id: '1',
+      image_ids: imageIds,
     });
     alert(t.product.productRegistered);
     setShowForm(false);

@@ -1,75 +1,127 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useUser } from '@/features/user/hooks/useUser';
-import { useRegionStore, DEFAULT_REGION_ID, DEFAULT_REGION_NAME } from '@/shared/store/regionStore';
+import { useRegionStore } from '@/shared/store/regionStore';
 import { fetchRegionById } from '@/features/location/api/region';
+import { useTranslation } from '@/shared/i18n';
+
+// 지역 선택 타입: 동 단위(region), 시/구/군 단위(sigugun), 시/도 단위(sido)
+export type RegionSelectType = 'region' | 'sigugun' | 'sido';
+
+export interface RegionSelection {
+  type: RegionSelectType;
+  regionId?: string;  // 동 단위일 때만 사용
+  sido?: string;
+  sigugun?: string;
+  displayName: string;
+}
 
 export function useRegionSelection() {
-  const { user, isLoggedIn, isLoading } = useUser();
-  // store는 이제 '상태 저장소'가 아니라 URL에 따른 '데이터 캐시/표시용'으로 사용됩니다.
-  const { regionId, regionName, setRegion } = useRegionStore();
+  const t = useTranslation();
+  const { regionId, regionName, setRegion, clearRegion } = useRegionStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 1. [Source of Truth] URL에서 현재 지역 ID를 가져옵니다.
-  const urlRegionId = searchParams.get('region');
+  // URL에서 현재 지역 정보를 가져옵니다
+  const urlRegionId = searchParams.get('region') || undefined;
+  const urlSido = searchParams.get('sido') || undefined;
+  const urlSigugun = searchParams.get('sigugun') || undefined;
 
-  // 2. [Action] 지역 선택 시 Store가 아닌 URL을 변경합니다.
-  const handleRegionSelect = (id: string) => {
-    // 이름은 URL 변경 후 Effect에서 비동기로 가져오거나, 
-    // UX를 위해 미리 알다면 인자로 받아 setRegion을 호출해 낙관적 업데이트를 할 수도 있지만,
-    // 원칙적으로 URL 변경이 우선입니다.
+  // 현재 선택된 지역 타입 결정
+  const getCurrentSelection = (): RegionSelection => {
+    if (urlRegionId) {
+      return {
+        type: 'region',
+        regionId: urlRegionId,
+        displayName: regionName || t.location.allRegions,
+      };
+    }
+    if (urlSido && urlSigugun) {
+      return {
+        type: 'sigugun',
+        sido: urlSido,
+        sigugun: urlSigugun,
+        displayName: `${urlSido} ${urlSigugun}`,
+      };
+    }
+    if (urlSido) {
+      return {
+        type: 'sido',
+        sido: urlSido,
+        displayName: urlSido,
+      };
+    }
+    return {
+      type: 'region',
+      displayName: t.location.allRegions,
+    };
+  };
+
+  const currentSelection = getCurrentSelection();
+
+  // 지역 선택 (동 단위)
+  const handleRegionSelect = (id: string, name?: string) => {
+    if (name) {
+      setRegion(id, name);
+    }
     setSearchParams({ region: id });
     closeModal();
   };
 
-  // 3. [Sync] URL 변경을 감지하여 데이터를 동기화합니다.
+  // 시/도 단위 선택
+  const handleSidoSelect = (sido: string) => {
+    setSearchParams({ sido });
+    closeModal();
+  };
+
+  // 시/구/군 단위 선택
+  const handleSigugunSelect = (sido: string, sigugun: string) => {
+    setSearchParams({ sido, sigugun });
+    closeModal();
+  };
+
+  // 지역 필터 해제 (전체 보기)
+  const handleClearRegion = () => {
+    clearRegion();
+    setSearchParams({});
+    closeModal();
+  };
+
+  // URL 변경을 감지하여 데이터를 동기화합니다 (동 단위일 때만)
   useEffect(() => {
-    // 3-1. URL에 지역 정보가 아예 없는 경우 (진입 시점)
-    if (!urlRegionId) {
-      // 로그인 유저의 경우 user 정보 로딩이 완료될 때까지 대기
-      if (isLoading) return;
-
-      if (isLoggedIn && user?.region?.id) {
-        // 로그인 유저라면 유저 지역으로 리다이렉트
-        setSearchParams({ region: user.region.id }, { replace: true });
-      } else {
-        // 비로그인이라면 기본 지역으로 리다이렉트
-        setSearchParams({ region: DEFAULT_REGION_ID }, { replace: true });
-      }
-      return;
-    }
-
-    // 3-2. URL과 현재 Store 상태가 일치하면 패스 (불필요한 fetch 방지)
+    if (!urlRegionId) return;
     if (urlRegionId === regionId && regionName) return;
 
-    // 3-3. URL의 ID에 해당하는 지역 정보(이름)를 가져와서 Store에 '반영'만 함
     const syncRegionData = async () => {
       try {
         const region = await fetchRegionById(urlRegionId);
         const name = `${region.sigugun} ${region.dong}`;
         setRegion(region.id, name);
       } catch (error) {
-        // 잘못된 ID인 경우 기본값으로 복구
         console.error('Invalid region ID in URL:', error);
-        setSearchParams({ region: DEFAULT_REGION_ID }, { replace: true });
+        setSearchParams({});
       }
     };
 
     syncRegionData();
-  }, [urlRegionId, isLoggedIn, isLoading, user, regionId, regionName, setRegion, setSearchParams]);
+  }, [urlRegionId, regionId, regionName, setRegion, setSearchParams]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return {
-    // 컴포넌트는 Store가 아닌 URL(urlRegionId)을 기준으로 렌더링한다고 생각하면 됩니다.
-    // 다만 UI에 표시할 이름(Name)이 필요하므로 Store의 값을 보조적으로 사용합니다.
-    currentRegionId: urlRegionId || DEFAULT_REGION_ID,
-    currentRegionName: regionName || DEFAULT_REGION_NAME, 
+    // 하위 호환성을 위해 기존 필드 유지
+    currentRegionId: urlRegionId,
+    currentRegionName: currentSelection.displayName,
+    // 새로운 필드
+    currentSelection,
+    currentSido: urlSido,
+    currentSigugun: urlSigugun,
     isModalOpen,
     openModal,
     closeModal,
     handleRegionSelect,
+    handleSidoSelect,
+    handleSigugunSelect,
+    handleClearRegion,
   };
 }

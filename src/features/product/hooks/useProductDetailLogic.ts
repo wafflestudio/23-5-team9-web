@@ -64,7 +64,7 @@ export function useProductDetailLogic(productId: string) {
     }
   }, [product, deleteProduct, navigate, t]);
 
-  const handleEdit = useCallback(async (data: ProductFormData) => {
+  const handleEdit = useCallback(async (data: ProductFormData, imageIds?: string[]) => {
     if (!product) return;
 
     const updateData: UpdateProductRequest = {
@@ -72,10 +72,9 @@ export function useProductDetailLogic(productId: string) {
       content: data.content.trim(),
       price: data.price,
       category_id: product.category_id,
-      // use image ids from the edited form so PATCH can add/remove images
-      image_ids: data.image_ids ?? [],
       region_id: product.region_id,
       is_sold: data.is_sold ?? false,
+      image_ids: imageIds,
     };
 
     try {

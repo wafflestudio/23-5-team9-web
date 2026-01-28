@@ -4,13 +4,14 @@ export const productFormSchema = z.object({
   title: z.string()
     .min(1, '상품 제목을 입력해주세요.')
     .transform((v) => v.trim()),
-  price: z.number({ error: '가격을 입력해주세요.' })
-    .min(1, '가격을 입력해주세요.'),
+  price: z.coerce.number({
+    required_error: '가격을 입력해주세요.',
+    invalid_type_error: '가격을 입력해주세요.',
+  }).min(0, '가격은 0 이상이어야 합니다.'),
   content: z.string()
     .min(1, '상품 설명을 입력해주세요.')
     .transform((v) => v.trim()),
   is_sold: z.boolean().optional(),
-  image_ids: z.array(z.string()).optional(),
 });
 
 export type ProductFormData = z.infer<typeof productFormSchema>;

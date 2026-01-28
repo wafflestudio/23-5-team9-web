@@ -17,8 +17,6 @@ export const ko = {
     hide: '숨기기',
     random: '랜덤',
     link: '링크',
-    upload: '업로드',
-    uploading: '업로드 중...',
     user: '사용자',
   },
 
@@ -98,12 +96,6 @@ export const ko = {
     registerProduct: '+ 상품 등록',
     mySalesItems: '나의 판매 물품',
     noSalesItems: '판매 중인 상품이 없습니다.',
-    imagesDropzone: '이미지를 드래그하세요',
-    imagesSelect: '이미지 선택',
-    imagesNone: '이미지가 없습니다',
-    imagesSelected: '{count}개 선택됨',
-    imageUploadFailed: '이미지 업로드에 실패했습니다.',
-    imageUploadingWait: '이미지 업로드가 완료될 때까지 기다려주세요.',
     ownProduct: '본인의 상품입니다.',
     confirmDelete: '정말로 이 상품을 삭제하시겠습니까?',
     deleted: '상품이 삭제되었습니다.',
@@ -191,7 +183,6 @@ export const ko = {
     email: '이메일',
     enterImageUrl: '이미지 URL을 입력하세요:',
     saveProfile: '저장하기',
-    imageUploadFailed: '프로필 이미지 업로드에 실패했습니다.',
     savedLocationSetPrefix: "저장된 위치('",
     savedLocationSetSuffix: "')로 설정되었습니다.",
     currentLocationSetPrefix: "현재 위치('",
@@ -208,6 +199,8 @@ export const ko = {
     findingLocation: '위치 찾는 중...',
     orSelectDirectly: '또는 직접 선택',
     regionSettings: '지역 설정',
+    allRegions: '전체 지역',
+    selectAtLeastSido: '시/도를 선택해주세요.',
     browserNotSupported: '브라우저가 위치 정보를 지원하지 않습니다.',
     serverLocationError: '서버에서 위치 정보를 찾을 수 없습니다.',
     locationUnavailable: '위치 정보를 가져올 수 없습니다.',
@@ -219,6 +212,16 @@ export const ko = {
   // Layout
   layout: {
     goBack: '← 뒤로가기',
+  },
+
+  // Image
+  image: {
+    productImages: '상품 이미지',
+    addImage: '사진 추가',
+    uploading: '업로드 중...',
+    uploadFailed: '이미지 업로드에 실패했습니다.',
+    maxImagesReached: '최대 이미지 개수에 도달했습니다.',
+    noImages: '상품 사진을 추가해보세요.',
   },
 } as const;
 

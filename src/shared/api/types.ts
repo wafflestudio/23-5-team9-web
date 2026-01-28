@@ -153,31 +153,40 @@ export const ProductPostRequestSchema = z.object({
   title: z.string(),
   content: z.string(),
   price: z.number().int(),
-  image_ids: z.array(z.string()).optional(),
   category_id: z.string(),
+  image_ids: z.array(z.string()).optional(),
 });
 
 export const ProductPatchRequestSchema = z.object({
   title: z.string(),
   content: z.string(),
   price: z.number().int(),
-  image_ids: z.array(z.string()).optional(),
   category_id: z.string(),
   region_id: z.string(),
   is_sold: z.boolean(),
+  image_ids: z.array(z.string()).optional(),
 });
 
 export const ProductResponseSchema = z.object({
   id: z.string(),
   owner_id: z.string(),
   title: z.string(),
+  image_ids: z.array(z.string()),
   content: z.string().nullable(),
   price: z.number().int(),
   like_count: z.number().int(),
   category_id: z.string(),
-  image_ids: z.array(z.string()).optional(),
   region_id: z.string(),
   is_sold: z.boolean(),
+});
+
+// ============================================
+// Image Schemas
+// ============================================
+
+export const ImageResponseSchema = z.object({
+  id: z.string(),
+  image_url: z.string(),
 });
 
 // ============================================
@@ -260,6 +269,9 @@ export type OpponentStatus = z.infer<typeof OpponentStatusSchema>;
 export type ProductPostRequest = z.infer<typeof ProductPostRequestSchema>;
 export type ProductPatchRequest = z.infer<typeof ProductPatchRequestSchema>;
 export type ProductResponse = z.infer<typeof ProductResponseSchema>;
+
+// Image
+export type ImageResponse = z.infer<typeof ImageResponseSchema>;
 
 // Region
 export type DongEntry = z.infer<typeof DongEntrySchema>;

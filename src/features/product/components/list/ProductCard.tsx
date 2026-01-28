@@ -1,12 +1,10 @@
-import { useState, MouseEvent, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
-import type { ImageUploadResponse } from '@/features/product/api/imageApi';
 import { Product } from '@/features/product/types';
-import { Card, CardContent, CardImage, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
-import { imageApi } from '@/features/product/api/imageApi';
+import { Card, CardContent, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
 import { useUserProfile } from '@/features/user/hooks/useUser';
 import { useTranslation } from '@/shared/i18n';
+import { ProductImage } from '@/features/product/components/common/ProductImage';
 
 interface ProductCardProps {
   product: Product;
@@ -26,14 +24,6 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
   // 이벤트 핸들러 (상단 분리)
   const stop = (e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); };
 
-  const firstImageId = useMemo(() => (product.image_ids && product.image_ids.length > 0 ? product.image_ids[0] : undefined), [product.image_ids]);
-
-  const { data: firstImage } = useQuery<ImageUploadResponse | null>({
-    queryKey: ['product', 'image', firstImageId],
-    queryFn: async () => (firstImageId ? await imageApi.getById(firstImageId) : null),
-    enabled: !!firstImageId,
-  });
-
   const handleLike = (e: MouseEvent) => {
     stop(e);
     setIsLiked(prev => !prev);
@@ -43,10 +33,23 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
   const handleEdit = (e: MouseEvent) => { stop(e); onEdit?.(product); };
   const handleDelete = (e: MouseEvent) => { stop(e); onDelete?.(product); };
 
+  const hasImages = product.image_ids && product.image_ids.length > 0;
+
   return (
     <Link to={`/products/${product.id}`} className="group text-inherit no-underline">
-      <Card className="border border-border-medium rounded-lg p-3">
-        <CardContent>
+      <Card className="border border-border-medium rounded-lg overflow-hidden">
+        {/* Product Image */}
+        {hasImages && (
+          <div className="aspect-square bg-bg-secondary overflow-hidden">
+            <ProductImage
+              imageId={product.image_ids[0]}
+              alt={product.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            />
+          </div>
+        )}
+
+        <CardContent className="p-3">
           {/* 판매자 프로필 */}
           <div className="flex items-center gap-2 mb-3">
             <Avatar src={profile?.profile_image ?? undefined} alt={profile?.nickname || t.product.seller} size="sm" />
@@ -58,11 +61,6 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
             <div className="mb-2">
               <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>
             </div>
-          )}
-
-          {/** product image (only render when image_ids exist) */}
-          {product.image_ids && product.image_ids.length > 0 && (
-            <CardImage src={firstImage?.image_url ?? undefined} alt={product.title} aspectRatio="square" />
           )}
 
           <CardTitle className="tracking-tighter break-keep text-text-heading">{product.title}</CardTitle>

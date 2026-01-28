@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자기소개</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 섹션 -->
+        <header class="header">
+            <div class="profile-section">
+                <div class="profile-image-wrapper">
+                    <div class="profile-image"></div>
+                </div>
+                <h1 class="name">이름을 입력하세요</h1>
+                <p class="title">직책/직업을 입력하세요</p>
+            </div>
+        </header>
+
+        <!-- 네비게이션 -->
+        <nav class="nav">
+            <button class="nav-btn active" data-section="about">소개</button>
+            <button class="nav-btn" data-section="skills">기술</button>
+            <button class="nav-btn" data-section="experience">경력</button>
+            <button class="nav-btn" data-section="contact">연락처</button>
+        </nav>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 소개 섹션 -->
+            <section id="about" class="content-section active">
+                <h2>안녕하세요! 👋</h2>
+                <p>
+                    안녕하세요! 저는 <strong>[이름]</strong>입니다. 
+                    [간단한 자기소개를 입력하세요. 예: 풀스택 개발자로서 사용자 경험을 중시하며, 
+                    혁신적인 웹 애플리케이션을 개발하는 것을 좋아합니다.]
+                </p>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <span class="info-icon">🎓</span>
+                        <div>
+                            <h3>학력</h3>
+                            <p>[학교명 및 전공]</p>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">📍</span>
+                        <div>
+                            <h3>위치</h3>
+                            <p>[거주 지역]</p>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">💼</span>
+                        <div>
+                            <h3>현재 상태</h3>
+                            <p>[재직 중/구직 중/학생 등]</p>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">🎯</span>
+                        <div>
+                            <h3>관심 분야</h3>
+                            <p>[관심 있는 기술/분야]</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 기술 섹션 -->
+            <section id="skills" class="content-section">
+                <h2>기술 스택</h2>
+                <div class="skills-container">
+                    <div class="skill-category">
+                        <h3>프론트엔드</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">HTML</span>
+                            <span class="skill-tag">CSS</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Vue.js</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>백엔드</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Express</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>기타</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">AWS</span>
+                            <span class="skill-tag">Linux</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 경력 섹션 -->
+            <section id="experience" class="content-section">
+                <h2>경력</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3>회사명 / 프로젝트명</h3>
+                            <p class="timeline-period">2020.01 - 현재</p>
+                            <p class="timeline-description">
+                                [상세한 업무 내용을 입력하세요. 예: 웹 애플리케이션 개발 및 유지보수, 
+                                팀 리딩 및 코드 리뷰 등]
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3>회사명 / 프로젝트명</h3>
+                            <p class="timeline-period">2018.06 - 2019.12</p>
+                            <p class="timeline-description">
+                                [상세한 업무 내용을 입력하세요]
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3>회사명 / 프로젝트명</h3>
+                            <p class="timeline-period">2016.03 - 2018.05</p>
+                            <p class="timeline-description">
+                                [상세한 업무 내용을 입력하세요]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 연락처 섹션 -->
+            <section id="contact" class="content-section">
+                <h2>연락처</h2>
+                <div class="contact-container">
+                    <a href="mailto:your.email@example.com" class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <div>
+                            <h3>이메일</h3>
+                            <p>your.email@example.com</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/yourusername" target="_blank" class="contact-item">
+                        <span class="contact-icon">💻</span>
+                        <div>
+                            <h3>GitHub</h3>
+                            <p>github.com/yourusername</p>
+                        </div>
+                    </a>
+                    <a href="https://linkedin.com/in/yourusername" target="_blank" class="contact-item">
+                        <span class="contact-icon">💼</span>
+                        <div>
+                            <h3>LinkedIn</h3>
+                            <p>linkedin.com/in/yourusername</p>
+                        </div>
+                    </a>
+                    <a href="tel:+821012345678" class="contact-item">
+                        <span class="contact-icon">📱</span>
+                        <div>
+                            <h3>전화번호</h3>
+                            <p>010-1234-5678</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- 푸터 -->
+        <footer class="footer">
+            <p>© 2024 [이름]. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

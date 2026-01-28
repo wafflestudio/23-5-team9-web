@@ -17,6 +17,9 @@ interface RegionSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (regionId: string, regionName: string) => void;
+  onSelectSido?: (sido: string) => void;
+  onSelectSigugun?: (sido: string, sigugun: string) => void;
+  onClearRegion?: () => void;
   initialRegionId?: string;
 }
 
@@ -24,6 +27,9 @@ export default function RegionSelectModal({
   isOpen,
   onClose,
   onSelect,
+  onSelectSido,
+  onSelectSigugun,
+  onClearRegion,
   initialRegionId
 }: RegionSelectModalProps) {
   const t = useTranslation();
@@ -148,14 +154,31 @@ export default function RegionSelectModal({
     }
   };
 
-  // 확인 버튼
+  // 확인 버튼 - 시/도, 시/구/군, 동 중 어느 단계에서든 적용 가능
   const handleConfirm = () => {
-    if (!selectedDongId) {
-      alert(t.user.selectAllRegion);
+    // 동까지 선택한 경우
+    if (selectedDongId) {
+      onSelect(selectedDongId, selectedDongName);
+      onClose();
       return;
     }
-    onSelect(selectedDongId, selectedDongName);
-    onClose();
+    
+    // 시/구/군까지 선택한 경우
+    if (selectedSido && selectedSigugun && onSelectSigugun) {
+      onSelectSigugun(selectedSido, selectedSigugun);
+      onClose();
+      return;
+    }
+    
+    // 시/도만 선택한 경우
+    if (selectedSido && onSelectSido) {
+      onSelectSido(selectedSido);
+      onClose();
+      return;
+    }
+    
+    // 아무것도 선택 안 한 경우
+    alert(t.location.selectAtLeastSido);
   };
 
   // 옵션 배열
@@ -177,6 +200,18 @@ export default function RegionSelectModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t.location.regionSettings}>
       <div className="flex flex-col gap-4">
+        {/* 전체 보기 버튼 */}
+        {onClearRegion && (
+          <Button
+            type="button"
+            variant="outline"
+            fullWidth
+            onClick={onClearRegion}
+          >
+            {t.location.allRegions}
+          </Button>
+        )}
+
         {/* 내 위치로 찾기 버튼 */}
         <Button
           type="button"

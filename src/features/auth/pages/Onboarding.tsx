@@ -23,11 +23,7 @@ export default function Onboarding() {
 
       try {
         await onboardingMutation.mutateAsync(data);
-        // Keep URL as the single source of truth for region selection.
-        // Append the selected region id as a query param so useRegionSelection
-        // on the product page will pick it up and sync the store.
-        const separator = redirect.includes('?') ? '&' : '?';
-        navigate(`${redirect}${separator}region=${encodeURIComponent(data.region_id)}`);
+        navigate(redirect);
       } catch (err: unknown) {
         const detail = getErrorMessage(err, t.auth.onboardingFailed);
         throw new Error(detail);

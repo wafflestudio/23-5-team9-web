@@ -30,20 +30,29 @@ function ProductNew() {
     );
   }
 
-  const handleSubmit = async (data: ProductFormData) => {
+  const handleSubmit = async (data: ProductFormData, imageIds: string[]) => {
     try {
       const payload = {
         title: data.title,
         content: data.content,
         price: data.price,
-        image_ids: data.image_ids ?? [],
         category_id: '1',
+        image_ids: imageIds,
       };
+      
+      console.log('=== DEBUG: Sending payload ===');
+      console.log('title:', payload.title, typeof payload.title);
+      console.log('content:', payload.content, typeof payload.content);
+      console.log('price:', payload.price, typeof payload.price);
+      console.log('category_id:', payload.category_id);
+      console.log('image_ids:', payload.image_ids);
+      console.log('Full payload:', JSON.stringify(payload));
 
       const newProduct = await createProduct.mutateAsync(payload);
       alert(t.product.productRegistered);
       navigate(`/products/${newProduct.id}`);
-    } catch {
+    } catch (error: any) {
+      console.error('Product creation failed:', error);
       alert(t.product.registerFailed);
     }
   };
