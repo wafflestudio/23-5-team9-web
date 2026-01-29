@@ -18,9 +18,7 @@ function ProductDetailContent() {
         <SellerSection />
       </DetailSection>
 
-      <DetailSection>
-        {isEditing ? <ProductEditForm /> : <ProductDetailView />}
-      </DetailSection>
+      {isEditing ? <DetailSection><ProductEditForm /></DetailSection> : <ProductDetailView />}
 
       <SellerProductList />
     </PageContainer>
