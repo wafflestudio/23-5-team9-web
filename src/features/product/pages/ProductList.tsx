@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "@/features/product/components/list/ProductCard";
 import SearchBar from "@/features/product/components/list/SearchBar";
@@ -10,6 +10,7 @@ import RegionSelector from "@/features/location/components/RegionSelector";
 import RegionSelectModal from "@/features/location/components/RegionSelectModal";
 import { useTranslation } from "@/shared/i18n";
 import { Button } from "@/shared/ui";
+import { useProductFilters } from "@/features/product/store/productFiltersStore";
 
 export default function ProductList() {
   const t = useTranslation();
@@ -32,6 +33,17 @@ export default function ProductList() {
   // URL 쿼리 파라미터에서 auction 값 읽기 (기본값: false)
   const auctionParam = searchParams.get("auction");
   const showAuction = auctionParam === "true";
+
+  // Sync current filters to store for navigation persistence
+  const { setFilters } = useProductFilters();
+  useEffect(() => {
+    setFilters({
+      region: currentRegionId,
+      sido: currentSido,
+      sigugun: currentSigugun,
+      auction: showAuction,
+    });
+  }, [currentRegionId, currentSido, currentSigugun, showAuction, setFilters]);
 
   const handleAuctionChange = (value: boolean) => {
     setSearchParams((prev) => {

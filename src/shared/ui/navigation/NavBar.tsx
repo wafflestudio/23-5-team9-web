@@ -7,6 +7,7 @@ import { useChatRooms } from '@/features/chat/hooks/useChat';
 import { Button } from '../display/Button';
 import { Badge } from '../feedback';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
+import { useProductFiltersStore } from '@/features/product/store/productFiltersStore';
 
 export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { toggleLanguage } = useLanguage();
   const t = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const getProductSearchParams = useProductFiltersStore((state) => state.getSearchParams);
 
   const MENUS = [
     { id: 'products', label: t.nav.products, path: '/products' },
@@ -28,7 +31,12 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   });
 
   const handleNav = (path: string) => {
-    navigate(path);
+    // Preserve product filters when navigating to /products
+    if (path === '/products') {
+      navigate(path + getProductSearchParams());
+    } else {
+      navigate(path);
+    }
     setIsMenuOpen(false);
   };
 
