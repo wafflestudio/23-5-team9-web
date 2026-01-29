@@ -14,7 +14,6 @@ import SellerProfile from '@/features/user/pages/SellerProfile';
 import ProductList from '@/features/product/pages/ProductList';
 import ProductDetail from '@/features/product/pages/ProductDetail';
 import AuctionList from '@/features/auction/pages/AuctionList';
-import AuctionDetail from '@/features/auction/pages/AuctionDetail';
 import AuctionNew from '@/features/auction/pages/AuctionNew';
 
 function App() {
@@ -33,7 +32,6 @@ function App() {
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/auction" element={<AuctionList />} />
           <Route path="/auction/new" element={<AuctionNew />} />
-          <Route path="/auction/:id" element={<AuctionDetail />} />
           <Route path="/user/:userId" element={<SellerProfile />} />
           <Route path="/chat" element={<ChatList />} />
           <Route path="/chat/:chatId" element={<ChatRoom />} />

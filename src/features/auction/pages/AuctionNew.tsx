@@ -87,7 +87,7 @@ export default function AuctionNew() {
         },
       });
       alert(t.auction.registered);
-      navigate(`/auction/${newProduct.auction.id}`);
+      navigate(`/products/${newProduct.id}`);
     } catch (err) {
       alert(getErrorMessage(err, t.auction.registerFailed));
     }

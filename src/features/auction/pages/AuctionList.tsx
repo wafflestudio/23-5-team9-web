@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AuctionCard from "@/features/auction/components/list/AuctionCard";
+import AuctionCard from "@/features/auction/components/AuctionCard";
 import { useAuctions } from "@/features/auction/hooks/useAuctions";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { DataListLayout } from "@/shared/layouts/DataListLayout";

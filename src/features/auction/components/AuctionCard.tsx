@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import type { AuctionResponse } from '../../types';
+import type { AuctionResponse } from '../types';
 import { Card, CardContent, CardImage, CardTitle, Badge } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { formatPrice, formatRemainingTime } from '@/shared/lib/formatting';
@@ -26,7 +26,7 @@ export default function AuctionCard({ auction }: AuctionCardProps) {
   const remainingTime = formatRemainingTime(auction.end_at, timeLabels);
 
   return (
-    <Link to={`/auction/${auction.product_id}`} className="group text-inherit no-underline">
+    <Link to={`/products/${auction.product_id}`} className="group text-inherit no-underline">
       <Card className="border border-border-medium rounded-lg p-3">
         <CardContent>
           <div className="flex items-center justify-between mb-3">

@@ -1,14 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { auctionApi, AuctionListParams } from '../api/auction';
 import { useRegionFilter } from '@/features/product/hooks/shared';
+import { productKeys } from '@/features/product/hooks/useProducts';
 import type { CreateAuctionRequest, PlaceBidRequest } from '../types';
 
 export const auctionKeys = {
   all: ['auctions'] as const,
   lists: () => [...auctionKeys.all, 'list'] as const,
   list: (filters: AuctionListParams) => [...auctionKeys.lists(), filters] as const,
-  details: () => [...auctionKeys.all, 'detail'] as const,
-  detail: (id: string) => [...auctionKeys.details(), id] as const,
 };
 
 export function useAuctions(options: { categoryId?: string; regionId?: string; sido?: string; sigugun?: string } = {}) {
@@ -34,21 +33,6 @@ export function useAuctions(options: { categoryId?: string; regionId?: string; s
   };
 }
 
-export function useAuction(productId: string) {
-  const queryInfo = useQuery({
-    queryKey: auctionKeys.detail(productId),
-    queryFn: () => auctionApi.getById(productId),
-    enabled: !!productId,
-  });
-
-  return {
-    auction: queryInfo.data,
-    loading: queryInfo.isLoading,
-    error: queryInfo.error as Error | null,
-    refetch: queryInfo.refetch,
-  };
-}
-
 export function useCreateAuction() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -62,10 +46,10 @@ export function useCreateAuction() {
 export function usePlaceBid() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ auctionId, productId, data }: { auctionId: string; productId: string; data: PlaceBidRequest }) =>
+    mutationFn: ({ auctionId, data }: { auctionId: string; productId: string; data: PlaceBidRequest }) =>
       auctionApi.placeBid(auctionId, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: auctionKeys.detail(variables.productId) });
+      queryClient.invalidateQueries({ queryKey: productKeys.detail(variables.productId) });
       queryClient.invalidateQueries({ queryKey: auctionKeys.lists() });
     },
   });

@@ -1,1 +1,0 @@
-export { AuctionInfoSection } from './AuctionInfoSection';

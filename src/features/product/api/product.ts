@@ -1,5 +1,5 @@
 import client from '@/shared/api/client';
-import type { Product, CreateProductRequest, UpdateProductRequest } from '../types';
+import type { Product, ProductDetail, CreateProductRequest, UpdateProductRequest } from '../types';
 
 export interface ProductListParams {
   region?: string;
@@ -17,8 +17,8 @@ export const productApi = {
     return response.data;
   },
 
-  getById: async (id: string): Promise<Product> => {
-    const response = await client.get<Product>(`/api/product/${id}`);
+  getById: async (id: string): Promise<ProductDetail> => {
+    const response = await client.get<ProductDetail>(`/api/product/${id}`);
     return response.data;
   },
 

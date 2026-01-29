@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuction, usePlaceBid } from "@/features/auction/hooks/useAuctions";
-import { useUserProducts } from "@/features/product/hooks/useProducts";
+import { usePlaceBid } from "@/features/auction/hooks/useAuctions";
+import { useProduct, useUserProducts } from "@/features/product/hooks/useProducts";
 import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
 import { useTranslation } from "@/shared/i18n";
 import { useDetailHandlers } from "@/features/product/hooks/shared";
@@ -13,9 +13,8 @@ export function useAuctionDetailLogic(productId: string) {
   const t = useTranslation();
   const { isLoggedIn } = useUser();
 
-  const { auction: productWithAuction, loading: auctionLoading, error: auctionError, refetch } = useAuction(productId);
-  const product = productWithAuction;
-  const auctionInfo = productWithAuction?.auction;
+  const { product, loading: auctionLoading, error: auctionError, refetch } = useProduct(productId);
+  const auctionInfo = product?.auction;
   const { profile: sellerProfile } = useUserProfile(product?.owner_id);
   const { products: sellerProducts } = useUserProducts(product?.owner_id!);
 
@@ -23,7 +22,7 @@ export function useAuctionDetailLogic(productId: string) {
   const [bidPrice, setBidPrice] = useState('');
   const [remainingTime, setRemainingTime] = useState('');
 
-  const handlers = useDetailHandlers({ product, redirectPath: '/auctions', onEditSuccess: refetch });
+  const handlers = useDetailHandlers({ product, redirectPath: '/auction', onEditSuccess: refetch });
 
   const isEnded = auctionInfo?.status !== 'active';
   const minBidPrice = auctionInfo ? auctionInfo.current_price + 1 : 0;

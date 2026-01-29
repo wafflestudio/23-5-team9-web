@@ -222,6 +222,10 @@ export const ProductWithAuctionResponseSchema = ProductResponseSchema.extend({
   auction: AuctionInfoSchema,
 });
 
+export const ProductDetailResponseSchema = ProductResponseSchema.extend({
+  auction: AuctionInfoSchema.optional(),
+});
+
 export const BidResponseSchema = z.object({
   id: z.string(),
   auction_id: z.string(),
@@ -327,6 +331,7 @@ export type OpponentStatus = z.infer<typeof OpponentStatusSchema>;
 export type ProductPostRequest = z.infer<typeof ProductPostRequestSchema>;
 export type ProductPatchRequest = z.infer<typeof ProductPatchRequestSchema>;
 export type ProductResponse = z.infer<typeof ProductResponseSchema>;
+export type ProductDetailResponse = z.infer<typeof ProductDetailResponseSchema>;
 
 // Region
 export type DongEntry = z.infer<typeof DongEntrySchema>;

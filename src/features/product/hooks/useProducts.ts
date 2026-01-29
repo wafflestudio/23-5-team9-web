@@ -47,6 +47,7 @@ export function useProduct(productId: string) {
     product: queryInfo.data,
     loading: queryInfo.isLoading,
     error: queryInfo.error as Error | null,
+    refetch: queryInfo.refetch,
   };
 }
 

@@ -1,15 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
 import { imageApi, ImageUploadResponse } from '@/features/product/api/imageApi';
-import { DetailImage, Thumbnail, Button, Badge } from '@/shared/ui';
+import { DetailImage, Thumbnail, Button, Badge, Input } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
+import { useLanguage } from '@/shared/store/languageStore';
 import { useImageCarousel, useContentTranslation } from '@/features/product/hooks/shared';
 import { useDetail } from '@/features/product/hooks/DetailContext';
+import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
 
 const NAV_BTN = "absolute top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity";
 
+function formatDateTime(dateStr: string, locale: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleString(locale === 'ko' ? 'ko-KR' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 export function ProductDetailView() {
   const t = useTranslation();
+  const { language } = useLanguage();
   const { product, isLiked, isOwner, isDeleting, handleLike, startEditing, handleDelete } = useDetail();
+  const { auction, isAuction, isEnded, remainingTime, bidPrice, setBidPrice, minBidPrice, handleBid, isBidding } = useProductDetail();
 
   const { data: images = [] } = useQuery<ImageUploadResponse[]>({
     queryKey: ['detail', 'images', product.id, product.image_ids ?? []],
@@ -66,7 +81,72 @@ export function ProductDetailView() {
       </div>
 
       <h2 className="text-2xl font-bold mb-2 text-text-heading">{displayTitle}</h2>
-      <h3 className="text-3xl font-bold mb-6 text-primary">{product.price.toLocaleString()}{t.common.won}</h3>
+
+      {/* Regular product price or Auction info */}
+      {isAuction && auction ? (
+        <div className="space-y-4 mb-6">
+          {/* Auction Status */}
+          <div className="flex items-center justify-between">
+            <Badge variant={isEnded ? 'secondary' : 'primary'}>
+              {isEnded ? t.auction.auctionEnded : t.auction.active}
+            </Badge>
+            {!isEnded && (
+              <span className="text-status-error font-bold">{remainingTime} {t.auction.remaining}</span>
+            )}
+          </div>
+
+          {/* End Time */}
+          <p className="text-sm text-text-muted">
+            {t.auction.endTime}: {formatDateTime(auction.end_at, language)}
+          </p>
+
+          {/* Price Info */}
+          <div className="bg-bg-secondary rounded-lg p-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-text-muted">{t.auction.startingPrice}</span>
+              <span className="text-text-body">{product.price.toLocaleString()}{t.common.won}</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-text-muted">{t.auction.currentPrice}</span>
+              <span className="text-2xl font-bold text-primary">{auction.current_price.toLocaleString()}{t.common.won}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-text-muted">{t.auction.bidCount}</span>
+              <span className="text-text-body">{t.auction.bidsCount.replace('{count}', String(auction.bid_count))}</span>
+            </div>
+          </div>
+
+          {/* Bid Section */}
+          {!isEnded && (
+            <div className="pt-4 border-t border-border-base">
+              <h3 className="font-semibold mb-3">{t.auction.placeBid}</h3>
+              <p className="text-sm text-text-muted mb-3">
+                {t.auction.minimumBid}: {minBidPrice.toLocaleString()}{t.common.won} {t.auction.orMore}
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  value={bidPrice}
+                  onChange={(e) => setBidPrice(e.target.value)}
+                  placeholder={t.auction.enterBidAmount.replace('{price}', minBidPrice.toLocaleString())}
+                  min={minBidPrice}
+                  className="flex-1"
+                />
+                <Button
+                  variant="primary"
+                  onClick={handleBid}
+                  disabled={isBidding}
+                  className="whitespace-nowrap min-w-[70px]"
+                >
+                  {isBidding ? t.auction.bidding : t.auction.bid}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <h3 className="text-3xl font-bold mb-6 text-primary">{product.price.toLocaleString()}{t.common.won}</h3>
+      )}
 
       <div className="mt-6 border-t border-border-base pt-6">
         <div className="whitespace-pre-wrap leading-relaxed text-text-body">{displayContent}</div>
