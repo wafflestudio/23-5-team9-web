@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useProduct, useUserProducts } from "@/features/product/hooks/useProducts";
+import { useProduct, useUserProducts, usePlaceBid } from "@/features/product/hooks/useProducts";
 import { useUser, useUserProfile } from "@/features/user/hooks/useUser";
-import { usePlaceBid } from "@/features/auction/hooks/useAuctions";
 import { useTranslation } from "@/shared/i18n";
 import { useDetailHandlers } from "./shared";
 import { getErrorMessage } from "@/shared/api/types";

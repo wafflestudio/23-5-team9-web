@@ -18,13 +18,15 @@ const UserProfile = () => {
 
   const [showForm, setShowForm] = useState(false);
 
-  const handleSubmit = async (data: { title: string; price: number; content: string; image_ids?: string[] }) => {
+  const handleSubmit = async (data: { title: string; price: number; content: string; image_ids?: string[]; isAuction?: boolean; auctionEndAt?: string }) => {
+    const { isAuction, auctionEndAt, ...productData } = data;
     const newProduct = await createProduct.mutateAsync({
-      ...data,
-      image_ids: data.image_ids ?? [],
+      ...productData,
+      image_ids: productData.image_ids ?? [],
       category_id: '1',
+      ...(isAuction && auctionEndAt ? { auction: { end_at: new Date(auctionEndAt).toISOString() } } : {}),
     });
-    alert(t.product.productRegistered);
+    alert(isAuction ? t.auction.registered : t.product.productRegistered);
     setShowForm(false);
     navigate(`/products/${newProduct.id}`);
   };

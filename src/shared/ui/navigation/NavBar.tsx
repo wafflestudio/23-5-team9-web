@@ -4,7 +4,6 @@ import { useTheme } from '@/shared/store/themeStore';
 import { useLanguage } from '@/shared/store/languageStore';
 import { useTranslation } from '@/shared/i18n';
 import { useChatRooms } from '@/features/chat/hooks/useChat';
-import { useProduct } from '@/features/product/hooks/useProducts';
 import { Button } from '../display/Button';
 import { Badge } from '../feedback';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
@@ -17,15 +16,8 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const t = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Check if we're on a product detail page and if it's an auction
-  const productIdMatch = pathname.match(/^\/products\/([^/]+)$/);
-  const productId = productIdMatch?.[1] ?? '';
-  const { product } = useProduct(productId);
-  const isViewingAuction = !!product?.auction;
-
   const MENUS = [
     { id: 'products', label: t.nav.products, path: '/products' },
-    { id: 'auction', label: t.nav.auction, path: '/auction' },
     { id: 'chat', label: t.nav.chat, path: '/chat' },
   ];
 
@@ -41,10 +33,7 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   };
 
   const NavItem = ({ label, path, mobile = false }: { label: string, path: string, mobile?: boolean }) => {
-    // When viewing an auction product, highlight "auction" tab instead of "products"
-    const isActive = isViewingAuction
-      ? (path === '/auction')
-      : pathname.startsWith(path);
+    const isActive = pathname.startsWith(path);
     const mobileStyle = mobile ? "w-full text-left text-lg" : "";
     const activeStyle = isActive ? "text-primary font-bold" : "text-text-body font-medium";
     const isChat = path === '/chat';

@@ -1,7 +1,7 @@
 import { useState, useMemo, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import type { Product } from '@/features/product/types';
-import type { AuctionInfo } from '@/features/auction/types';
+import type { AuctionInfo } from '@/shared/api/types';
 import { Card, CardContent, CardImage, CardTitle, Badge, Button, StatGroup, Avatar } from '@/shared/ui';
 import { useUserProfile } from '@/features/user/hooks/useUser';
 import { useTranslation } from '@/shared/i18n';

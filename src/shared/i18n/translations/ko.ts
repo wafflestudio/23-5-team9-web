@@ -25,7 +25,6 @@ export const ko = {
   // Navigation
   nav: {
     products: '중고거래',
-    auction: '경매',
     chat: '채팅하기',
     myCarrot: '마이캐럿',
     login: '로그인',
@@ -76,6 +75,8 @@ export const ko = {
   // Product
   product: {
     usedGoods: '중고거래',
+    all: '전체',
+    regular: '일반',
     noSearchResults: '검색 결과가 없습니다.',
     noProducts: '등록된 상품이 없습니다.',
     productRegistered: '상품이 등록되었습니다.',

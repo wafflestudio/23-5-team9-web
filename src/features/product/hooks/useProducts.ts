@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { productApi, ProductListParams } from '../api/product';
 import { useRegionFilter } from './shared';
 import type { CreateProductRequest, UpdateProductRequest } from '../types';
+import type { PlaceBidRequest } from '@/shared/api/types';
 
 export const productKeys = {
   all: ['products'] as const,
@@ -11,14 +12,15 @@ export const productKeys = {
   detail: (id: string) => [...productKeys.details(), id] as const,
 };
 
-export function useProducts(options: { regionId?: string; sido?: string; sigugun?: string; userId?: string; category?: string; search?: string } = {}) {
-  const { regionId, sido, sigugun, userId, category, search } = options;
+export function useProducts(options: { regionId?: string; sido?: string; sigugun?: string; userId?: string; category?: string; search?: string; auction?: boolean } = {}) {
+  const { regionId, sido, sigugun, userId, category, search, auction } = options;
 
+  // region 파라미터는 500 에러를 유발하므로 제외하고, 프론트엔드에서 필터링
   const params: ProductListParams = {
-    region: regionId,
     seller: userId,
     category: category === 'all' ? undefined : category,
     search: search?.trim() || undefined,
+    auction,
   };
 
   const queryInfo = useQuery({
@@ -87,3 +89,14 @@ export function useDeleteProduct() {
 // 기존 호환성을 위한 alias (필요 없으면 삭제 가능)
 export const useUserProducts = (userId: string, category?: string, search?: string) =>
   useProducts({ userId, category, search });
+
+export function usePlaceBid() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ auctionId, data }: { auctionId: string; productId: string; data: PlaceBidRequest }) =>
+      productApi.placeBid(auctionId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: productKeys.detail(variables.productId) });
+    },
+  });
+}

@@ -52,8 +52,8 @@ export function useRegionFilter<T>(
     const filter = async () => {
       const data = items ?? [];
 
-      // If dong-level filter exists or no region filter needed, skip frontend filtering
-      if (regionId || (!sido && !sigugun)) {
+      // 지역 필터가 없으면 전체 반환
+      if (!regionId && !sido && !sigugun) {
         setFiltered(data);
         setIsFiltering(false);
         return;
@@ -66,6 +66,13 @@ export function useRegionFilter<T>(
         const itemRegionId = getItemRegionId(item);
         if (!itemRegionId) continue;
 
+        // 동 단위(regionId) 필터: 정확히 일치해야 함
+        if (regionId) {
+          if (itemRegionId === regionId) result.push(item);
+          continue;
+        }
+
+        // 시/도, 시/구/군 단위 필터
         const info = await getRegionInfo(itemRegionId);
         if (!info) continue;
 

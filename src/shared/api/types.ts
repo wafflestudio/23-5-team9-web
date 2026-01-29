@@ -155,6 +155,7 @@ export const ProductPostRequestSchema = z.object({
   price: z.number().int(),
   image_ids: z.array(z.string()).optional(),
   category_id: z.string(),
+  auction: z.object({ end_at: z.string() }).optional(),
 });
 
 export const ProductPatchRequestSchema = z.object({

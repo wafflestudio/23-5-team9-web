@@ -28,6 +28,7 @@ const ProductForm = ({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
@@ -37,8 +38,12 @@ const ProductForm = ({
       content: initialData?.content ?? '',
       is_sold: initialData?.is_sold ?? false,
       image_ids: initialData?.image_ids ?? [],
+      isAuction: initialData?.isAuction ?? false,
+      auctionEndAt: initialData?.auctionEndAt ?? '',
     },
   });
+
+  const isAuction = watch('isAuction');
 
   const {
     images,
@@ -90,7 +95,7 @@ const ProductForm = ({
           <input
             type="number"
             {...register('price', { valueAsNumber: true })}
-            placeholder={t.product.price}
+            placeholder={isAuction ? t.auction.startingPrice : t.product.price}
             min="0"
             className="text-3xl font-bold text-primary bg-transparent border-b border-dashed border-border-medium focus:border-primary outline-none pb-1 w-40"
           />
@@ -98,6 +103,24 @@ const ProductForm = ({
         </div>
         {errors.price && <p className="mt-1 text-sm text-status-error">{errors.price.message}</p>}
       </div>
+
+      <div className="mb-6 flex items-center gap-4">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" {...register('isAuction')} className="w-4 h-4 accent-primary" />
+          <span className="text-sm font-medium text-text-heading">{t.auction.auction}</span>
+        </label>
+        {isAuction && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-text-secondary">{t.auction.endDate}:</span>
+            <input
+              type="datetime-local"
+              {...register('auctionEndAt')}
+              className="text-sm bg-transparent border border-border-medium rounded px-2 py-1 focus:border-primary outline-none"
+            />
+          </div>
+        )}
+      </div>
+      {errors.auctionEndAt && <p className="mb-4 text-sm text-status-error">{errors.auctionEndAt.message}</p>}
 
       <div className="mt-6 border-t border-border-base pt-6">
         <textarea

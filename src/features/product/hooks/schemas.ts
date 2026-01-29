@@ -11,6 +11,11 @@ export const productFormSchema = z.object({
   ...baseFormFields,
   price: z.number({ error: '가격을 입력해주세요.' }).min(1, '가격을 입력해주세요.'),
   is_sold: z.boolean().optional(),
-});
+  isAuction: z.boolean().optional(),
+  auctionEndAt: z.string().optional(),
+}).refine(
+  (data) => !data.isAuction || (data.isAuction && data.auctionEndAt),
+  { message: '경매 종료 시간을 입력해주세요.', path: ['auctionEndAt'] }
+);
 
 export type ProductFormData = z.infer<typeof productFormSchema>;

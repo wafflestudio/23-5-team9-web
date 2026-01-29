@@ -1,11 +1,13 @@
 import client from '@/shared/api/client';
 import type { Product, ProductDetail, CreateProductRequest, UpdateProductRequest } from '../types';
+import type { BidResponse, PlaceBidRequest } from '@/shared/api/types';
 
 export interface ProductListParams {
   region?: string;
   seller?: string;
   category?: string;
   search?: string;
+  auction?: boolean;
 }
 
 export const productApi = {
@@ -34,5 +36,10 @@ export const productApi = {
 
   delete: async (id: string): Promise<void> => {
     await client.delete(`/api/product/${id}`);
+  },
+
+  placeBid: async (auctionId: string, data: PlaceBidRequest): Promise<BidResponse> => {
+    const response = await client.post<BidResponse>(`/api/auction/${auctionId}/bids`, data);
+    return response.data;
   },
 };

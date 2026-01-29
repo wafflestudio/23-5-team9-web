@@ -62,7 +62,12 @@ export function useRegionSelection() {
     if (name) {
       setRegionDisplayName(name);
     }
-    setSearchParams({ region: id });
+    setSearchParams((prev) => {
+      prev.delete('sido');
+      prev.delete('sigugun');
+      prev.set('region', id);
+      return prev;
+    });
     closeModal();
   };
 
@@ -71,24 +76,44 @@ export function useRegionSelection() {
     // 전체 지역 선택 시 필터 해제
     if (sido === 'ALL') {
       setRegionDisplayName('');
-      setSearchParams({});
+      setSearchParams((prev) => {
+        prev.delete('region');
+        prev.delete('sido');
+        prev.delete('sigugun');
+        return prev;
+      });
       closeModal();
       return;
     }
-    setSearchParams({ sido });
+    setSearchParams((prev) => {
+      prev.delete('region');
+      prev.delete('sigugun');
+      prev.set('sido', sido);
+      return prev;
+    });
     closeModal();
   };
 
   // 시/구/군 단위 선택
   const handleSigugunSelect = (sido: string, sigugun: string) => {
-    setSearchParams({ sido, sigugun });
+    setSearchParams((prev) => {
+      prev.delete('region');
+      prev.set('sido', sido);
+      prev.set('sigugun', sigugun);
+      return prev;
+    });
     closeModal();
   };
 
   // 지역 필터 해제 (전체 보기)
   const handleClearRegion = () => {
     setRegionDisplayName('');
-    setSearchParams({});
+    setSearchParams((prev) => {
+      prev.delete('region');
+      prev.delete('sido');
+      prev.delete('sigugun');
+      return prev;
+    });
     closeModal();
   };
 
@@ -105,7 +130,10 @@ export function useRegionSelection() {
         setRegionDisplayName(`${region.sigugun} ${region.dong}`);
       } catch (error) {
         console.error('Invalid region ID in URL:', error);
-        setSearchParams({});
+        setSearchParams((prev) => {
+          prev.delete('region');
+          return prev;
+        });
       }
     };
 
