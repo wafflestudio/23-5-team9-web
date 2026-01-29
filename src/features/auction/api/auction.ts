@@ -1,5 +1,12 @@
 import client from '@/shared/api/client';
-import type { AuctionResponse, BidResponse, CreateAuctionRequest, PlaceBidRequest, ProductDetailResponse } from '@/shared/api/types';
+import type {
+  AuctionResponse,
+  BidResponse,
+  CreateAuctionRequest,
+  PlaceBidRequest,
+  ProductDetailResponse,
+  ProductWithAuctionResponse,
+} from '@/shared/api/types';
 
 export interface AuctionListParams {
   category_id?: string;
@@ -8,11 +15,32 @@ export interface AuctionListParams {
 
 export const auctionApi = {
   getList: async (params: AuctionListParams = {}, skipAuth = true): Promise<AuctionResponse[]> => {
-    const response = await client.get<AuctionResponse[]>('/api/auction/', {
-      params,
+    const response = await client.get<ProductWithAuctionResponse[]>('/api/product/', {
+      params: { ...params, auction: true },
       skipAuth,
     });
-    return response.data;
+
+    // API returns products with `auction` nested. Convert to AuctionResponse[] shape.
+    const products = response.data || [];
+    const auctions: AuctionResponse[] = products
+      .filter((p) => p.auction != null)
+      .map((p) => ({
+        ...p.auction,
+        product: {
+          id: p.id,
+          owner_id: p.owner_id,
+          title: p.title,
+          image_ids: p.image_ids,
+          content: p.content,
+          price: p.price,
+          like_count: p.like_count,
+          category_id: p.category_id,
+          region_id: p.region_id,
+          is_sold: p.is_sold,
+        },
+      }));
+
+    return auctions;
   },
 
   create: async (data: CreateAuctionRequest): Promise<ProductDetailResponse> => {
