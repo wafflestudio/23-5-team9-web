@@ -82,9 +82,19 @@ export function ProductDetailView() {
 
       <h2 className="text-2xl font-bold mb-2 text-text-heading">{displayTitle}</h2>
 
-      {/* Regular product price or Auction info */}
-      {isAuction && auction ? (
-        <div className="space-y-4 mb-6">
+      {/* Regular product price (non-auction only) */}
+      {!isAuction && (
+        <h3 className="text-3xl font-bold mb-6 text-primary">{product.price.toLocaleString()}{t.common.won}</h3>
+      )}
+
+      {/* Product description */}
+      <div className="mt-6 border-t border-border-base pt-6">
+        <div className="whitespace-pre-wrap leading-relaxed text-text-body">{displayContent}</div>
+      </div>
+
+      {/* Auction info (when auction exists) */}
+      {isAuction && auction && (
+        <div className="space-y-4 mt-6 pt-6 border-t border-border-base">
           {/* Auction Status */}
           <div className="flex items-center justify-between">
             <Badge variant={isEnded ? 'secondary' : 'primary'}>
@@ -144,13 +154,7 @@ export function ProductDetailView() {
             </div>
           )}
         </div>
-      ) : (
-        <h3 className="text-3xl font-bold mb-6 text-primary">{product.price.toLocaleString()}{t.common.won}</h3>
       )}
-
-      <div className="mt-6 border-t border-border-base pt-6">
-        <div className="whitespace-pre-wrap leading-relaxed text-text-body">{displayContent}</div>
-      </div>
 
       <div className="flex items-center justify-between pt-6 mt-6 border-t border-border-base">
         <Button variant={isLiked ? "primary" : "outline"} size="sm" onClick={handleLike}>
