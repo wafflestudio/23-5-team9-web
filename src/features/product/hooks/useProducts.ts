@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { productApi, ProductListParams } from '../api/product';
 import { useRegionFilter } from './shared';
 import type { CreateProductRequest, UpdateProductRequest } from '../types';
 import type { PlaceBidRequest } from '@/shared/api/types';
+import { useUser } from '@/features/user/hooks/useUser';
 
 export const productKeys = {
   all: ['products'] as const,
@@ -14,10 +16,13 @@ export const productKeys = {
 
 export function useProducts(options: { regionId?: string; sido?: string; sigugun?: string; userId?: string; category?: string; search?: string; auction?: boolean } = {}) {
   const { regionId, sido, sigugun, userId, category, search, auction } = options;
+  const { user } = useUser();
 
-  // region 파라미터는 500 에러를 유발하므로 제외하고, 프론트엔드에서 필터링
+  // Resolve 'me' to actual user ID for client-side filtering
+  const resolvedUserId = userId === 'me' ? user?.id : userId;
+
+  // Don't pass seller to API - server-side filtering doesn't work
   const params: ProductListParams = {
-    seller: userId,
     category: category === 'all' ? undefined : category,
     search: search?.trim() || undefined,
     auction,
@@ -25,10 +30,16 @@ export function useProducts(options: { regionId?: string; sido?: string; sigugun
 
   const queryInfo = useQuery({
     queryKey: productKeys.list(params),
-    queryFn: () => productApi.getList(params, userId !== 'me'),
+    queryFn: () => productApi.getList(params, true),
   });
 
-  const { filtered, isFiltering } = useRegionFilter(queryInfo.data, { regionId, sido, sigugun }, queryInfo.isLoading);
+  const { filtered: regionFiltered, isFiltering } = useRegionFilter(queryInfo.data, { regionId, sido, sigugun }, queryInfo.isLoading);
+
+  // Client-side seller filtering
+  const filtered = useMemo(() => {
+    if (!regionFiltered || !resolvedUserId) return regionFiltered;
+    return regionFiltered.filter((product) => product.owner_id === resolvedUserId);
+  }, [regionFiltered, resolvedUserId]);
 
   return {
     products: filtered,
