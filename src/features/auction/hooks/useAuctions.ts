@@ -34,11 +34,11 @@ export function useAuctions(options: { categoryId?: string; regionId?: string; s
   };
 }
 
-export function useAuction(auctionId: string) {
+export function useAuction(productId: string) {
   const queryInfo = useQuery({
-    queryKey: auctionKeys.detail(auctionId),
-    queryFn: () => auctionApi.getById(auctionId),
-    enabled: !!auctionId,
+    queryKey: auctionKeys.detail(productId),
+    queryFn: () => auctionApi.getById(productId),
+    enabled: !!productId,
   });
 
   return {
@@ -62,10 +62,10 @@ export function useCreateAuction() {
 export function usePlaceBid() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ auctionId, data }: { auctionId: string; data: PlaceBidRequest }) =>
+    mutationFn: ({ auctionId, productId, data }: { auctionId: string; productId: string; data: PlaceBidRequest }) =>
       auctionApi.placeBid(auctionId, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: auctionKeys.detail(variables.auctionId) });
+      queryClient.invalidateQueries({ queryKey: auctionKeys.detail(variables.productId) });
       queryClient.invalidateQueries({ queryKey: auctionKeys.lists() });
     },
   });

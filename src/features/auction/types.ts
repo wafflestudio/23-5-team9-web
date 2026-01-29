@@ -1,9 +1,10 @@
 export type {
   AuctionStatus,
   AuctionProduct,
+  AuctionInfo,
   AuctionResponse,
+  ProductWithAuctionResponse,
   BidResponse,
-  CreateAuctionProductData,
   CreateAuctionData,
   CreateAuctionRequest,
   PlaceBidRequest,

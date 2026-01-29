@@ -199,15 +199,27 @@ export const AuctionProductSchema = z.object({
   is_sold: z.boolean(),
 });
 
+export const AuctionInfoSchema = z.object({
+  id: z.string(),
+  product_id: z.string(),
+  current_price: z.number().int(),
+  end_at: z.string().datetime(),
+  bid_count: z.number().int(),
+  status: AuctionStatusSchema,
+});
+
 export const AuctionResponseSchema = z.object({
   id: z.string(),
   product_id: z.string(),
-  starting_price: z.number().int(),
   current_price: z.number().int(),
   end_at: z.string().datetime(),
   bid_count: z.number().int(),
   status: AuctionStatusSchema,
   product: AuctionProductSchema,
+});
+
+export const ProductWithAuctionResponseSchema = ProductResponseSchema.extend({
+  auction: AuctionInfoSchema,
 });
 
 export const BidResponseSchema = z.object({
@@ -218,22 +230,17 @@ export const BidResponseSchema = z.object({
   bid_at: z.string().datetime(),
 });
 
-export const CreateAuctionProductDataSchema = z.object({
+export const CreateAuctionDataSchema = z.object({
+  end_at: z.string().datetime(),
+});
+
+export const CreateAuctionRequestSchema = z.object({
   title: z.string(),
   image_ids: z.array(z.string()).optional(),
   content: z.string(),
   price: z.number().int(),
   category_id: z.string(),
-});
-
-export const CreateAuctionDataSchema = z.object({
-  starting_price: z.number().int().positive(),
-  end_at: z.string().datetime(),
-});
-
-export const CreateAuctionRequestSchema = z.object({
-  product_data: CreateAuctionProductDataSchema,
-  auction_data: CreateAuctionDataSchema,
+  auction: CreateAuctionDataSchema,
 });
 
 export const PlaceBidRequestSchema = z.object({
@@ -335,9 +342,10 @@ export type TransactionResponse = z.infer<typeof TransactionResponseSchema>;
 // Auction
 export type AuctionStatus = z.infer<typeof AuctionStatusSchema>;
 export type AuctionProduct = z.infer<typeof AuctionProductSchema>;
+export type AuctionInfo = z.infer<typeof AuctionInfoSchema>;
 export type AuctionResponse = z.infer<typeof AuctionResponseSchema>;
+export type ProductWithAuctionResponse = z.infer<typeof ProductWithAuctionResponseSchema>;
 export type BidResponse = z.infer<typeof BidResponseSchema>;
-export type CreateAuctionProductData = z.infer<typeof CreateAuctionProductDataSchema>;
 export type CreateAuctionData = z.infer<typeof CreateAuctionDataSchema>;
 export type CreateAuctionRequest = z.infer<typeof CreateAuctionRequestSchema>;
 export type PlaceBidRequest = z.infer<typeof PlaceBidRequestSchema>;

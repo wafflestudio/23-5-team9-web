@@ -26,7 +26,7 @@ export default function AuctionCard({ auction }: AuctionCardProps) {
   const remainingTime = formatRemainingTime(auction.end_at, timeLabels);
 
   return (
-    <Link to={`/auction/${auction.id}`} className="group text-inherit no-underline">
+    <Link to={`/auction/${auction.product_id}`} className="group text-inherit no-underline">
       <Card className="border border-border-medium rounded-lg p-3">
         <CardContent>
           <div className="flex items-center justify-between mb-3">
@@ -38,7 +38,7 @@ export default function AuctionCard({ auction }: AuctionCardProps) {
             )}
           </div>
 
-          {auction.product.image_ids?.length > 0 && (
+          {(auction.product.image_ids?.length ?? 0) > 0 && (
             <CardImage src={firstImageUrl ?? undefined} alt={auction.product.title} aspectRatio="square" />
           )}
 
@@ -49,7 +49,7 @@ export default function AuctionCard({ auction }: AuctionCardProps) {
 
           <div className="space-y-1">
             <div className="text-xs text-text-muted">
-              {t.auction.startingPrice}: {formatPrice(auction.starting_price, t.common.won)}
+              {t.auction.startingPrice}: {formatPrice(auction.product.price, t.common.won)}
             </div>
             <div className="text-[15px] font-extrabold text-primary">
               {t.auction.currentPrice}: {formatPrice(auction.current_price, t.common.won)}

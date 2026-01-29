@@ -42,7 +42,7 @@ export function AuctionInfoSection() {
       <div className="bg-bg-secondary rounded-lg p-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-text-muted">{t.auction.startingPrice}</span>
-          <span className="text-text-body">{auction.starting_price.toLocaleString()}{t.common.won}</span>
+          <span className="text-text-body">{auction.product.price.toLocaleString()}{t.common.won}</span>
         </div>
         <div className="flex justify-between items-center mb-2">
           <span className="text-text-muted">{t.auction.currentPrice}</span>

@@ -76,21 +76,18 @@ export default function AuctionNew() {
     }
 
     try {
-      const newAuction = await createAuction.mutateAsync({
-        product_data: {
-          title: data.title,
-          content: data.content,
-          price: data.starting_price,
-          image_ids: imageIds,
-          category_id: data.category_id,
-        },
-        auction_data: {
-          starting_price: data.starting_price,
+      const newProduct = await createAuction.mutateAsync({
+        title: data.title,
+        content: data.content,
+        price: data.starting_price,
+        image_ids: imageIds,
+        category_id: data.category_id,
+        auction: {
           end_at: new Date(`${data.end_date}T${data.end_time}`).toISOString(),
         },
       });
       alert(t.auction.registered);
-      navigate(`/auction/${newAuction.id}`);
+      navigate(`/auction/${newProduct.auction.id}`);
     } catch (err) {
       alert(getErrorMessage(err, t.auction.registerFailed));
     }

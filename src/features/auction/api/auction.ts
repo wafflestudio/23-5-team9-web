@@ -1,5 +1,5 @@
 import client from '@/shared/api/client';
-import type { AuctionResponse, BidResponse, CreateAuctionRequest, PlaceBidRequest } from '@/shared/api/types';
+import type { AuctionResponse, BidResponse, CreateAuctionRequest, PlaceBidRequest, ProductWithAuctionResponse } from '@/shared/api/types';
 
 export interface AuctionListParams {
   category_id?: string;
@@ -15,13 +15,13 @@ export const auctionApi = {
     return response.data;
   },
 
-  getById: async (auctionId: string): Promise<AuctionResponse> => {
-    const response = await client.get<AuctionResponse>(`/api/auction/${auctionId}`);
+  getById: async (productId: string): Promise<ProductWithAuctionResponse> => {
+    const response = await client.get<ProductWithAuctionResponse>(`/api/product/${productId}`);
     return response.data;
   },
 
-  create: async (data: CreateAuctionRequest): Promise<AuctionResponse> => {
-    const response = await client.post<AuctionResponse>('/api/auction/', data);
+  create: async (data: CreateAuctionRequest): Promise<ProductWithAuctionResponse> => {
+    const response = await client.post<ProductWithAuctionResponse>('/api/product/', data);
     return response.data;
   },
 
