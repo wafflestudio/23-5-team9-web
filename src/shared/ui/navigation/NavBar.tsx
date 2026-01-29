@@ -60,7 +60,7 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-bg-page px-5 shadow-sm">
+      <nav className="flex h-16 w-full items-center justify-between bg-bg-page px-5 shadow-sm">
         <div className="flex items-center gap-10">
           <h1 onClick={() => handleNav('/products')} className="cursor-pointer text-2xl font-bold text-primary">
             {t.nav.carrotMarket}
