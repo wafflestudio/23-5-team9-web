@@ -60,11 +60,14 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
             ) : null}
           </div>
 
-          <div className={`aspect-square rounded-lg overflow-hidden mb-3 ${firstImageUrl ? '' : 'bg-gray-200 dark:bg-gray-700'}`}>
+          <div className={`aspect-square rounded-lg overflow-hidden mb-3 ${firstImageUrl ? '' : 'border border-border-medium bg-bg-box'}`}>
             {firstImageUrl ? (
               <CardImage src={firstImageUrl} alt={product.title} aspectRatio="square" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-4xl opacity-50">🖼️</div>
+              <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                <span className="text-3xl text-text-muted">📦</span>
+                <span className="text-xs text-text-secondary">{t.product.noImage}</span>
+              </div>
             )}
           </div>
 

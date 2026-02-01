@@ -114,6 +114,7 @@ export const en: TranslationKeys = {
     deleteFailed: 'Failed to delete product.',
     updated: 'Product updated.',
     updateFailed: 'Failed to update product.',
+    noImage: 'No image',
   },
 
   // Product validation
