@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useMessages, useSendMessage, useMarkAsRead, useChatRoom } from '@/features/chat/hooks/useChat';
 import { useUser, useUserProfile } from '@/features/user/hooks/useUser';
 import { Loading, ErrorMessage, DetailHeader } from '@/shared/ui';
@@ -9,13 +9,11 @@ import MessageList from '@/features/chat/components/MessageList';
 import ChatInput from '@/features/chat/components/ChatInput';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
 import { useTranslation } from '@/shared/i18n';
-import { useChatNavigationStore } from '@/features/chat/store/chatNavigationStore';
 
 function ChatRoom() {
   const t = useTranslation();
   const { chatId } = useParams();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const [showTransferMenu, setShowTransferMenu] = useState(false);
   const { user, isLoggedIn, isLoading: userLoading } = useUser({
     refetchInterval: getPollingInterval(POLLING_CONFIG.USER_BALANCE),
@@ -27,12 +25,6 @@ function ChatRoom() {
   const markAsReadMutation = useMarkAsRead(chatId || '');
 
   const { profile: opponentProfile } = useUserProfile(roomInfo?.opponent_id);
-  const setLastChatPath = useChatNavigationStore((s) => s.setLastPath);
-
-  // Track this chat room path for navigation persistence
-  useEffect(() => {
-    setLastChatPath(pathname);
-  }, [pathname, setLastChatPath]);
 
   useEffect(() => {
     if (!userLoading && !isLoggedIn) {

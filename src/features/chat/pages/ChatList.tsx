@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import ChatRoomItem from '@/features/chat/components/ChatRoomItem';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Loading, ErrorMessage, EmptyState, LoginRequired, OnboardingRequired } from '@/shared/ui';
@@ -6,17 +5,10 @@ import { useChatRooms, ChatRoom } from '@/features/chat/hooks/useChat';
 import { useUser } from '@/features/user/hooks/useUser';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
 import { useTranslation } from '@/shared/i18n';
-import { useChatNavigationStore } from '@/features/chat/store/chatNavigationStore';
 
 function ChatList() {
   const { isLoggedIn, isLoading: userLoading, needsOnboarding } = useUser();
   const t = useTranslation();
-  const setLastChatPath = useChatNavigationStore((s) => s.setLastPath);
-
-  // Track chat list as the last visited chat path
-  useEffect(() => {
-    setLastChatPath('/chat');
-  }, [setLastChatPath]);
 
   const canFetch = isLoggedIn && !needsOnboarding;
   const { rooms, isLoading: loading, error } = useChatRooms({

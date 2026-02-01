@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ProfileEditForm from '@/features/user/components/ProfileEditForm';
 import UserProfile from '@/features/user/components/UserProfile';
 import CoinTab from '@/features/pay/pages/CoinTab';
@@ -13,7 +12,6 @@ import { useTranslation } from '@/shared/i18n';
 import { useOnboarding } from '@/features/user/hooks/useUser';
 import { useUser } from '@/features/user/hooks/useUser';
 import { POLLING_CONFIG } from '@/shared/config/polling';
-import { useMyCarrotNavigationStore } from '@/features/user/store/myCarrotNavigationStore';
 
 type TabType = 'products' | 'profile' | 'coin' | 'transactions' | 'password';
 
@@ -25,15 +23,8 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
   const { user } = useUser({ refetchInterval: POLLING_CONFIG.USER_BALANCE });
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const onboardingMutation = useOnboarding();
   const t = useTranslation();
-  const setLastMyCarrotPath = useMyCarrotNavigationStore((s) => s.setLastPath);
-
-  // Track current mycarrot path for navigation persistence
-  useEffect(() => {
-    setLastMyCarrotPath(pathname);
-  }, [pathname, setLastMyCarrotPath]);
 
   const MENU_ITEMS: { id: TabType; label: string; to: string }[] = [
     { id: 'products', label: t.user.myProducts, to: '/my/products' },
