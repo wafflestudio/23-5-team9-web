@@ -45,45 +45,49 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
             <span className="text-sm text-text-secondary truncate">{profile?.nickname || t.common.unknown}</span>
           </div>
 
-          {isAuction && (
-            <div className="flex items-center justify-between mb-2">
-              <Badge variant={isAuctionEnded ? 'secondary' : 'primary'} className="text-xs">
-                {isAuctionEnded ? t.auction.ended : t.auction.inProgress}
-              </Badge>
-              {!isAuctionEnded && (
-                <span className="text-xs text-status-error font-medium">{remainingTime}</span>
-              )}
-            </div>
-          )}
-
-          {!isAuction && product.is_sold && (
-            <div className="mb-2">
+          <div className="flex items-center justify-between mb-2 h-5">
+            {isAuction ? (
+              <>
+                <Badge variant={isAuctionEnded ? 'secondary' : 'primary'} className="text-xs">
+                  {isAuctionEnded ? t.auction.ended : t.auction.inProgress}
+                </Badge>
+                {!isAuctionEnded && (
+                  <span className="text-xs text-status-error font-medium">{remainingTime}</span>
+                )}
+              </>
+            ) : product.is_sold ? (
               <Badge variant="secondary" className="text-xs">{t.product.soldOut}</Badge>
-            </div>
-          )}
+            ) : null}
+          </div>
 
-          {(product.image_ids?.length ?? 0) > 0 && (
-            <CardImage src={firstImageUrl ?? undefined} alt={product.title} aspectRatio="square" />
-          )}
+          <div className="aspect-square bg-bg-muted rounded-lg overflow-hidden mb-3">
+            {firstImageUrl ? (
+              <CardImage src={firstImageUrl} alt={product.title} aspectRatio="square" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-4xl opacity-50">🖼️</div>
+            )}
+          </div>
 
-          <CardTitle className="tracking-tighter break-keep text-text-heading">{product.title}</CardTitle>
-          <p className="text-sm text-text-muted line-clamp-2 mb-2">{product.content}</p>
+          <CardTitle className="tracking-tighter break-keep text-text-heading line-clamp-1">{product.title}</CardTitle>
+          <p className="text-sm text-text-muted line-clamp-2 h-10 mb-2">{product.content}</p>
 
-          {isAuction ? (
-            <div className="space-y-1">
-              <div className="text-xs text-text-muted">
-                {t.auction.startingPrice}: {formatPrice(product.price, t.common.won)}
+          <div className="h-16">
+            {isAuction ? (
+              <div className="space-y-1">
+                <div className="text-xs text-text-muted">
+                  {t.auction.startingPrice}: {formatPrice(product.price, t.common.won)}
+                </div>
+                <div className="text-[15px] font-extrabold text-primary">
+                  {t.auction.currentPrice}: {formatPrice(auction.current_price, t.common.won)}
+                </div>
+                <div className="text-xs text-text-secondary">
+                  {t.auction.bidsCount.replace('{count}', String(auction.bid_count))}
+                </div>
               </div>
-              <div className="text-[15px] font-extrabold text-primary">
-                {t.auction.currentPrice}: {formatPrice(auction.current_price, t.common.won)}
-              </div>
-              <div className="text-xs text-text-secondary">
-                {t.auction.bidsCount.replace('{count}', String(auction.bid_count))}
-              </div>
-            </div>
-          ) : (
-            <div className="mb-1 text-[15px] font-extrabold text-primary">{formatPrice(product.price, t.common.won)}</div>
-          )}
+            ) : (
+              <div className="text-[15px] font-extrabold text-primary">{formatPrice(product.price, t.common.won)}</div>
+            )}
+          </div>
 
           {showActions && (
             <div className="flex gap-2 mt-3 pt-3 border-t border-border-medium">
