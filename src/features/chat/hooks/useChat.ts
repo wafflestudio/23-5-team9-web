@@ -30,16 +30,21 @@ export function useChatRooms(options: UseChatRoomsOptions = {}) {
     queryKey: chatKeys.rooms(),
     queryFn: fetchChatRooms,
     staleTime: POLLING_CONFIG.STALE_TIME.CHAT_ROOMS,
-    refetchInterval,
+    refetchInterval: (query) => {
+      // 에러가 발생했을 때는 폴링 중단
+      if (query.state.error) return false;
+      return refetchInterval;
+    },
     enabled,
+    retry: false, // 에러 발생 시 재시도하지 않음
   });
 
   // Compute total unread count
   const totalUnreadCount = rooms?.reduce((sum, room) => sum + room.unread_count, 0) ?? 0;
 
   return {
-    rooms: rooms ?? [],
-    isLoading,
+    rooms: rooms ?? [], // 에러 발생 시에도 빈 배열 반환
+    isLoading: isLoading && !error, // 에러가 있으면 로딩 상태가 아님
     error,
     refetch,
     totalUnreadCount,
