@@ -53,6 +53,7 @@ const ProductForm = ({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
@@ -130,11 +131,25 @@ const ProductForm = ({
 
       {showAuctionOption && (
         <>
-          <div className="mb-6 flex items-center gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" {...register('isAuction')} className="w-4 h-4 accent-primary" />
-              <span className="text-sm font-medium text-text-heading">{t.auction.auction}</span>
-            </label>
+          <div className="mb-6 flex flex-col gap-3">
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant={!isAuction ? "primary" : "secondary"}
+                onClick={() => setValue('isAuction', false)}
+              >
+                {t.product.regular}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={isAuction ? "primary" : "secondary"}
+                onClick={() => setValue('isAuction', true)}
+              >
+                {t.auction.auction}
+              </Button>
+            </div>
             {isAuction && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-text-secondary">{t.auction.endDate}:</span>
