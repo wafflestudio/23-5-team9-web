@@ -21,7 +21,7 @@ export function TransactionItem({ tx, currentUserId }: TransactionItemProps) {
     : tx.type === 'WITHDRAW'
       ? { label: t.pay.withdraw, icon: '↑', isPositive: false }
       : isSender
-        ? { label: t.pay.transfer, icon: '→', isPositive: false }
+        ? { label: '보냄', icon: '→', isPositive: false }
         : { label: t.pay.received, icon: '←', isPositive: true };
 
   const sign = info.isPositive ? '+' : '-';
@@ -31,27 +31,49 @@ export function TransactionItem({ tx, currentUserId }: TransactionItemProps) {
     ? (isSender ? tx.details.receive_user : tx.details.user)
     : null;
 
-  const amountColor = info.isPositive ? 'var(--color-brand)' : 'var(--status-error)';
+  // Determine colors based on transaction type
+  let mainColor = 'var(--text-primary)';
+  let bgColor = 'var(--bg-box)';
+  
+  // Logic: Money IN = Blue, Money OUT = Red (Pink-ish)
+  const isIncoming = tx.type === 'DEPOSIT' || (isTransfer && !isSender);
+  
+  if (isIncoming) {
+      // Deposit or Received: Blue
+      mainColor = 'var(--status-info)';
+      bgColor = 'rgba(59, 130, 246, 0.1)'; 
+  } else {
+      // Withdraw or Sent: Red (Pink-ish pastel for background to look softer)
+      mainColor = 'var(--status-error)';
+      // Using a slightly more pink hue for the background transparency
+      // rgb(255, 87, 87) is soft red, 0.1 opacity makes it pastel pink on white
+      bgColor = 'rgba(255, 87, 87, 0.1)';
+  }
+
+  // Amount color follows the main color
+  const amountColor = mainColor;
 
   return (
     <Box
       p="md"
+      className="transition-colors duration-200"
       style={{
         borderRadius: 'var(--mantine-radius-md)',
-        backgroundColor: 'var(--bg-box)',
-        border: '1px solid var(--border-light)',
+        backgroundColor: bgColor,
       }}
     >
       <Group gap="sm" wrap="nowrap">
         {isTransfer ? (
           <Avatar src={otherParty?.profile_image ?? undefined} alt={otherParty?.nickname || t.common.unknown} size="sm" />
         ) : (
-          <Text fw={700} style={{ width: 28, textAlign: 'center', opacity: 0.7 }}>
+          <Text fw={700} style={{ width: 28, textAlign: 'center', opacity: 0.7, color: mainColor }}>
             {info.icon}
           </Text>
         )}
         <Stack gap={2} style={{ flex: 1 }}>
-          <Text size="sm" fw={500}>{info.label}{isTransfer && ` · ${otherParty?.nickname || t.common.unknown}`}</Text>
+          <Text size="sm" fw={500}>
+            {info.label}{isTransfer && otherParty && ` · ${otherParty.nickname || t.common.unknown}`}
+          </Text>
           <Text size="xs" c="dimmed">{formattedDate}</Text>
         </Stack>
         <Text fw={700} fz="lg" style={{ color: amountColor }}>
