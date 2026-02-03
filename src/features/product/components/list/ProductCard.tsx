@@ -82,11 +82,13 @@ export default function ProductCard({ product, showActions, onEdit, onDelete }: 
               {product.title}
             </Text>
 
-            <Text size="sm" c="dimmed" lineClamp={2} mih={40}>
-              {product.content}
-            </Text>
+            {!isAuction && (
+              <Text size="sm" c="dimmed" lineClamp={1} mih={24}>
+                {product.content}
+              </Text>
+            )}
 
-            <div style={{ minHeight: 64 }}>
+            <div style={{ minHeight: isAuction ? 64 : undefined }}>
               {isAuction ? (
                 <Stack gap={2}>
                   <Text size="xs" c="dimmed">
