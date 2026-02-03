@@ -132,7 +132,9 @@ export function ProductDetailView() {
               {isEnded ? t.auction.auctionEnded : t.auction.active}
             </Badge>
             {!isEnded && (
-              <span className="text-status-error font-bold">{remainingTime} {t.auction.remaining}</span>
+              <span className="text-status-error font-bold">
+                {remainingTime === t.auction.timeEnded ? remainingTime : `${remainingTime} ${t.auction.remaining}`}
+              </span>
             )}
           </div>
 
