@@ -1,13 +1,16 @@
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import {
   AspectRatio,
   Box,
+  type BoxProps,
   Card as MantineCard,
   Center,
   Image,
   Skeleton,
+  Stack,
   Text,
 } from '@mantine/core';
+import { useTranslation } from '@/shared/i18n';
 
 interface CardProps {
   children: ReactNode;
@@ -40,19 +43,38 @@ interface CardImageProps {
   aspectRatio?: 'square' | 'video' | 'auto';
   className?: string;
   onError?: () => void;
+  emptyLabel?: string;
+  w?: BoxProps['w'];
+  h?: BoxProps['h'];
+  style?: BoxProps['style'];
 }
 
-export function CardImage({ src, alt, aspectRatio = 'square', className = '', onError }: CardImageProps) {
-  const [isLoading, setIsLoading] = useState(true);
+export function CardImage({ src, alt, aspectRatio = 'square', className = '', onError, emptyLabel, w, h, style }: CardImageProps) {
+  const t = useTranslation();
+  const [isLoading, setIsLoading] = useState(Boolean(src));
   const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(Boolean(src));
+    setHasError(false);
+  }, [src]);
+
   const ratio = useMemo(() => {
     if (aspectRatio === 'square') return 1;
     if (aspectRatio === 'video') return 16 / 9;
     return undefined;
   }, [aspectRatio]);
 
+  const label = emptyLabel ?? t.product.noImage;
+
   const content = (
-    <Box pos="relative" className={className} style={{ borderRadius: 'var(--mantine-radius-md)', overflow: 'hidden' }}>
+    <Box
+      pos="relative"
+      className={className}
+      w={w}
+      h={h}
+      style={{ borderRadius: 'var(--mantine-radius-md)', overflow: 'hidden', ...style }}
+    >
       {isLoading && src && (
         <Skeleton visible h="100%" w="100%" style={{ position: 'absolute', inset: 0, zIndex: 1 }} />
       )}
@@ -75,10 +97,22 @@ export function CardImage({ src, alt, aspectRatio = 'square', className = '', on
           }}
         />
       ) : (
-        <Center h="100%" w="100%" bg="var(--mantine-color-body)">
-          <Text c="dimmed" fz={24}>
-            🖼️
-          </Text>
+        <Center
+          h="100%"
+          w="100%"
+          style={{
+            backgroundColor: 'var(--color-bg-box)',
+            color: 'var(--color-text-primary)',
+          }}
+        >
+          <Stack align="center" gap={6}>
+            <Text size="xl" fw={700} lh={1}>
+              📦
+            </Text>
+            <Text size="sm" fw={600} style={{ opacity: 0.7 }}>
+              {label}
+            </Text>
+          </Stack>
         </Center>
       )}
     </Box>
@@ -86,7 +120,7 @@ export function CardImage({ src, alt, aspectRatio = 'square', className = '', on
 
   if (ratio) {
     return (
-      <AspectRatio ratio={ratio}>
+      <AspectRatio ratio={ratio} w={w}>
         {content}
       </AspectRatio>
     );

@@ -37,7 +37,6 @@ function App() {
           <Route path="/my/profile" element={<MyCarrot initialTab="profile" />} />
           <Route path="/my/coin" element={<MyCarrot initialTab="coin" />} />
           <Route path="/my/transactions" element={<MyCarrot initialTab="transactions" />} />
-          <Route path="/my/password" element={<MyCarrot initialTab="password" />} />
 
           {/* 인증 페이지도 이곳으로 통합 */}
           <Route path="/auth/login" element={<Login />} />

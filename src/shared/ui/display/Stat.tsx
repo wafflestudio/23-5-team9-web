@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Group, Paper, Stack, Text } from '@mantine/core';
+import { Group, Paper, type PaperProps, Stack, Text } from '@mantine/core';
 
 interface StatProps {
   icon?: ReactNode;
@@ -44,6 +44,7 @@ interface StatCardProps {
   className?: string;
   layout?: 'vertical' | 'horizontal';
   variant?: 'outline' | 'primary' | 'secondary'; // Button의 variant 시스템 반영
+  radius?: PaperProps['radius'];
 }
 
 export function StatCard({ 
@@ -52,7 +53,8 @@ export function StatCard({
   unit, 
   className = '', 
   layout = 'vertical',
-  variant = 'outline' 
+  variant = 'outline',
+  radius = 'md',
 }: StatCardProps) {
   const isVertical = layout === 'vertical';
   const isPrimary = variant === 'primary';
@@ -66,7 +68,7 @@ export function StatCard({
   return (
     <Paper
       withBorder={variant === 'outline'}
-      radius="md"
+      radius={radius}
       p={isVertical ? 'xl' : 'md'}
       className={className}
       bg={bg as any}

@@ -5,7 +5,6 @@ import ProfileEditForm from '@/features/user/components/ProfileEditForm';
 import UserProfile from '@/features/user/components/UserProfile';
 import MyBidsTab from '@/features/user/components/MyBidsTab';
 import CoinTab from '@/features/pay/pages/CoinTab';
-import PasswordTab from '@/features/user/components/PasswordTab';
 import TransactionTab from '@/features/pay/components/transaction/TransactionTab';
 import { useAuth } from '@/features/auth/hooks/store';
 import { Loading, Button, Avatar, DetailHeader } from '@/shared/ui';
@@ -16,7 +15,7 @@ import { useOnboarding } from '@/features/user/hooks/useUser';
 import { useUser } from '@/features/user/hooks/useUser';
 import { POLLING_CONFIG } from '@/shared/config/polling';
 
-type TabType = 'products' | 'bids' | 'profile' | 'coin' | 'transactions' | 'password';
+type TabType = 'products' | 'bids' | 'profile' | 'coin' | 'transactions';
 
 interface MyCarrotProps {
   initialTab?: TabType;
@@ -35,7 +34,6 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
     { id: 'profile', label: t.user.editProfile, to: '/my/profile' },
     { id: 'coin', label: t.pay.coinManagement, to: '/my/coin' },
     { id: 'transactions', label: t.pay.transactionHistory, to: '/my/transactions' },
-    { id: 'password', label: t.user.changePassword, to: '/my/password' },
   ];
 
   if (!user) return <Loading />;
@@ -125,7 +123,6 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
         )}
         {initialTab === 'coin' && <CoinTab />}
         {initialTab === 'transactions' && <TransactionTab />}
-        {initialTab === 'password' && <PasswordTab />}
       </Stack>
     </PageContainer>
   );
