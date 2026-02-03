@@ -5,6 +5,7 @@ import { useUserProducts } from '@/features/product/hooks/useProducts';
 import { useCreateRoom } from '@/features/chat/hooks/useChat';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Avatar, Pagination, SegmentedTabBar } from '@/shared/ui';
+import { DataListLayout } from '@/shared/layouts/DataListLayout';
 import ProductCard from '@/features/product/components/list/ProductCard';
 import { useTranslation } from '@/shared/i18n';
 
@@ -21,10 +22,11 @@ function SellerProfile() {
   const [showAuction, setShowAuction] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { products: regularProducts, loading: regularLoading } = useUserProducts(userId || '', undefined, undefined, false);
-  const { products: auctionProducts, loading: auctionLoading } = useUserProducts(userId || '', undefined, undefined, true);
+  const { products: regularProducts, loading: regularLoading, error: regularError } = useUserProducts(userId || '', undefined, undefined, false);
+  const { products: auctionProducts, loading: auctionLoading, error: auctionError } = useUserProducts(userId || '', undefined, undefined, true);
 
   const productsLoading = regularLoading || auctionLoading;
+  const productsError = regularError || auctionError;
   const currentProducts = showAuction ? auctionProducts : regularProducts;
 
   const paginatedProducts = useMemo(() => {
@@ -94,24 +96,25 @@ function SellerProfile() {
             onTabChange={(tab) => handleTabChange(tab === 'auction')}
           />
         </div>
-        {productsLoading ? (
-          <Loading />
-        ) : currentProducts.length === 0 ? (
-          <EmptyState message={showAuction ? t.auction.noAuctions : t.product.noProducts} />
-        ) : (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {paginatedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+        <DataListLayout
+          isLoading={productsLoading}
+          error={productsError}
+          isEmpty={currentProducts.length === 0}
+          emptyMessage={showAuction ? t.auction.noAuctions : t.product.noProducts}
+        >
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {paginatedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
-          </>
-        )}
+          )}
+        </DataListLayout>
       </div>
     </PageContainer>
   );

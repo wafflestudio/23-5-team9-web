@@ -3,6 +3,7 @@ import { useTranslation } from '@/shared/i18n';
 import { useDetail } from '@/features/product/hooks/DetailContext';
 import ProductCard from '@/features/product/components/list/ProductCard';
 import { Pagination, SegmentedTabBar } from '@/shared/ui';
+import { DataListLayout } from '@/shared/layouts/DataListLayout';
 
 const ITEMS_PER_PAGE = 4;
 
@@ -54,24 +55,25 @@ export function SellerProductList() {
           onTabChange={(tab) => handleTabChange(tab === 'auction')}
         />
       </div>
-      {currentItems.length === 0 ? (
-        <p className="text-text-muted text-sm">
-          {showAuction ? t.auction.noAuctions : t.product.noProducts}
-        </p>
-      ) : (
-        <>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {paginatedItems.map(p => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+      <DataListLayout
+        isLoading={false}
+        error={undefined}
+        isEmpty={currentItems.length === 0}
+        emptyMessage={showAuction ? t.auction.noAuctions : t.product.noProducts}
+      >
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {paginatedItems.map(p => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+        {totalPages > 1 && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
-        </>
-      )}
+        )}
+      </DataListLayout>
     </div>
   );
 }

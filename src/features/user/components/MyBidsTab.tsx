@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { useProducts } from "@/features/product/hooks/useProducts";
 import { productApi } from "@/features/product/api/product";
-import { EmptyState, Loading, Pagination, SegmentedTabBar } from '@/shared/ui';
+import { Pagination, SegmentedTabBar } from '@/shared/ui';
 import ProductCard from "@/features/product/components/list/ProductCard";
 import { useTranslation } from '@/shared/i18n';
 import { useUser } from '@/features/user/hooks/useUser';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 import { OnboardingRequired } from '@/shared/ui';
+import { DataListLayout } from '@/shared/layouts/DataListLayout';
 import { payApi } from '@/features/pay/api/payApi';
 import type { ProductDetailResponse } from '@/shared/api/types';
 import { useSearchParams } from 'react-router-dom';
@@ -47,7 +48,7 @@ const MyBidsTab = () => {
   }, [bidsTab]);
 
   // 1. Fetch all auction products
-  const { products: auctionProducts, loading: productsLoading } = useProducts({ auction: true });
+  const { products: auctionProducts, loading: productsLoading, error: productsError } = useProducts({ auction: true });
 
   // 2. Fetch product details to get auction IDs
   const productDetailQueries = useQueries({
@@ -113,6 +114,7 @@ const MyBidsTab = () => {
   });
 
   const transactionsLoading = transactionQueries.some(q => q.isLoading);
+  const transactionsError = transactionQueries.find(q => q.error)?.error as Error | undefined;
 
   // 7. Check if a specific auction has been paid
   const checkAuctionPaid = (product: ProductDetailResponse | undefined): boolean => {
@@ -180,10 +182,11 @@ const MyBidsTab = () => {
   }
 
   const isLoading = productsLoading || productDetailsLoading || topBidsLoading || transactionsLoading;
-
-  if (isLoading) {
-    return <Loading />;
-  }
+  const error =
+    productsError ||
+    (productDetailQueries.find(q => q.error)?.error as Error | undefined) ||
+    (topBidQueries.find(q => q.error)?.error as Error | undefined) ||
+    transactionsError;
 
   const getEmptyMessage = () => {
     return t.auction.noMyBids;
@@ -205,22 +208,25 @@ const MyBidsTab = () => {
           />
         </div>
 
-        {currentAuctions.length === 0 ? (
-          <EmptyState message={getEmptyMessage()} />
-        ) : (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {paginatedAuctions.map(product => (
-                <ProductCard key={product!.id} product={product!} />
-              ))}
-            </div>
+        <DataListLayout
+          isLoading={isLoading}
+          error={error}
+          isEmpty={currentAuctions.length === 0}
+          emptyMessage={getEmptyMessage()}
+        >
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {paginatedAuctions.map(product => (
+              <ProductCard key={product!.id} product={product!} />
+            ))}
+          </div>
+          {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
-          </>
-        )}
+          )}
+        </DataListLayout>
       </div>
     </div>
   );
