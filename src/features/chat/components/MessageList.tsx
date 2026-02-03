@@ -3,6 +3,7 @@ import type { Message } from '@/features/chat/api/chatApi';
 import type { PayTransaction } from '@/features/pay/api/payApi';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
+import { formatMessageTime } from '@/shared/lib/formatting';
 import { Box, Center, Group, Paper, ScrollArea, Stack, Text } from '@mantine/core';
 
 export type ChatItem =
@@ -33,11 +34,6 @@ function MessageList({ messages, transactions = [], currentUserId }: MessageList
       timestamp: new Date(tx.details.time).getTime(),
     })),
   ].sort((a, b) => a.timestamp - b.timestamp);
-
-  const formatMessageTime = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString(language === 'ko' ? 'ko-KR' : 'en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -102,7 +98,7 @@ function MessageList({ messages, transactions = [], currentUserId }: MessageList
                     </Text>
                     {showTime && (
                       <Text size="xs" c="dimmed">
-                        {formatMessageTime(tx.details.time)}
+                        {formatMessageTime(tx.details.time, language)}
                       </Text>
                     )}
                   </Group>
@@ -124,7 +120,7 @@ function MessageList({ messages, transactions = [], currentUserId }: MessageList
             >
               {isMe && showTime && (
                 <Text size="xs" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
-                  {formatMessageTime(msg.created_at)}
+                  {formatMessageTime(msg.created_at, language)}
                 </Text>
               )}
 
@@ -147,7 +143,7 @@ function MessageList({ messages, transactions = [], currentUserId }: MessageList
 
               {!isMe && showTime && (
                 <Text size="xs" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
-                  {formatMessageTime(msg.created_at)}
+                  {formatMessageTime(msg.created_at, language)}
                 </Text>
               )}
             </Group>

@@ -2,11 +2,17 @@ import { PayTransaction } from '@/features/pay/api/payApi';
 import { Avatar } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
+import { Box, Group, Stack, Text, ThemeIcon } from '@mantine/core';
 
 interface TransactionItemProps {
   tx: PayTransaction;
   currentUserId?: string;
 }
+
+const txConfig = {
+  positive: { sign: '+', colors: { transfer: 'blue', other: 'orange' } },
+  negative: { sign: '-', colors: { transfer: 'grape', other: 'red' } },
+} as const;
 
 export function TransactionItem({ tx, currentUserId }: TransactionItemProps) {
   const t = useTranslation();
@@ -15,93 +21,33 @@ export function TransactionItem({ tx, currentUserId }: TransactionItemProps) {
   const isTransfer = tx.type === 'TRANSFER';
   const isSender = isTransfer && tx.details.user.id === currentUserId;
 
-  const getTransactionInfo = () => {
-    if (tx.type === 'DEPOSIT') {
-      return { label: t.pay.charge, icon: '↓', isPositive: true };
-    }
-    if (tx.type === 'WITHDRAW') {
-      return { label: t.pay.withdraw, icon: '↑', isPositive: false };
-    }
-    // TRANSFER
-    if (isSender) {
-      return { label: t.pay.transfer, icon: '→', isPositive: false };
-    }
-    return { label: t.pay.received, icon: '←', isPositive: true };
-  };
+  const info = tx.type === 'DEPOSIT' ? { label: t.pay.charge, icon: '↓', isPositive: true }
+    : tx.type === 'WITHDRAW' ? { label: t.pay.withdraw, icon: '↑', isPositive: false }
+    : isSender ? { label: t.pay.transfer, icon: '→', isPositive: false }
+    : { label: t.pay.received, icon: '←', isPositive: true };
 
-  const { label, icon, isPositive } = getTransactionInfo();
-  const formattedDate = new Date(tx.details.time).toLocaleString(
-    language === 'ko' ? 'ko-KR' : 'en-US'
-  );
+  const { sign, colors } = info.isPositive ? txConfig.positive : txConfig.negative;
+  const color = isTransfer ? colors.transfer : colors.other;
+  const formattedDate = new Date(tx.details.time).toLocaleString(language === 'ko' ? 'ko-KR' : 'en-US');
 
-  // For transfer, show the other party's info
-  const otherParty =
-    isTransfer && 'receive_user' in tx.details
-      ? isSender
-        ? tx.details.receive_user
-        : tx.details.user
-      : null;
+  const otherParty = isTransfer && 'receive_user' in tx.details
+    ? (isSender ? tx.details.receive_user : tx.details.user)
+    : null;
 
-  if (isTransfer) {
-    return (
-      <div
-        className={`flex items-center gap-3 p-4 rounded-lg border-l-4 ${
-          isPositive
-            ? 'bg-blue-500/10 border-l-blue-500'
-            : 'bg-purple-500/10 border-l-purple-500'
-        }`}
-      >
-        <Avatar
-          src={otherParty?.profile_image ?? undefined}
-          alt={otherParty?.nickname || t.common.unknown}
-          size="sm"
-        />
-        <div className="flex-1 text-left">
-          <p className="text-sm font-medium text-text-primary">
-            {label} · {otherParty?.nickname || t.common.unknown}
-          </p>
-          <p className="text-xs text-text-tertiary">{formattedDate}</p>
-        </div>
-        <span
-          className={`font-bold text-lg ${
-            isPositive ? 'text-blue-500' : 'text-purple-500'
-          }`}
-        >
-          {isPositive ? '+' : '-'}
-          {tx.details.amount.toLocaleString()}C
-        </span>
-      </div>
-    );
-  }
-
-  // Deposit / Withdraw
   return (
-    <div
-      className={`flex items-center gap-3 p-4 rounded-lg border-l-4 ${
-        isPositive
-          ? 'bg-primary/5 border-l-primary'
-          : 'bg-status-error/5 border-l-status-error'
-      }`}
-    >
-      <div
-        className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-bold ${
-          isPositive ? 'bg-primary' : 'bg-status-error'
-        }`}
-      >
-        {icon}
-      </div>
-      <div className="flex-1 text-left">
-        <p className="text-sm font-medium text-text-primary">{label}</p>
-        <p className="text-xs text-text-tertiary">{formattedDate}</p>
-      </div>
-      <span
-        className={`font-bold text-lg ${
-          isPositive ? 'text-primary' : 'text-status-error'
-        }`}
-      >
-        {isPositive ? '+' : '-'}
-        {tx.details.amount.toLocaleString()}C
-      </span>
-    </div>
+    <Box p="md" style={{ borderRadius: 'var(--mantine-radius-md)', borderLeft: `4px solid var(--mantine-color-${color}-5)`, backgroundColor: `var(--mantine-color-${color}-0)` }}>
+      <Group gap="sm" wrap="nowrap">
+        {isTransfer ? (
+          <Avatar src={otherParty?.profile_image ?? undefined} alt={otherParty?.nickname || t.common.unknown} size="sm" />
+        ) : (
+          <ThemeIcon color={color} size="lg" radius="xl">{info.icon}</ThemeIcon>
+        )}
+        <Stack gap={2} style={{ flex: 1 }}>
+          <Text size="sm" fw={500}>{info.label}{isTransfer && ` · ${otherParty?.nickname || t.common.unknown}`}</Text>
+          <Text size="xs" c="dimmed">{formattedDate}</Text>
+        </Stack>
+        <Text fw={700} fz="lg" c={color}>{sign}{tx.details.amount.toLocaleString()}C</Text>
+      </Group>
+    </Box>
   );
 }

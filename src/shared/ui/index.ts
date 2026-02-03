@@ -13,4 +13,4 @@ export { NavBar, TabBar, SegmentedTabBar, Pagination } from './navigation';
 export type { Tab, SegmentedTab } from './navigation';
 
 // Display
-export { Avatar, Button, Stat, StatGroup, StatCard, GoogleIcon, CategorySelector } from './display';
+export { Avatar, Button, Stat, StatGroup, StatCard, GoogleIcon, CategorySelector, UserCard, PriceDisplay } from './display';
