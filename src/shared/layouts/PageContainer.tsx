@@ -6,13 +6,14 @@ interface PageContainerProps {
   title?: string;
   rightAction?: React.ReactNode;
   fullWidth?: boolean;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | string | number;
 }
 
-export function PageContainer({ title, rightAction, children, fullWidth = false }: PageContainerProps) {
+export function PageContainer({ title, rightAction, children, fullWidth = false, size }: PageContainerProps) {
   return (
     <Container
       fluid={fullWidth}
-      size={fullWidth ? undefined : 'lg'}
+      size={size || (fullWidth ? undefined : 'lg')}
       px={fullWidth ? 0 : 'md'}
       py={fullWidth ? 0 : 'lg'}
       style={{ minHeight: 'calc(100vh - 60px)' }}

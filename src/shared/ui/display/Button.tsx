@@ -32,7 +32,7 @@ const variantToMantine: Record<AppButtonVariant, MantineButtonProps['variant']> 
 };
 
 const variantToColor: Record<AppButtonVariant, MantineButtonProps['color']> = {
-  primary: 'orange',
+  primary: 'orange.5',
   secondary: 'gray',
   outline: 'gray',
   'outline-primary': 'orange',

@@ -53,7 +53,7 @@ export default function Signup({ onSignup }: SignupPageProps) {
   return (
     <PageContainer>
       <DetailHeader />
-      <Box maw={1200} mx="auto">
+      <Box w="100%" maw={400} mx="auto" mt="sm">
         <Stack gap="md">
           <Title order={2}>{t.auth.signup}</Title>
 
