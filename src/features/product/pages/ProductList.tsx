@@ -9,7 +9,7 @@ import { useRegionSelection } from "@/features/location/hooks/useRegionSelection
 import RegionSelector from "@/features/location/components/RegionSelector";
 import RegionSelectModal from "@/features/location/components/RegionSelectModal";
 import { useTranslation } from "@/shared/i18n";
-import { Button } from "@/shared/ui";
+import { SegmentedTabBar } from "@/shared/ui";
 import { useProductFilters } from "@/features/product/store/productFiltersStore";
 
 export default function ProductList() {
@@ -47,9 +47,10 @@ export default function ProductList() {
 
   const handleAuctionChange = (value: boolean) => {
     setSearchParams((prev) => {
-      prev.set("auction", String(value));
-      return prev;
-    });
+      const next = new URLSearchParams(prev);
+      next.set("auction", String(value));
+      return next;
+    }, { replace: true });
   };
 
   // 지역 필터: 동 단위, 시/구/군 단위, 시/도 단위 모두 지원
@@ -72,17 +73,12 @@ export default function ProductList() {
         <RegionSelector regionName={currentRegionName} onClick={openModal} />
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       </div>
-      <div className="mb-4 flex gap-2">
-        {filterOptions.map((opt) => (
-          <Button
-            key={String(opt.value)}
-            variant={showAuction === opt.value ? "primary" : "secondary"}
-            size="sm"
-            onClick={() => handleAuctionChange(opt.value)}
-          >
-            {opt.label}
-          </Button>
-        ))}
+      <div className="mb-4">
+        <SegmentedTabBar
+          tabs={filterOptions.map((opt) => ({ id: String(opt.value), label: opt.label }))}
+          activeTab={String(showAuction)}
+          onTabChange={(tab) => handleAuctionChange(tab === 'true')}
+        />
       </div>
       <DataListLayout
         isLoading={loading}

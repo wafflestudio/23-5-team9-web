@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from '@/shared/i18n';
 import { useDetail } from '@/features/product/hooks/DetailContext';
 import ProductCard from '@/features/product/components/list/ProductCard';
-import { Button, Pagination } from '@/shared/ui';
+import { Pagination, SegmentedTabBar } from '@/shared/ui';
 
 const ITEMS_PER_PAGE = 4;
 
@@ -44,21 +44,15 @@ export function SellerProductList() {
       <h3 className="text-lg font-bold mb-4">
         {nickname}{t.product.salesItems}
       </h3>
-      <div className="mb-4 flex gap-2">
-        <Button
-          variant={!showAuction ? "primary" : "secondary"}
-          size="sm"
-          onClick={() => handleTabChange(false)}
-        >
-          {t.product.regular}
-        </Button>
-        <Button
-          variant={showAuction ? "primary" : "secondary"}
-          size="sm"
-          onClick={() => handleTabChange(true)}
-        >
-          {t.auction.auction}
-        </Button>
+      <div className="mb-4">
+        <SegmentedTabBar
+          tabs={[
+            { id: 'regular', label: t.product.regular },
+            { id: 'auction', label: t.auction.auction },
+          ]}
+          activeTab={showAuction ? 'auction' : 'regular'}
+          onTabChange={(tab) => handleTabChange(tab === 'auction')}
+        />
       </div>
       {currentItems.length === 0 ? (
         <p className="text-text-muted text-sm">

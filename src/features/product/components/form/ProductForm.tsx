@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/shared/ui';
+import { Button, SegmentedTabBar } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { productFormSchema, type ProductFormData } from '@/features/product/hooks/schemas';
 import { useImageUpload, ImageUploadSection } from '@/features/image';
@@ -132,23 +132,15 @@ const ProductForm = ({
       {showAuctionOption && (
         <>
           <div className="mb-6 flex flex-col gap-3">
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                size="sm"
-                variant={!isAuction ? "primary" : "secondary"}
-                onClick={() => setValue('isAuction', false)}
-              >
-                {t.product.regular}
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant={isAuction ? "primary" : "secondary"}
-                onClick={() => setValue('isAuction', true)}
-              >
-                {t.auction.auction}
-              </Button>
+            <div>
+              <SegmentedTabBar
+                tabs={[
+                  { id: 'regular', label: t.product.regular },
+                  { id: 'auction', label: t.auction.auction },
+                ]}
+                activeTab={isAuction ? 'auction' : 'regular'}
+                onTabChange={(tab) => setValue('isAuction', tab === 'auction')}
+              />
             </div>
             {isAuction && (
               <div className="flex items-center gap-2">

@@ -4,7 +4,7 @@ import { useUser, useUserProfile } from '@/features/user/hooks/useUser';
 import { useUserProducts } from '@/features/product/hooks/useProducts';
 import { useCreateRoom } from '@/features/chat/hooks/useChat';
 import { PageContainer } from '@/shared/layouts/PageContainer';
-import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Avatar, Pagination } from '@/shared/ui';
+import { Loading, ErrorMessage, EmptyState, Button, DetailHeader, DetailSection, Avatar, Pagination, SegmentedTabBar } from '@/shared/ui';
 import ProductCard from '@/features/product/components/list/ProductCard';
 import { useTranslation } from '@/shared/i18n';
 
@@ -84,21 +84,15 @@ function SellerProfile() {
       {/* 판매 상품 목록 */}
       <div>
         <h2 className="text-lg font-bold mb-4">{profile.nickname}{t.user.sellerSalesItems}</h2>
-        <div className="mb-4 flex gap-2">
-          <Button
-            variant={!showAuction ? "primary" : "secondary"}
-            size="sm"
-            onClick={() => handleTabChange(false)}
-          >
-            {t.product.regular}
-          </Button>
-          <Button
-            variant={showAuction ? "primary" : "secondary"}
-            size="sm"
-            onClick={() => handleTabChange(true)}
-          >
-            {t.auction.auction}
-          </Button>
+        <div className="mb-4">
+          <SegmentedTabBar
+            tabs={[
+              { id: 'regular', label: t.product.regular },
+              { id: 'auction', label: t.auction.auction },
+            ]}
+            activeTab={showAuction ? 'auction' : 'regular'}
+            onTabChange={(tab) => handleTabChange(tab === 'auction')}
+          />
         </div>
         {productsLoading ? (
           <Loading />

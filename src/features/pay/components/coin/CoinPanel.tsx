@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, StatCard } from '@/shared/ui';
+import { Button, SegmentedTabBar, StatCard } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 
 type Mode = 'deposit' | 'withdraw';
@@ -35,21 +35,15 @@ export function CoinPanel({ currentCoin, onDeposit, onWithdraw }: CoinPanelProps
         className="mb-7.5"
       />
 
-      <div className="flex gap-2 justify-center mb-5">
-        <Button
-          onClick={() => setMode('deposit')}
-          variant={mode === 'deposit' ? 'primary' : 'outline'}
-          size="sm"
-        >
-          {t.pay.charge}
-        </Button>
-        <Button
-          onClick={() => setMode('withdraw')}
-          variant={mode === 'withdraw' ? 'primary' : 'outline'}
-          size="sm"
-        >
-          {t.pay.withdraw}
-        </Button>
+      <div className="flex justify-center mb-5">
+        <SegmentedTabBar
+          tabs={[
+            { id: 'deposit', label: t.pay.charge },
+            { id: 'withdraw', label: t.pay.withdraw },
+          ]}
+          activeTab={mode}
+          onTabChange={setMode}
+        />
       </div>
 
       <h4 className="mb-5 text-text-secondary font-bold">
