@@ -24,9 +24,14 @@ export function useProductDetailLogic(productId: string) {
 
   const handlers = useDetailHandlers({ product, redirectPath: '/products', onEditSuccess: refetch });
 
-  // Auction-specific logic
+  // Auction-specific logic (ended = status not active OR end_at has passed)
   const isAuction = !!auctionInfo;
-  const isEnded = auctionInfo?.status !== 'active';
+  const isEnded = Boolean(
+    auctionInfo && (
+      auctionInfo.status !== 'active' ||
+      (auctionInfo.end_at ? new Date(auctionInfo.end_at).getTime() <= Date.now() : false)
+    )
+  );
   const minBidPrice = auctionInfo ? auctionInfo.current_price + 1 : 0;
 
   const timeLabels = useMemo(() => ({
