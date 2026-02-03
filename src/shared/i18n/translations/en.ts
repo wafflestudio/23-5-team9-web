@@ -28,9 +28,9 @@ export const en: TranslationKeys = {
   nav: {
     products: 'Products',
     chat: 'Chat',
-    myCarrot: 'My Carrot',
+    myOrange: 'My Orange',
     login: 'Login',
-    carrotMarket: 'Carrot Market',
+    orangeMarket: '🍊 Market',
     themeToggle: 'Toggle theme',
     langToggle: 'Toggle language',
     langLabel: 'EN',
@@ -174,7 +174,7 @@ export const en: TranslationKeys = {
 
   // User
   user: {
-    myCarrot: 'My Carrot',
+    myOrange: 'My Orange',
     myProducts: 'My Products',
     editProfile: 'Edit Profile',
     changePassword: 'Change Password',

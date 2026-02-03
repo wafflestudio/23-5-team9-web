@@ -26,9 +26,9 @@ export const ko = {
   nav: {
     products: '중고거래',
     chat: '채팅하기',
-    myCarrot: '마이캐럿',
+    myOrange: '마이감귤',
     login: '로그인',
-    carrotMarket: '당근마켓',
+    orangeMarket: '감귤마켓',
     themeToggle: '테마 전환',
     langToggle: '언어 전환',
     langLabel: '한글',
@@ -172,7 +172,7 @@ export const ko = {
 
   // User
   user: {
-    myCarrot: '마이캐럿',
+    myOrange: '마이감귤',
     myProducts: '내 상품 관리',
     editProfile: '프로필 수정',
     changePassword: '비밀번호 변경',

@@ -54,7 +54,7 @@ function MyCarrot({ initialTab }: MyCarrotProps) {
     return (
       <PageContainer>
         <div className="flex justify-between items-center mb-7.5">
-          <h2 className="text-2xl font-extrabold m-0">{t.user.myCarrot}</h2>
+          <h2 className="text-2xl font-extrabold m-0">{t.user.myOrange}</h2>
           <Button onClick={() => { logout(); navigate('/products'); }} variant="outline" size="sm">{t.auth.logout}</Button>
         </div>
 

@@ -62,14 +62,14 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
     );
   };
 
-  const authItem = { label: isLoggedIn ? t.nav.myCarrot : t.nav.login, path: isLoggedIn ? '/my' : '/auth/login' };
+  const authItem = { label: isLoggedIn ? t.nav.myOrange : t.nav.login, path: isLoggedIn ? '/my' : '/auth/login' };
 
   return (
     <>
       <nav className="flex h-16 w-full items-center justify-between bg-bg-page px-5 shadow-sm">
         <div className="flex items-center gap-10">
           <h1 onClick={() => handleNav('/products')} className="cursor-pointer text-2xl font-bold text-primary">
-            {t.nav.carrotMarket}
+            {t.nav.orangeMarket}
           </h1>
 
           {/* 데스크탑 메뉴 */}
@@ -114,7 +114,7 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
           onClick={e => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-4">
-            <span className="text-lg font-bold text-primary">{t.nav.carrotMarket}</span>
+            <span className="text-lg font-bold text-primary">{t.nav.orangeMarket}</span>
             <div className="flex items-center gap-2">
               <Button
                 onClick={toggleLanguage}
