@@ -4,11 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '@/features/auth/api/auth';
 import { useAuth } from '@/features/auth/hooks/store';
-import { Input, PasswordInput, Button } from '@/shared/ui';
+import { Input, PasswordInput, Button, DetailHeader } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { signupSchema, type SignupForm } from '../api/schemas';
 import { getErrorMessage } from '@/shared/api/types';
-import { Alert, Anchor, Paper, Stack, Text, Title } from '@mantine/core';
+import { Alert, Anchor, Box, Stack, Text, Title } from '@mantine/core';
 import { PageContainer } from '@/shared/layouts/PageContainer';
 
 interface SignupPageProps {
@@ -52,7 +52,8 @@ export default function Signup({ onSignup }: SignupPageProps) {
 
   return (
     <PageContainer>
-      <Paper withBorder radius="md" p="xl" maw={520} mx="auto" mt={40}>
+      <DetailHeader />
+      <Box maw={1200} mx="auto">
         <Stack gap="md">
           <Title order={2}>{t.auth.signup}</Title>
 
@@ -101,7 +102,7 @@ export default function Signup({ onSignup }: SignupPageProps) {
             </Anchor>
           </Text>
         </Stack>
-      </Paper>
+      </Box>
     </PageContainer>
   );
 }

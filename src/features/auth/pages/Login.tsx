@@ -7,7 +7,7 @@ import { Input, PasswordInput, Button, GoogleIcon } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLogin } from '../hooks/useLogin';
 import { loginSchema, type LoginForm } from '../api/schemas';
-import { Alert, Anchor, Paper, Stack, Text, Title } from '@mantine/core';
+import { Alert, Anchor, Box, Stack, Text, Title } from '@mantine/core';
 
 export default function Login() {
   const { login, serverError } = useLogin();
@@ -23,7 +23,7 @@ export default function Login() {
 
   return (
     <PageContainer>
-      <Paper withBorder radius="md" p="xl" maw={520} mx="auto" mt={40}>
+      <Box maw={1200} mx="auto" mt={40}>
         <Stack gap="md">
           <Title order={2}>{t.auth.login}</Title>
 
@@ -70,7 +70,7 @@ export default function Login() {
             </Anchor>
           </Text>
         </Stack>
-      </Paper>
+      </Box>
     </PageContainer>
   );
 }
