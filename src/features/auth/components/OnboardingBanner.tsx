@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '@/features/user/hooks/useUser';
 import { Button } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
+import { Group, Paper, Text } from '@mantine/core';
 
 export function OnboardingBanner() {
   const { user, needsOnboarding } = useUser();
@@ -16,16 +17,15 @@ export function OnboardingBanner() {
   if (!shouldShowBanner) return null;
 
   return (
-    <div className="bg-primary text-white p-3 text-center flex justify-center gap-2.5 items-center text-sm font-medium animate-fade-in">
-      <span>{t.auth.onboardingRequired}</span>
-      <Button
-        onClick={() => navigate('/auth/onboarding')}
-        variant="secondary"
-        size="sm"
-        className="text-xs"
-      >
-        {t.auth.goToSettings}
-      </Button>
-    </div>
+    <Paper bg="orange" c="white" py={8} px="md" radius={0}>
+      <Group justify="center" gap="sm">
+        <Text size="sm" fw={500}>
+          {t.auth.onboardingRequired}
+        </Text>
+        <Button onClick={() => navigate('/auth/onboarding')} variant="secondary" size="sm">
+          {t.auth.goToSettings}
+        </Button>
+      </Group>
+    </Paper>
   );
 }

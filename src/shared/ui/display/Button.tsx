@@ -2,6 +2,7 @@ import {
   Button as MantineButton,
   type ButtonProps as MantineButtonProps,
 } from '@mantine/core';
+import type React from 'react';
 
 type AppButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type AppButtonSize = 'sm' | 'md' | 'lg';
@@ -11,6 +12,7 @@ export interface ButtonProps
   variant?: AppButtonVariant;
   size?: AppButtonSize;
   fullWidth?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const variantToMantine: Record<AppButtonVariant, MantineButtonProps['variant']> = {

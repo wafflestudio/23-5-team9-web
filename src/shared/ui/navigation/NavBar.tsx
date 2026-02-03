@@ -8,6 +8,17 @@ import { Button } from '../display/Button';
 import { Badge } from '../feedback';
 import { POLLING_CONFIG, getPollingInterval } from '@/shared/config/polling';
 import { useProductFiltersStore } from '@/features/product/store/productFiltersStore';
+import {
+  ActionIcon,
+  Box,
+  Container,
+  Drawer,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
+import { APP_Z_INDEX } from '@/shared/ui/theme/zIndex';
 
 export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
@@ -66,82 +77,92 @@ export default function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <>
-      <nav className="flex h-16 w-full items-center justify-between bg-bg-page px-5 shadow-sm">
-        <div className="flex items-center gap-10">
-          <h1 onClick={() => handleNav('/products')} className="cursor-pointer text-2xl font-bold text-primary">
-            {t.nav.orangeMarket}
-          </h1>
-
-          {/* 데스크탑 메뉴 */}
-          <div className="hidden md:flex md:items-center md:gap-4">
-            {MENUS.map(menu => <NavItem key={menu.id} {...menu} />)}
-            <NavItem {...authItem} />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* 언어 토글 */}
-          <Button
-            onClick={toggleLanguage}
-            variant="ghost"
-            className="p-2 text-sm font-medium"
-            aria-label={t.nav.langToggle}
-          >
-            {t.nav.langLabel}
-          </Button>
-
-          {/* 다크모드 토글 */}
-          <Button
-            onClick={toggleTheme}
-            variant="ghost"
-            className="p-2"
-            aria-label={t.nav.themeToggle}
-          >
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-          </Button>
-
-          {/* 모바일 햄버거 버튼 */}
-          <Button variant="ghost" className="md:hidden" onClick={() => setIsMenuOpen(true)}>
-            <MenuIcon />
-          </Button>
-        </div>
-      </nav>
-
-      {/* 모바일 메뉴 오버레이 */}
-      <div className={`fixed inset-0 z-2000 bg-bg-overlay transition-opacity ${isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'}`} onClick={() => setIsMenuOpen(false)}>
-        <div
-          className={`absolute right-0 h-full w-[70%] max-w-75 bg-bg-page shadow-xl transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-between p-4">
-            <span className="text-lg font-bold text-primary">{t.nav.orangeMarket}</span>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={toggleLanguage}
-                variant="ghost"
-                className="p-2 text-sm font-medium"
-                aria-label={t.nav.langToggle}
+      <Box component="nav" bg="var(--bg-page)" style={{ borderBottom: '1px solid var(--border-light)' }}>
+        <Container size="lg" py={10}>
+          <Group justify="space-between" align="center">
+            <Group gap="xl" align="center">
+              <Title
+                order={1}
+                size="h3"
+                c="orange"
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleNav('/products')}
               >
+                {t.nav.orangeMarket}
+              </Title>
+
+              {/* 데스크탑 메뉴 */}
+              <Group gap="xs" visibleFrom="md">
+                {MENUS.map((menu) => (
+                  <NavItem key={menu.id} {...menu} />
+                ))}
+                <NavItem {...authItem} />
+              </Group>
+            </Group>
+
+            <Group gap="xs">
+              <Button onClick={toggleLanguage} variant="ghost" aria-label={t.nav.langToggle}>
                 {t.nav.langLabel}
               </Button>
-              <Button
-                onClick={toggleTheme}
-                variant="ghost"
-                className="p-2"
+
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="lg"
                 aria-label={t.nav.themeToggle}
+                onClick={toggleTheme}
               >
                 {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-              </Button>
-              <Button variant="ghost" onClick={() => setIsMenuOpen(false)}><CloseIcon /></Button>
-            </div>
-          </div>
+              </ActionIcon>
 
-          <div className="flex flex-col py-2">
-            {MENUS.map(menu => <NavItem key={menu.id} {...menu} mobile />)}
-            <NavItem {...authItem} mobile />
-          </div>
-        </div>
-      </div>
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="lg"
+                hiddenFrom="md"
+                aria-label="menu"
+                onClick={() => setIsMenuOpen(true)}
+              >
+                <MenuIcon />
+              </ActionIcon>
+            </Group>
+          </Group>
+        </Container>
+      </Box>
+
+      <Drawer
+        opened={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        position="right"
+        size="70%"
+        padding="md"
+        zIndex={APP_Z_INDEX.overlay}
+        title={
+          <Group justify="space-between" w="100%">
+            <Text fw={700} c="orange">
+              {t.nav.orangeMarket}
+            </Text>
+            <Group gap={6}>
+              <Button onClick={toggleLanguage} variant="ghost" aria-label={t.nav.langToggle}>
+                {t.nav.langLabel}
+              </Button>
+              <ActionIcon variant="subtle" color="gray" size="lg" aria-label={t.nav.themeToggle} onClick={toggleTheme}>
+                {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+              </ActionIcon>
+              <ActionIcon variant="subtle" color="gray" size="lg" aria-label="close" onClick={() => setIsMenuOpen(false)}>
+                <CloseIcon />
+              </ActionIcon>
+            </Group>
+          </Group>
+        }
+      >
+        <Stack gap="xs">
+          {MENUS.map((menu) => (
+            <NavItem key={menu.id} {...menu} mobile />
+          ))}
+          <NavItem {...authItem} mobile />
+        </Stack>
+      </Drawer>
     </>
   );
 }

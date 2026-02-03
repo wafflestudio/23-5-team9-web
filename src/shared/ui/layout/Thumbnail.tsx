@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Box, Center, Image, Skeleton, Text } from '@mantine/core';
 
 interface ThumbnailProps {
   src?: string | null;
@@ -14,27 +15,28 @@ export function Thumbnail({ src, alt = '', size = 56, className = '' }: Thumbnai
   const sizeStyle = { width: `${size}px`, height: `${size}px` } as const;
 
   return (
-    <div className={`rounded-lg overflow-hidden bg-bg-page ${className}`} style={sizeStyle}>
-      {isLoading && src && (
-        <div className="w-full h-full flex items-center justify-center animate-pulse">
-          <span className="text-2xl text-text-placeholder">📷</span>
-        </div>
-      )}
+    <Box className={className} style={{ ...sizeStyle, borderRadius: 'var(--mantine-radius-md)', overflow: 'hidden' }}>
+      {isLoading && src && <Skeleton visible h={size} w={size} />}
 
       {!hasError && src ? (
-        <img
+        <Image
           src={src}
           alt={alt}
-          className={`w-full h-full object-cover transition-all ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+          fit="cover"
+          h={size}
+          w={size}
           onLoad={() => setIsLoading(false)}
-          onError={() => { setIsLoading(false); setHasError(true); }}
+          onError={() => {
+            setIsLoading(false);
+            setHasError(true);
+          }}
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-text-muted bg-bg-page">
-          <span className="text-xl">🖼️</span>
-        </div>
+        <Center h={size} w={size} bg="var(--mantine-color-body)">
+          <Text c="dimmed">🖼️</Text>
+        </Center>
       )}
-    </div>
+    </Box>
   );
 }
 

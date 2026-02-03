@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
-import { Button } from '../display/Button';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Tabs } from '@mantine/core';
 
 export interface Tab<T extends string = string> {
   id: T;
@@ -18,38 +19,36 @@ export function TabBar<T extends string = string>({
   activeTab,
   onTabChange,
 }: TabBarProps<T>) {
-  const getClassName = (isActive: boolean) => `
-    px-4 py-2 border-b-2 rounded-none bg-transparent
-    ${isActive
-      ? 'border-primary text-text-heading font-bold'
-      : 'border-transparent text-text-secondary font-normal hover:text-text-heading'
+  const navigate = useNavigate();
+  const toById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const tab of tabs) {
+      if (tab.to) map.set(String(tab.id), tab.to);
     }
-  `;
+    return map;
+  }, [tabs]);
 
   return (
-    <div className="flex gap-2 mb-[30px] border-b border-border-base pb-0">
-      {tabs.map((tab) => {
-        const isActive = activeTab === tab.id;
-
-        if (tab.to) {
-          return (
-            <Link key={tab.id} to={tab.to} className={getClassName(isActive)}>
-              {tab.label}
-            </Link>
-          );
+    <Tabs
+      value={activeTab}
+      onChange={(value) => {
+        if (!value) return;
+        const to = toById.get(String(value));
+        if (to) {
+          navigate(to);
+          return;
         }
-
-        return (
-          <Button
-            key={tab.id}
-            onClick={() => onTabChange?.(tab.id)}
-            variant="ghost"
-            className={getClassName(isActive)}
-          >
+        onTabChange?.(value as T);
+      }}
+      variant="default"
+    >
+      <Tabs.List>
+        {tabs.map((tab) => (
+          <Tabs.Tab key={tab.id} value={tab.id}>
             {tab.label}
-          </Button>
-        );
-      })}
-    </div>
+          </Tabs.Tab>
+        ))}
+      </Tabs.List>
+    </Tabs>
   );
 }

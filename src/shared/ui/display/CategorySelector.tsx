@@ -1,4 +1,4 @@
-import { Button } from './Button';
+import { Chip, Group, Stack, Text } from '@mantine/core';
 
 export interface SelectOption {
   value: string;
@@ -21,28 +21,29 @@ export default function CategorySelector({
   title
 }: CategorySelectorProps) {
   return (
-    <div className={className}>
+    <Stack gap="sm" className={className}>
       {title && (
-        <h3 className="text-base font-bold mb-3 text-text-primary">
+        <Text fw={700}>
           {title}
-        </h3>
+        </Text>
       )}
-      <div className="flex gap-2 flex-wrap">
-        {options.map((option) => {
-          const isActive = selected === option.value;
-          return (
-            <Button
-              key={option.value}
-              onClick={() => onSelect(option.value)}
-              variant={isActive ? 'primary' : 'secondary'}
-              size="sm"
-              className="rounded-full"
-            >
+
+      <Chip.Group
+        multiple={false}
+        value={selected}
+        onChange={(value) => {
+          if (typeof value !== 'string') return;
+          onSelect(value);
+        }}
+      >
+        <Group gap="xs" wrap="wrap">
+          {options.map((option) => (
+            <Chip key={option.value} value={option.value} color="orange" radius="xl" variant="light">
               {option.label}
-            </Button>
-          );
-        })}
-      </div>
-    </div>
+            </Chip>
+          ))}
+        </Group>
+      </Chip.Group>
+    </Stack>
   );
 }

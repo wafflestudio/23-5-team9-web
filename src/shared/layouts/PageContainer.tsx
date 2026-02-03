@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Container, Group, Stack, Title } from '@mantine/core';
 
 interface PageContainerProps {
   children: React.ReactNode;
@@ -8,22 +9,25 @@ interface PageContainerProps {
 }
 
 export function PageContainer({ title, rightAction, children, fullWidth = false }: PageContainerProps) {
-  // 모바일 친화적인 최대 너비 설정 (기본 600px, fullWidth시 100%)
-  const maxWidthClass = fullWidth ? 'w-full' : 'w-full max-w-[1000px] mx-auto'; 
-  // fullWidth인 경우(지도, 채팅 등) 패딩 제거
-  const paddingClass = fullWidth ? '' : 'px-4 py-6';
-
   return (
-    <div className={`flex flex-col min-h-[calc(100vh-60px)] ${maxWidthClass} ${paddingClass}`}>
-      {title && (
-        <header className="mb-6 flex items-center justify-between px-4 sm:px-0">
-          <h1 className="text-2xl font-bold text-text-heading">{title}</h1>
-          {rightAction && <div>{rightAction}</div>}
-        </header>
-      )}
-      <main className="flex-1 flex flex-col min-h-0">
-        {children}
-      </main>
-    </div>
+    <Container
+      fluid={fullWidth}
+      size={fullWidth ? undefined : 'lg'}
+      px={fullWidth ? 0 : 'md'}
+      py={fullWidth ? 0 : 'lg'}
+      style={{ minHeight: 'calc(100vh - 60px)' }}
+    >
+      <Stack gap="md" style={{ minHeight: 'calc(100vh - 60px)' }}>
+        {title && (
+          <Group justify="space-between" align="center" px={fullWidth ? 'md' : 0}>
+            <Title order={1} size="h2">
+              {title}
+            </Title>
+            {rightAction && <Box>{rightAction}</Box>}
+          </Group>
+        )}
+        <Box style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>{children}</Box>
+      </Stack>
+    </Container>
   );
 }

@@ -7,7 +7,7 @@ interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement>
 }
 
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ label, error, className = '', ...props }, ref) => {
+  ({ label, error, className = '', size, ...props }, ref) => {
     return (
       <MantinePasswordInput
         ref={ref}

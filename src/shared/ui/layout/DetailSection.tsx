@@ -1,4 +1,5 @@
 import { ReactNode, CSSProperties } from 'react';
+import { Paper } from '@mantine/core';
 
 interface DetailSectionProps {
   children: ReactNode;
@@ -8,8 +9,8 @@ interface DetailSectionProps {
 
 export function DetailSection({ children, className = '', style }: DetailSectionProps) {
   return (
-    <section className={`bg-bg-page rounded-lg border border-border-medium p-6 overflow-hidden ${className}`} style={style}>
+    <Paper withBorder radius="md" p="lg" className={className} style={style}>
       {children}
-    </section>
+    </Paper>
   );
 }

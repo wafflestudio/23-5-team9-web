@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Loading, ErrorMessage } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
+import { Box, Center, Stack, Text } from '@mantine/core';
+import { APP_Z_INDEX } from '@/shared/ui/theme/zIndex';
 
 interface DataListLayoutProps {
   isLoading: boolean;
@@ -46,36 +48,47 @@ export function DataListLayout({
   const errorMsg = error?.message ?? null;
 
   return (
-    <div className={`flex flex-col gap-4 ${className}`}>
+    <Stack gap="md" className={className}>
       {filters && (
-        <div
-          className={`sticky top-0 z-10 bg-bg-page/95 backdrop-blur-sm py-2 transition-all duration-300 ${
-            isFilterVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
-          }`}
+        <Box
+          pos="sticky"
+          top={0}
+          py="xs"
+          style={{
+            zIndex: APP_Z_INDEX.header,
+            backgroundColor: 'rgba(255,255,255,0.95)',
+            backdropFilter: 'blur(6px)',
+            transition: 'transform 300ms ease, opacity 300ms ease',
+            transform: isFilterVisible ? 'translateY(0)' : 'translateY(-100%)',
+            opacity: isFilterVisible ? 1 : 0,
+            pointerEvents: isFilterVisible ? 'auto' : 'none',
+          }}
         >
           {filters}
-        </div>
+        </Box>
       )}
 
       {isLoading ? (
-        <div className="flex justify-center items-center py-20">
+        <Center py={80}>
           <Loading />
-        </div>
+        </Center>
       ) : errorMsg ? (
-        <div className="flex justify-center items-center py-20">
+        <Center py={80}>
           <ErrorMessage message={errorMsg} />
-        </div>
+        </Center>
       ) : (
         <>
           {children}
           {isEmpty && (
-            <div className="flex flex-col items-center justify-center py-20 text-text-muted">
-              <div className="text-4xl mb-2">📭</div>
-              <p>{emptyMessage || t.common.noData}</p>
-            </div>
+            <Center py={80}>
+              <Stack gap={6} align="center">
+                <Text fz={32}>📭</Text>
+                <Text c="dimmed">{emptyMessage || t.common.noData}</Text>
+              </Stack>
+            </Center>
           )}
         </>
       )}
-    </div>
+    </Stack>
   );
 }

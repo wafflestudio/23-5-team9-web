@@ -1,20 +1,20 @@
 import { Button } from '../display/Button';
 import { useTranslation } from '@/shared/i18n';
 import { useHierarchicalBack } from '@/shared/hooks/useHierarchicalBack';
+import { Box } from '@mantine/core';
 
 export function DetailHeader() {
   const t = useTranslation();
   const goBack = useHierarchicalBack();
 
   return (
-    <div className="mb-4">
+    <Box mb="md">
       <Button
         variant="ghost"
         onClick={goBack}
-        className="pl-0 hover:bg-transparent hover:text-primary"
       >
         {t.layout.goBack}
       </Button>
-    </div>
+    </Box>
   );
 }

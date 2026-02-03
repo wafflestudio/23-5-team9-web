@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Box, Center, Image, Skeleton, Stack, Text } from '@mantine/core';
 
 interface DetailImageProps {
   src: string;
@@ -11,29 +12,35 @@ export function DetailImage({ src, alt, className = '' }: DetailImageProps) {
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative rounded-xl overflow-hidden ${className}`}>
+    <Box pos="relative" className={className} style={{ borderRadius: 'var(--mantine-radius-md)', overflow: 'hidden' }}>
       {isLoading && src && (
-        <div className="absolute inset-0 bg-bg-page flex items-center justify-center animate-pulse">
-          <span className="text-6xl text-text-placeholder">📷</span>
-        </div>
+        <Skeleton visible h={400} />
       )}
 
       {!hasError ? (
-        <img
+        <Image
           src={src}
           alt={alt}
-          className={`w-full max-h-[400px] object-contain transition-all ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+          fit="contain"
+          h={400}
           onLoad={() => setIsLoading(false)}
-          onError={() => { setIsLoading(false); setHasError(true); }}
+          onError={() => {
+            setIsLoading(false);
+            setHasError(true);
+          }}
         />
       ) : (
-        <div className="w-full max-h-[400px] min-h-[120px] bg-bg-page flex items-center justify-center text-text-muted">
-          <div className="text-center">
-            <div className="text-6xl">🖼️</div>
-            <div className="mt-2 text-sm">{alt}</div>
-          </div>
-        </div>
+        <Center h={400}>
+          <Stack align="center" gap={6}>
+            <Text fz={40} c="dimmed">
+              🖼️
+            </Text>
+            <Text size="sm" c="dimmed">
+              {alt}
+            </Text>
+          </Stack>
+        </Center>
       )}
-    </div>
+    </Box>
   );
 }
