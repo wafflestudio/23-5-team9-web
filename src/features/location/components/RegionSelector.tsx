@@ -14,6 +14,7 @@ export default function RegionSelector({ regionName, onClick }: RegionSelectorPr
       color="orange"
       size="sm"
       radius="md"
+      style={{ color: 'var(--color-brand)' }}
       leftSection={
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
           <path
