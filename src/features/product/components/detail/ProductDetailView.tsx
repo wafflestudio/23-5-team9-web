@@ -1,12 +1,15 @@
 import { useQuery, useQueries } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { imageApi, ImageUploadResponse } from '@/features/product/api/imageApi';
 import { fetchRegionById } from '@/features/location/api/region';
-import { DetailImage, Thumbnail, Button, Badge, Input, DetailSection } from '@/shared/ui';
+import { useCreateRoom } from '@/features/chat/hooks/useChat';
+import { DetailImage, Thumbnail, Button, Badge, Input, DetailSection, Avatar } from '@/shared/ui';
 import { useTranslation } from '@/shared/i18n';
 import { useLanguage } from '@/shared/store/languageStore';
 import { useImageCarousel, useContentTranslation } from '@/features/product/hooks/shared';
 import { useDetail } from '@/features/product/hooks/DetailContext';
 import { useProductDetail } from '@/features/product/hooks/ProductDetailContext';
+import { useUser } from '@/features/user/hooks/useUser';
 
 const NAV_BTN = "absolute top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity";
 
@@ -24,8 +27,34 @@ function formatDateTime(dateStr: string, locale: string): string {
 export function ProductDetailView() {
   const t = useTranslation();
   const { language } = useLanguage();
+  const navigate = useNavigate();
+  const { user, isLoggedIn } = useUser();
+  const createRoom = useCreateRoom();
   const { product, isOwner, isDeleting, startEditing, handleDelete } = useDetail();
   const { auction, isAuction, isEnded, remainingTime, bidPrice, setBidPrice, minBidPrice, handleBid, isBidding, topBidder, topBidderProfile } = useProductDetail();
+
+  const isTopBidder = topBidder && user?.id === topBidder.bidder_id;
+
+  const handleNavigateToTopBidder = () => {
+    if (topBidder?.bidder_id) {
+      navigate(`/user/${topBidder.bidder_id}`);
+    }
+  };
+
+  const handleChatWithTopBidder = () => {
+    if (!isLoggedIn) {
+      navigate('/auth/login');
+      return;
+    }
+    if (!topBidder?.bidder_id) return;
+    if (user?.id === topBidder.bidder_id) {
+      return; // Can't chat with yourself
+    }
+    createRoom.mutate(topBidder.bidder_id, {
+      onSuccess: (roomId) => navigate(`/chat/${roomId}`),
+      onError: () => alert(t.chat.cannotOpenRoom),
+    });
+  };
 
   const imageQueries = useQueries({
     queries: (product.image_ids ?? []).map(id => ({
@@ -151,17 +180,37 @@ export function ProductDetailView() {
               <span className="text-text-muted">{t.auction.currentPrice}</span>
               <span className="text-2xl font-bold text-primary">{auction.current_price.toLocaleString()}{t.common.won}</span>
             </div>
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center">
               <span className="text-text-muted">{t.auction.bidCount}</span>
               <span className="text-text-body">{t.auction.bidsCount.replace('{count}', String(auction.bid_count))}</span>
             </div>
-            {topBidder && (
-              <div className="flex justify-between items-center">
-                <span className="text-text-muted">{t.auction.topBidder}</span>
-                <span className="text-text-body font-medium">{topBidderProfile?.nickname || t.common.unknown}</span>
-              </div>
-            )}
           </div>
+
+          {/* Top Bidder Section */}
+          {topBidder && (
+            <div className="border-t border-border-base pt-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div
+                  className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={handleNavigateToTopBidder}
+                >
+                  <Avatar src={topBidderProfile?.profile_image ?? undefined} alt={topBidderProfile?.nickname ?? undefined} size="sm" />
+                  <div>
+                    <div className="font-semibold text-text-heading">
+                      {topBidderProfile?.nickname || t.common.unknown}
+                    </div>
+                    <div className="text-sm text-text-secondary">{t.auction.topBidder}</div>
+                  </div>
+                </div>
+
+                {!isTopBidder && (
+                  <Button size="sm" onClick={handleChatWithTopBidder} disabled={createRoom.isPending}>
+                    {createRoom.isPending ? t.product.connecting : t.product.startChat}
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
 
           {!isEnded && (
             <div className="pt-4 border-t border-border-base">
