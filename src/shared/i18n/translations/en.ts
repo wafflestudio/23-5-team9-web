@@ -282,5 +282,10 @@ export const en: TranslationKeys = {
     auctionPaymentSuccess: 'Auction payment completed.',
     notice: 'Notice',
     cannotEditOrDelete: 'Auctions cannot be edited or deleted once created. Please review carefully.',
+    auctionEndsAt: 'Auction ends',
+    change: 'Change',
+    close: 'Close',
+    date: 'Date',
+    time: 'Time',
   },
 } as const;

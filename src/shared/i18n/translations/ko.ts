@@ -280,6 +280,11 @@ export const ko = {
     auctionPaymentSuccess: '낙찰 송금이 완료되었습니다.',
     notice: '주의',
     cannotEditOrDelete: '경매는 한번 생성하면 수정이나 삭제가 불가능합니다. 신중하게 등록해주세요.',
+    auctionEndsAt: '에 경매 종료',
+    change: '변경',
+    close: '닫기',
+    date: '날짜',
+    time: '시간',
   },
 } as const;
 
